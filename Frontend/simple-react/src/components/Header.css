@@ -1,0 +1,97 @@
+header {
+  background-color: var(--header-background);
+  padding: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+nav a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+nav a:hover {
+  color: var(--text-color-hover);
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.toggle-switch {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+  position: absolute;
+}
+
+.toggle-label {
+  cursor: pointer;
+  width: 40px;
+  height: 25px;
+  background-color: var(--text-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 50px;
+  position: relative;
+  transition: background-color 0.2s;
+  padding: 0 5px;
+}
+
+.toggle-ball {
+  width: 21px;
+  height: 21px;
+  background-color: var(--background-color);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.icon-sun,
+.icon-moon {
+  position: absolute;
+  transition: opacity 0.2s;
+}
+
+.icon-sun {
+  opacity: 1;
+}
+
+.icon-moon {
+  opacity: 0;
+}
+
+.toggle-switch:checked + .toggle-label .toggle-ball {
+  transform: translateX(25px);
+}
+
+.toggle-switch:checked + .toggle-label .icon-sun {
+  opacity: 0;
+}
+
+.toggle-switch:checked + .toggle-label .icon-moon {
+  opacity: 1;
+}
+
+@media (min-width: 768px) {
+  .nav-text {
+    display: inline;
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "Naisarg Halvadiya",
+  "bio": "Full-Stack Software Engineer | Data Science Enthusiast",
+  "contact": {
+    "email": "naisarg.halvadiya@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/naisarg-halvadiya/",
+    "github": "https://github.com/nh0397"
+  },
+  "skills": ["JavaScript", "SQL", "Python", "R", "React", "Angular", "Node", "AWS", "Docker"],
+  "projects": [
+    {
+      "title": "EduBridge",
+      "description": "A learning management system built with React.js and Node.js.",
+      "technologies": ["React.js", "Node.js", "AWS"],
+      "link": "http://example.com"
+    },
+    {
+      "title": "FlareGraph",
+      "description": "A web app for visualizing fire incidents using Plotly and Python Dash.",
+      "technologies": ["Plotly", "Python Dash"],
+      "link": "http://example.com"
+    }
+  ],
+  "experience": [
+    {
+      "role": "Software Engineer (Full-Stack)",
+      "company": "MU SIGMA INC.",
+      "period": "Oct 2019 – July 2023",
+      "achievements": [
+        "Built and deployed a robust CMS platform.",
+        "Designed an efficient Real-Time Data Streaming application.",
+        "Led a team to develop a work tracking and evaluation application."
+      ]
+    }
+  ],
+  "education": {
+    "degree": "M.S. in Data Science and AI",
+    "institution": "San Francisco State University",
+    "gpa": "3.9",
+    "graduation": "Dec 2024"
+  }
+}

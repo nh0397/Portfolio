@@ -1,0 +1,66 @@
+/* Home.css */
+.home-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.home-content {
+  text-align: center;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+.home-title {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  animation: slideInFromLeft 1s ease-in-out;
+}
+
+.home-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  animation: slideInFromRight 1s ease-in-out;
+}
+
+.home-button {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  color: var(--background-color);
+  background-color: var(--text-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  animation: fadeIn 2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
