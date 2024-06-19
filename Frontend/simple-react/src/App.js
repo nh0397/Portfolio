@@ -1,58 +1,80 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { motion } from 'framer-motion';
 import Header from './components/Header';
+import Home from './components/Home';
+import Experience from './components/Experience';
+import Projects from './components/Projects';
+import Contact from './components/Contact';
+import About from './components/About';
 import { ThemeProvider, ThemeContext } from './components/ThemeContext';
 import './App.css';
+import data from './data/data.json';
 
-const App = ({ portfolioData }) => {
+const App = () => {
   const { darkMode } = useContext(ThemeContext);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = document.querySelectorAll('.section');
-      const scrollPosition = window.scrollY + window.innerHeight / 2;
-
-      sections.forEach(section => {
-        if (scrollPosition >= section.offsetTop && scrollPosition <= section.offsetTop + section.offsetHeight) {
-          section.classList.add('active');
-        } else {
-          section.classList.remove('active');
-        }
-      });
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const handleNavClick = (event) => {
-    event.preventDefault();
-    const targetId = event.currentTarget.getAttribute('href').substring(1);
-    const targetSection = document.getElementById(targetId);
-    targetSection.scrollIntoView({ behavior: 'smooth' });
-  };
 
   const sectionBackgroundColor = darkMode ? '#000' : '#fff';
   const textColor = darkMode ? '#fff' : '#000';
 
   return (
     <div className="App">
-      <Header onNavClick={handleNavClick} />
+      <Header />
       <div className="content">
-        {['section1', 'section2', 'section3', 'section4'].map((sectionId) => (
-          <motion.section
-            key={sectionId}
-            id={sectionId}
-            className="section"
-            style={{ backgroundColor: sectionBackgroundColor, color: textColor }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
-          >
-            {`Section ${sectionId.charAt(sectionId.length - 1)}`}
-          </motion.section>
-        ))}
+        <motion.section
+          id="home"
+          className="section"
+          style={{ backgroundColor: sectionBackgroundColor, color: textColor }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <Home data={data} />
+        </motion.section>
+        <motion.section
+          id="about"
+          className="section"
+          style={{ backgroundColor: sectionBackgroundColor, color: textColor }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <About data={data} />
+        </motion.section>
+        <motion.section
+          id="experience"
+          className="section"
+          style={{ backgroundColor: sectionBackgroundColor, color: textColor }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <Experience data={data} />
+        </motion.section>
+        <motion.section
+          id="projects"
+          className="section"
+          style={{ backgroundColor: sectionBackgroundColor, color: textColor }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <Projects data={data} />
+        </motion.section>
+        <motion.section
+          id="contact"
+          className="section"
+          style={{ backgroundColor: sectionBackgroundColor, color: textColor }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <Contact data={data} />
+        </motion.section>
       </div>
     </div>
   );
