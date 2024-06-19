@@ -1,60 +1,67 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
+import { motion } from 'framer-motion';
 import Header from './components/Header';
-import Home from './components/Home';
-import About from './components/About';
-import Skills from './components/Skills';
-import Projects from './components/Projects';
-import Experience from './components/Experience';
-import Education from './components/Education';
-import Contact from './components/Contact';
-import { ThemeProvider } from './components/ThemeContext';
+import { ThemeProvider, ThemeContext } from './components/ThemeContext';
 import './App.css';
 
-const App = () => {
-  const [portfolioData, setPortfolioData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const App = ({ portfolioData }) => {
+  const { darkMode } = useContext(ThemeContext);
 
   useEffect(() => {
-    fetch('/data.json')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+    const handleScroll = () => {
+      const sections = document.querySelectorAll('.section');
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+
+      sections.forEach(section => {
+        if (scrollPosition >= section.offsetTop && scrollPosition <= section.offsetTop + section.offsetHeight) {
+          section.classList.add('active');
+        } else {
+          section.classList.remove('active');
         }
-        return response.json();
-      })
-      .then(data => {
-        setPortfolioData(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        setError(error);
-        setLoading(false);
       });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  const handleNavClick = (event) => {
+    event.preventDefault();
+    const targetId = event.currentTarget.getAttribute('href').substring(1);
+    const targetSection = document.getElementById(targetId);
+    targetSection.scrollIntoView({ behavior: 'smooth' });
+  };
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  const sectionBackgroundColor = darkMode ? '#000' : '#fff';
+  const textColor = darkMode ? '#fff' : '#000';
 
   return (
-    <ThemeProvider>
-      <div className="App">
-        <Header />
-        <Home data={portfolioData} />
-        <About data={portfolioData} />
-        <Skills data={portfolioData} />
-        <Projects data={portfolioData} />
-        <Experience data={portfolioData} />
-        <Education data={portfolioData} />
-        <Contact data={portfolioData} />
+    <div className="App">
+      <Header onNavClick={handleNavClick} />
+      <div className="content">
+        {['section1', 'section2', 'section3', 'section4'].map((sectionId) => (
+          <motion.section
+            key={sectionId}
+            id={sectionId}
+            className="section"
+            style={{ backgroundColor: sectionBackgroundColor, color: textColor }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+          >
+            {`Section ${sectionId.charAt(sectionId.length - 1)}`}
+          </motion.section>
+        ))}
       </div>
-    </ThemeProvider>
+    </div>
   );
 };
 
-export default App;
+const AppWrapper = (props) => (
+  <ThemeProvider>
+    <App {...props} />
+  </ThemeProvider>
+);
+
+export default AppWrapper;

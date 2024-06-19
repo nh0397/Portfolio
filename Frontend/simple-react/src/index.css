@@ -1,25 +1,52 @@
-body {
-  transition: background-color 0.3s, color 0.3s;
+@font-face {
+  font-family: 'Mova';
+  src: url('./assets/fonts/Mova.otf');
 }
 
-.light-mode {
-  --background-color: #ffffff;
-  --text-color: #000000;
-  --header-background: #f0f0f0;
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Mova', sans-serif;
+  transition: background-color 2s, color 2s; /* Add transition for background and text color */
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: background-color 2s, color 2s; /* Add transition here too */
+}
+
+header {
+  flex: 0 0 10vh;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: background-color 2s, color 2s; /* Add transition here too */
+}
+
+.content {
+  flex: 1 0 90vh;
+  overflow-y: auto;
+}
+
+.section {
+  height: 90vh;
+  opacity: 0;
+  transition: opacity 1s ease-in-out, background-color 2s, color 2s; /* Add transition for background and text color */
+}
+
+.section.active {
+  opacity: 1;
 }
 
 .dark-mode {
-  --background-color: #000000;
-  --text-color: #ffffff;
-  --header-background: #333333;
+  background-color: #000;
+  color: #fff;
 }
 
-body.light-mode {
-  background-color: var(--background-color);
-  color: var(--text-color);
-}
-
-body.dark-mode {
-  background-color: var(--background-color);
-  color: var(--text-color);
+.light-mode {
+  background-color: #fff;
+  color: #000;
 }
