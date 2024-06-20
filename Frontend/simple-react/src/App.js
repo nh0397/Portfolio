@@ -31,7 +31,7 @@ const App = () => {
         >
           <Home data={data} />
         </motion.section>
-        <motion.section
+        {/* <motion.section
           id="about"
           className="section"
           style={{ backgroundColor: sectionBackgroundColor, color: textColor }}
@@ -63,7 +63,7 @@ const App = () => {
           transition={{ duration: 1 }}
         >
           <Projects data={data} />
-        </motion.section>
+        </motion.section> */}
         <motion.section
           id="contact"
           className="section"

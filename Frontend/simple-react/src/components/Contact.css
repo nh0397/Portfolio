@@ -1,6 +1,7 @@
 .contact-section {
   padding: 60px 20px;
   text-align: center;
+  position: relative;
 }
 
 .contact-title {
@@ -22,7 +23,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem; /* Increased vertical spacing */
 }
 
 .label-cell {
@@ -70,6 +71,16 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
+  opacity: 0.5; /* Initial reduced opacity */
+}
+
+.contact-column-full button.disabled {
+  background-color: #007bff;
+  cursor: not-allowed;
+}
+
+.contact-column-full button:not(.disabled) {
+  opacity: 1; /* Full opacity when enabled */
 }
 
 .submit-row {
@@ -87,4 +98,35 @@
 
 .contact-icon {
   height: 3vw;
+}
+
+.toast {
+  position: fixed;
+  top: 10vh; /* Positioned below the header */
+  right: 10px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toast.light-mode {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.toast.dark-mode {
+  background-color: #333333;
+  color: #fff;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1rem;
 }

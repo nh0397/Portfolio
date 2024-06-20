@@ -19,7 +19,7 @@ body, html {
 }
 
 header {
-  flex: 0 0 10vh;
+  max-height: 10vh;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -27,14 +27,14 @@ header {
 }
 
 .content {
-  flex: 1 0 90vh;
-  overflow-y: auto;
+  max-height: 90vh;
 }
 
 .section {
   height: 90vh;
   opacity: 0;
   transition: opacity 1s ease-in-out, background-color 2s, color 2s; /* Add transition for background and text color */
+  overflow: hidden;
 }
 
 .section.active {
