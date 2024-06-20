@@ -1,0 +1,90 @@
+.contact-section {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.contact-title {
+  font-size: 4vh;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+.contact-table {
+  height: 60vh;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin: 0 auto;
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.label-cell {
+  width: 25%;
+  font-size: 1vh;
+  text-align: end;
+}
+
+.input-cell {
+  width: 50%;
+  text-align: center;
+}
+
+.label-cell label {
+  font-size: 2.5vh;
+  width: 100%;
+}
+
+.input-cell input,
+.input-cell textarea {
+  width: 70%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.text-message {
+  width: 70%;
+  margin-left: 0%;
+}
+
+.contact-column-full {
+  display: flex;
+  justify-content: center;
+}
+
+.contact-column-full button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.submit-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.contact-icons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.contact-icon {
+  height: 3vw;
+}
