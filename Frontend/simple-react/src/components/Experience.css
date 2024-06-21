@@ -1,0 +1,69 @@
+.timeline-date {
+    color: var(--text-color) !important;
+  }
+  
+  .vertical-timeline-element-content {
+    transition: transform 0.5s ease-in-out;
+  }
+  
+  .vertical-timeline-element-content:hover {
+    transform: scale(1.05);
+  }
+  
+  .button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+  }
+  
+  .resume-button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .resume-button:hover {
+    background-color: #555;
+    border-color: #aaa;
+  }
+  
+  .vertical-timeline-element-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 0 4px rgb(255 255 255 / 15%), inset 0 2px 0 rgb(0 0 0 / 20%);
+    background: #4A4A4A; /* Change to a neutral color */
+  }
+  
+  .vertical-timeline::before {
+    background: var(--text-color); /* Change the timeline line color */
+  }
+  
+  .custom-icon {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .vertical-timeline-element-icon svg{
+    display: block;
+    width: 24px;
+    height: 24px;
+    position: relative;
+    left: 9%;
+    top: 10%;
+    margin-left: -12px;
+    margin-top: -12px;
+
+  }

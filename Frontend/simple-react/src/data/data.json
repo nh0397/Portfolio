@@ -1,8 +1,8 @@
 {
   "name": "NAISARG HALVADIYA",
   "bio": "Transforming Insights into Impact: A Data-Savvy Software Engineer",
-  "brief":"As a software engineer adept at harnessing data, I specialize in transforming intricate data insights into impactful, real-world solutions. My expertise spans full-stack development and data science, allowing me to innovate and drive forward-thinking projects. With a proven track record in leveraging data to enhance user experiences and streamline processes, I am dedicated to pushing the boundaries of technology to solve real-world problems efficiently and effectively.",
-  "photos":"../assets/MyPhoto.webp",
+  "brief": "As a software engineer adept at harnessing data, I specialize in transforming intricate data insights into impactful, real-world solutions. My expertise spans full-stack development and data science, allowing me to innovate and drive forward-thinking projects. With a proven track record in leveraging data to enhance user experiences and streamline processes, I am dedicated to pushing the boundaries of technology to solve real-world problems efficiently and effectively.",
+  "photos": "../assets/MyPhoto.webp",
   "contact": {
     "email": "naisarg.halvadiya@gmail.com",
     "linkedin": "https://www.linkedin.com/in/naisarg-halvadiya/",
@@ -21,17 +21,46 @@
       "description": "A web app for visualizing fire incidents using Plotly and Python Dash.",
       "technologies": ["Plotly", "Python Dash"],
       "link": "http://example.com"
+    },
+    {
+      "title": "KnowledgeGrid",
+      "description": "A knowledge-sharing platform built with PHP and MongoDB, featuring Python algorithms for keyword extraction.",
+      "technologies": ["PHP", "MongoDB", "Python"],
+      "link": "http://example.com"
+    },
+    {
+      "title": "AllocMate",
+      "description": "An automation tool for project allocation and evaluation at universities using JSP, Servlets, JavaScript, and DBMS.",
+      "technologies": ["JSP", "Servlets", "JavaScript", "DBMS"],
+      "link": "http://example.com"
     }
   ],
   "experience": [
     {
+      "role": "Software Engineering Tutor (Full-Stack)",
+      "company": "San Francisco State University",
+      "location": "San Francisco, CA",
+      "period": "Sep 2023 - Present",
+      "achievements": [
+        "Led lectures and office hours for 135+ students in web development technologies, boosting engagement by 40%. Automated 35% of grading with a custom script, saving 5 hours weekly."
+      ]
+    },
+    {
+      "role": "Web Development Bootcamp Fellow (Full-Stack)",
+      "company": "CODEPATH",
+      "location": "San Francisco, CA",
+      "period": "Jan 2024 - May 2024",
+      "achievements": [
+        "Selected from over 2500 applicants, developed a discussion forum using Vite (ReactJS), NodeJS, and MySQL, enhancing user engagement by 25%. Gained expertise in Git workflows, CI/CD, and REST APIs."
+      ]
+    },
+    {
       "role": "Software Engineer (Full-Stack)",
       "company": "MU SIGMA INC.",
+      "location": "Bengaluru, India",
       "period": "Oct 2019 – July 2023",
       "achievements": [
-        "Built and deployed a robust CMS platform.",
-        "Designed an efficient Real-Time Data Streaming application.",
-        "Led a team to develop a work tracking and evaluation application."
+        "Built and deployed a CMS platform with React.js and Node.js, generating over $500K in revenue. Led a team to create a work tracking app, reducing review time by 50% with Angular and PostgreSQL."
       ]
     }
   ],

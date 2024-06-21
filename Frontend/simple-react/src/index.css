@@ -11,42 +11,4 @@ body, html {
   transition: background-color 2s, color 2s; /* Add transition for background and text color */
 }
 
-.App {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  transition: background-color 2s, color 2s; /* Add transition here too */
-}
 
-header {
-  max-height: 10vh;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  transition: background-color 2s, color 2s; /* Add transition here too */
-}
-
-.content {
-  max-height: 90vh;
-}
-
-.section {
-  height: 90vh;
-  opacity: 0;
-  transition: opacity 1s ease-in-out, background-color 2s, color 2s; /* Add transition for background and text color */
-  overflow: hidden;
-}
-
-.section.active {
-  opacity: 1;
-}
-
-.dark-mode {
-  background-color: #000;
-  color: #fff;
-}
-
-.light-mode {
-  background-color: #fff;
-  color: #000;
-}
