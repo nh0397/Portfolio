@@ -70,7 +70,6 @@ const Contact = ({ data }) => {
           console.log(error);
           setShowToast(true);
           setTimeout(() => setShowToast(false), 3000);
-          
         }
       );
   };
@@ -177,6 +176,9 @@ const Contact = ({ data }) => {
           <FontAwesomeIcon icon={faGithub} className="contact-icon" />
         </a>
       </div>
+      <footer className="footer">
+        <p>&copy; 2024. Code and idea credits to <a href="https://github.com/shaqdeff/Portfolio-Template" target="_blank" rel="noopener noreferrer">Shaquile's GitHub repo</a>.</p>
+      </footer>
     </motion.section>
   );
 };

@@ -4,6 +4,8 @@
   
   .vertical-timeline-element-content {
     transition: transform 0.5s ease-in-out;
+    height: fit-content;
+    padding: 17px !important;
   }
   
   .vertical-timeline-element-content:hover {

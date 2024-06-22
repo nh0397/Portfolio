@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -29,7 +30,13 @@ const Experience = ({ data }) => {
   };
 
   return (
-    <section id="experience">
+    <motion.section
+      id="experience"
+      className="experience-section"
+      initial={{ opacity: 0, x: -100 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.75, delay: 0.75 }}
+    >
       <h2>Experience</h2>
       <VerticalTimeline>
         {data.experience.map((exp, index) => (
@@ -49,7 +56,7 @@ const Experience = ({ data }) => {
           </a>
         </VerticalTimelineElement>
       </VerticalTimeline>
-    </section>
+    </motion.section>
   );
 };
 
