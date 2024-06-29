@@ -34,6 +34,17 @@ const App = () => {
           <Home data={data} />
         </motion.section>
         <motion.section
+          id="about"
+          className="section"
+          style={{ backgroundColor: sectionBackgroundColor, color: textColor }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <About data={data} />
+        </motion.section>
+        <motion.section
           id="experience"
           className="section"
           style={{ backgroundColor: sectionBackgroundColor, color: textColor }}

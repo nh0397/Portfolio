@@ -8,7 +8,45 @@
     "linkedin": "https://www.linkedin.com/in/naisarg-halvadiya/",
     "github": "https://github.com/nh0397"
   },
-  "skills": ["JavaScript", "SQL", "Python", "R", "React", "Angular", "Node", "AWS", "Docker"],
+  "skills": {
+    "Frontend": [
+      { "name": "JavaScript", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+      { "name": "React", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+      { "name": "Angular", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg" },
+      { "name": "TypeScript", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
+      { "name": "HTML", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" },
+      { "name": "CSS", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" }
+    ],
+    "Backend": [
+      { "name": "Node", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
+      { "name": "PHP", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" },
+      { "name": "Java", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" },
+      { "name": "Flask", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" },
+      { "name": "Python", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
+      { "name": "Ruby", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ruby/ruby-original.svg" }
+    ],
+    "DevOps": [
+      { "name": "Docker", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
+      { "name": "AWS", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" },
+      { "name": "CI/CD", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg" },
+      { "name": "Kubernetes", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg" },
+      { "name": "Terraform", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg" }
+    ],
+    "Database": [
+      { "name": "SQL", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original-wordmark.svg" },
+      { "name": "MongoDB", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" },
+      { "name": "Redis", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" },
+      { "name": "PostgreSQL", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
+      { "name": "SQLite", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" }
+    ],
+    "Tools": [
+      { "name": "Git", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
+      { "name": "Postman", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg" },
+      { "name": "NPM", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/npm/npm-original-wordmark.svg" },
+      { "name": "Yarn", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/yarn/yarn-original.svg" },
+      { "name": "Webpack", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/webpack/webpack-original.svg" }
+    ]
+  },
   "projects": [
     {
       "title": "EduBridge",
@@ -58,16 +96,24 @@
       "role": "Software Engineer (Full-Stack)",
       "company": "MU SIGMA INC.",
       "location": "Bengaluru, India",
-      "period": "Oct 2019 – July 2023",
+      "period": "Oct 2019 – Jul 2023",
       "achievements": [
         "Built and deployed a CMS platform with React.js and Node.js, generating over $500K in revenue. Led a team to create a work tracking app, reducing review time by 50% with Angular and PostgreSQL."
       ]
     }
   ],
-  "education": {
-    "degree": "M.S. in Data Science and AI",
-    "institution": "San Francisco State University",
-    "gpa": "3.9",
-    "graduation": "Dec 2024"
-  }
+  "education": [
+    {
+      "degree": "M.S. in Data Science and AI",
+      "institution": "San Francisco State University",
+      "gpa": "3.9",
+      "graduation": "Dec 2024"
+    },
+    {
+      "degree": "B. Tech. in Computer Engineering",
+      "institution": "Nirma University",
+      "gpa": "7.34",
+      "graduation": "Jul 2019"
+    }
+  ]
 }

@@ -19,9 +19,6 @@ const Home = ({ data }) => {
           <h2>
             {data.bio}
           </h2>
-          <p className='brief'>
-            {data.brief}
-          </p>
         </motion.div>
         <motion.div
           initial={{ x: 100, opacity: 0 }}

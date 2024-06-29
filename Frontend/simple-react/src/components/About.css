@@ -1,0 +1,57 @@
+.about-section {
+  padding: 20px;
+  transition: background-color 2s, color 2s;
+}
+
+.about-content {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.about-photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.about-text {
+  flex: 1;
+}
+
+.education-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.education-item {
+  margin-bottom: 10px;
+}
+
+.skills-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.skill-category {
+  width: 100%;
+  max-width: 16vw;
+}
+
+.skills-row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+.cube-container {
+  margin-top: -60px;
+}
+
+.dark-mode {
+  background-color: black;
+  color: white;
+}
+
