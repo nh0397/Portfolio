@@ -10,14 +10,15 @@
 }
 
 .about-photo {
-  width: 150px;
-  height: 150px;
+  width: 10vw;
+  height: 10vh;
   border-radius: 50%;
-  margin-right: 20px;
+  object-fit: cover;
 }
 
 .about-text {
   flex: 1;
+  /* margin-left: -8vw; */
 }
 
 .education-container {
@@ -55,3 +56,8 @@
   color: white;
 }
 
+@media (max-width: 768px) {
+  .vertical-timeline{
+    padding: 0px;
+  }
+}

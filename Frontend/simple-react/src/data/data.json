@@ -49,28 +49,40 @@
   },
   "projects": [
     {
+      "title": "LegalGPT",
+      "description": "A platform that uses a context-specific LLM to analyze historic criminal case documents and provide recommendations.",
+      "technologies": ["React.js", "Node.js", "AWS"],
+      "link": "https://github.com/nh0397/Legal-GPT"
+    },
+    {
       "title": "EduBridge",
       "description": "A learning management system built with React.js and Node.js.",
       "technologies": ["React.js", "Node.js", "AWS"],
-      "link": "http://example.com"
+      "link": "https://github.com/nh0397/EduBridge"
     },
     {
       "title": "FlareGraph",
       "description": "A web app for visualizing fire incidents using Plotly and Python Dash.",
       "technologies": ["Plotly", "Python Dash"],
-      "link": "http://example.com"
+      "link": "https://github.com/nh0397/Data-Viz-SFFD"
     },
     {
-      "title": "KnowledgeGrid",
-      "description": "A knowledge-sharing platform built with PHP and MongoDB, featuring Python algorithms for keyword extraction.",
-      "technologies": ["PHP", "MongoDB", "Python"],
-      "link": "http://example.com"
+      "title": "Naive Bayesian Classifier",
+      "description": "Implemented a Naive Bayesian classifier from scratch for learning purposes.",
+      "technologies": ["Python"],
+      "link": "https://github.com/nh0397/naiveBayesianClassifier"
     },
     {
-      "title": "AllocMate",
-      "description": "An automation tool for project allocation and evaluation at universities using JSP, Servlets, JavaScript, and DBMS.",
-      "technologies": ["JSP", "Servlets", "JavaScript", "DBMS"],
-      "link": "http://example.com"
+      "title": "Flight Fare Prediction",
+      "description": "A machine learning model to predict flight fares based on historical data.",
+      "technologies": ["Python"],
+      "link": "https://github.com/nh0397/Flight-Fare-Prediction"
+    },
+    {
+      "title": "Discussion forum",
+      "description": "Contributed to a project focusing on advanced data analysis techniques.",
+      "technologies": ["R", "SQL"],
+      "link": "https://github.com/nh0397/Discussion-Forum"
     }
   ],
   "experience": [

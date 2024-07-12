@@ -10,17 +10,20 @@ const Cube = ({ imgUrls, isDarkMode }) => {
   const meshRef = useRef();
 
   useEffect(() => {
-    // Initial rotation animation on load
+    const initialRotation = { x: Math.PI / 4, y: Math.PI / 4, z: Math.PI / 4 };
+    let frameId;
     const animate = () => {
       if (meshRef.current) {
         meshRef.current.rotation.x += 0.01;
         meshRef.current.rotation.y += 0.01;
+        meshRef.current.rotation.z += 0.01;
       }
+      frameId = requestAnimationFrame(animate);
     };
-    const interval = setInterval(animate, 16);
-    setTimeout(() => clearInterval(interval), 2000); // Stop after 2 seconds
+    frameId = requestAnimationFrame(animate);
+    setTimeout(() => cancelAnimationFrame(frameId), 3000);
 
-    return () => clearInterval(interval);
+    return () => cancelAnimationFrame(frameId);
   }, []);
 
   useFrame(({ mouse }) => {
@@ -31,7 +34,7 @@ const Cube = ({ imgUrls, isDarkMode }) => {
   });
 
   return (
-    <mesh ref={meshRef} rotation={[Math.PI / 4, Math.PI / 4, 0]}>
+    <mesh ref={meshRef} rotation={[Math.PI / 4, Math.PI / 4, Math.PI / 4]}>
       <boxGeometry args={[2.5, 2.5, 2.5]} />
       {textures.map((texture, index) => (
         <meshStandardMaterial

@@ -8,14 +8,15 @@ import Loader from './Loader';
 import './About.css';
 import data from '../data/data.json';
 import { ThemeContext } from './ThemeContext';
+import myPhoto from '../assets/My-Photo.jpg'
 
 const About = () => {
   const { darkMode } = useContext(ThemeContext);
 
   return (
     <section id="about" className={`about-section ${darkMode ? 'dark-mode' : 'light-mode'}`}>
+      <img src={myPhoto} alt="My Photo" className="about-photo" />
       <div className="about-content">
-        <img src={data.photos} alt="My Photo" className="about-photo" />
         <div className="about-text">
           <h1>About Me</h1>
           <p>{data.brief}</p>

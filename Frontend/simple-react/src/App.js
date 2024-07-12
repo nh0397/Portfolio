@@ -56,6 +56,17 @@ const App = () => {
           <Experience data={data} />
         </motion.section>
         <motion.section
+          id="projects"
+          className="section"
+          style={{ backgroundColor: sectionBackgroundColor, color: textColor }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <Projects data={data} />
+        </motion.section>
+        <motion.section
           id="contact"
           className="section"
           style={{ backgroundColor: sectionBackgroundColor, color: textColor }}
