@@ -1,0 +1,63 @@
+.about-section {
+  padding: 20px;
+  transition: background-color 2s, color 2s;
+}
+
+.about-content {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.about-photo {
+  width: 10vw;
+  height: 10vh;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.about-text {
+  flex: 1;
+  /* margin-left: -8vw; */
+}
+
+.education-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.education-item {
+  margin-bottom: 10px;
+}
+
+.skills-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.skill-category {
+  width: 100%;
+  max-width: 16vw;
+}
+
+.skills-row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+.cube-container {
+  margin-top: -60px;
+}
+
+.dark-mode {
+  background-color: black;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .vertical-timeline{
+    padding: 0px;
+  }
+}

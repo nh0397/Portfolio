@@ -1,0 +1,14 @@
+@font-face {
+  font-family: 'Mova';
+  src: url('./assets/fonts/Mova.otf');
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Mova', sans-serif;
+  transition: background-color 2s, color 2s; /* Add transition for background and text color */
+}
+
+

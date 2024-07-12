@@ -1,0 +1,95 @@
+.header {
+  background: rgba(0, 0, 0, 1);
+  padding: 10px 20px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Mova', sans-serif;
+  box-sizing: border-box;
+  height: 10vh;
+}
+
+.header.light-mode {
+  background: rgba(255, 255, 255, 1);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 8vh;
+  width: auto;
+  border-radius: 50%;
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-list li {
+  margin: 0 10px;
+}
+
+.nav-item {
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  font-size: 16px;
+  position: relative;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.nav-item .nav-text {
+  margin-left: 8px;
+}
+
+.nav-item:hover {
+  background-color: rgba(211, 211, 211, 0.3);
+}
+
+.nav-item::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  height: 2px;
+  width: 0;
+  background-color: currentColor;
+  transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
+}
+
+.nav-item:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+.header.light-mode .nav-item {
+  color: #333;
+}
+
+.header.light-mode .nav-item:hover {
+  background-color: rgba(211, 211, 211, 0.3);
+}
+
+@media (max-width: 768px) {
+  .nav-text {
+    display: none;
+  }
+}
+
+.nav-container > *:not(:last-child) {
+  margin-right: 15px;
+}

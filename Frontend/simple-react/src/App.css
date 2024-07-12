@@ -1,0 +1,64 @@
+.App {
+  text-align: center;
+}
+
+.light-mode {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --header-background: #f0f0f0;
+  --text-color-hover: #007bff;
+  --background-color-hover: #e0e0e0;
+}
+
+.dark-mode {
+  --background-color: #000000;
+  --text-color: #ffffff;
+  --header-background: #333333;
+  --text-color-hover: #1e90ff;
+  --background-color-hover: #4f4f4f;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: background-color 2s, color 2s; /* Add transition here too */
+}
+
+.header {
+  max-height: 10vh;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  transition: background-color 2s, color 2s; /* Add transition here too */
+  left: 0;
+}
+
+.content {
+  position: fixed;
+  max-height: 90vh;
+  top: 10vh;
+  overflow-y: scroll;
+  width: 100vw;
+}
+
+.section {
+  height: 90vh;
+  opacity: 0;
+  transition: opacity 1s ease-in-out, background-color 2s, color 2s; /* Add transition for background and text color */
+  overflow: hidden;
+}
+
+.section.active {
+  opacity: 1;
+}
+
+.dark-mode {
+  background-color: #000;
+  color: #fff;
+}
+
+.light-mode {
+  background-color: #fff;
+  color: #000;
+}
