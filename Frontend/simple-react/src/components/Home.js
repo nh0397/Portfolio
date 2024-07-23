@@ -25,7 +25,7 @@ const Home = ({ data }) => {
           animate={{ x: 0, opacity: 1 }}
            transition={{ duration: 1, delay: 1 }}
         >
-          <img src={photo} alt={data.name} className="home-photo"/>
+          <img src={photo} alt={`Naisarg Halvadiya - ${data.name}`} className="home-photo"/>
         </motion.div>
       </div>
     </section>

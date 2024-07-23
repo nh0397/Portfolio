@@ -15,7 +15,7 @@ const About = () => {
 
   return (
     <section id="about" className={`about-section ${darkMode ? 'dark-mode' : 'light-mode'}`}>
-      <img src={myPhoto} alt="My Photo" className="about-photo" />
+      <img src={myPhoto} alt="Naisarg Halvadiya Photo" className="about-photo" />
       <div className="about-content">
         <div className="about-text">
           <h1>About Me</h1>

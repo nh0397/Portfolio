@@ -60,7 +60,7 @@ const Projects = ({ data }) => {
                   }}
                 >
                   <h4>{project.title}</h4>
-                  <img src={projectImages[project.title] || "https://via.placeholder.com/200"} alt={project.title} className="project-image" />
+                  <img src={projectImages[project.title] || "https://via.placeholder.com/200"} alt={`Naisarg Halvadiya - ${project.title}`} className="project-image" />
                   <p>{project.description}</p>
                   <div className="project-tech">
                     {project.technologies.map((tech, idx) => (

@@ -20,7 +20,7 @@ const Header = ({ onNavClick }) => {
   return (
     <header className={`header ${modeClass}`}>
       <div className="logo-container">
-        <img src={Logo} alt="Logo" className="logo" />
+        <img src={Logo} alt="Naisarg Halvadiya Logo" className="logo" />
       </div>
       <nav className="nav-container">
         <ul className="nav-list">
