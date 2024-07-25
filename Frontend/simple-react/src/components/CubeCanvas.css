@@ -1,0 +1,31 @@
+.cube-container {
+    position: relative;
+    height: 150px;
+    width: 150px;
+}
+
+.cube-container h4 {
+    font-size: 16px;
+    margin: 0px;
+}
+
+.skill-category h4{
+    margin-top: -10px;
+    margin-bottom: 50px;
+
+}
+
+
+@media (max-width: 768px) {
+    .cube-container {
+        height: 100px;
+        width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cube-container {
+        height: 75px;
+        width: 75px;
+    }
+}

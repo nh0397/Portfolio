@@ -18,8 +18,8 @@ const About = () => {
       <img src={myPhoto} alt="Naisarg Halvadiya Photo" className="about-photo" />
       <div className="about-content">
         <div className="about-text">
-          <h1>About Me</h1>
-          <p>{data.brief}</p>
+          <h3>About Me</h3>
+          <p className='data-brief'>{data.brief}</p>
         </div>
       </div>
       <h3>Education</h3>
@@ -35,7 +35,7 @@ const About = () => {
           >
             <h3 className="vertical-timeline-element-title">{edu.degree}</h3>
             <h4 className="vertical-timeline-element-subtitle">{edu.institution}</h4>
-            <p>GPA: {edu.gpa}</p>
+            <p className='GPA'>GPA: {edu.gpa}</p>
           </VerticalTimelineElement>
         ))}
       </VerticalTimeline>

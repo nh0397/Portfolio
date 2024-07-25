@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { Canvas, useFrame, extend } from '@react-three/fiber';
 import { OrbitControls, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
+import './CubeCanvas.css';
 
 extend({ BoxGeometry: THREE.BoxGeometry });
 
@@ -10,20 +11,17 @@ const Cube = ({ imgUrls, isDarkMode }) => {
   const meshRef = useRef();
 
   useEffect(() => {
-    const initialRotation = { x: Math.PI / 4, y: Math.PI / 4, z: Math.PI / 4 };
-    let frameId;
+    // Initial rotation animation on load
     const animate = () => {
       if (meshRef.current) {
         meshRef.current.rotation.x += 0.01;
         meshRef.current.rotation.y += 0.01;
-        meshRef.current.rotation.z += 0.01;
       }
-      frameId = requestAnimationFrame(animate);
     };
-    frameId = requestAnimationFrame(animate);
-    setTimeout(() => cancelAnimationFrame(frameId), 3000);
+    const interval = setInterval(animate, 16);
+    setTimeout(() => clearInterval(interval), 2000); // Stop after 2 seconds
 
-    return () => cancelAnimationFrame(frameId);
+    return () => clearInterval(interval);
   }, []);
 
   useFrame(({ mouse }) => {
@@ -53,7 +51,7 @@ const Cube = ({ imgUrls, isDarkMode }) => {
 
 const CubeCanvas = ({ icons, isDarkMode }) => {
   return (
-    <div className="cube-container" style={{ position: 'relative', height: '200px', width: '200px' }}>
+    <div className="cube-container">
       <Canvas>
         <ambientLight intensity={1} />
         <directionalLight position={[0, 0, 5]} />
