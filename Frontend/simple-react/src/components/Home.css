@@ -37,21 +37,20 @@
   margin-right: 5vw;
 }
 
-.intro{
+.intro {
   margin: 0px
 }
 
-.name{
+.name {
   font-size: 5vw;
 }
 
-.brief{
+.brief {
   margin: 10px;
   font-size: 2vh;
 }
 
-
-@media only screen and (width<=920px) {
+@media only screen and (width<=1024px) {
 
   .home-photo {
     width: 19rem;
@@ -59,5 +58,17 @@
     border-radius: 50%;
     object-fit: cover;
     margin-right: 5vw;
+  }
+}
+
+
+@media (max-width: 767px) {
+
+  .home-photo {
+    width: 45vw;
+    height: 27vh;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 1vw;
   }
 }
