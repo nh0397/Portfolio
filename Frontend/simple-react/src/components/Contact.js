@@ -168,15 +168,15 @@ const Contact = ({ data }) => {
           </div>
         </div>
       </form>
-      <div className="contact-icons">
-        <a href={data.contact.linkedin} target="_blank" rel="noopener noreferrer">
-          <FontAwesomeIcon icon={faLinkedin} className="contact-icon" />
-        </a>
-        <a href={data.contact.github} target="_blank" rel="noopener noreferrer">
-          <FontAwesomeIcon icon={faGithub} className="contact-icon" />
-        </a>
-      </div>
       <footer className="footer">
+        <div className="contact-icons">
+          <a href={data.contact.linkedin} target="_blank" rel="noopener noreferrer" className="linkedin-icon">
+            <FontAwesomeIcon icon={faLinkedin} className="contact-icon" />
+          </a>
+          <a href={data.contact.github} target="_blank" rel="noopener noreferrer" className={`github-icon-${data.mode}`}>
+            <FontAwesomeIcon icon={faGithub} className="contact-icon" />
+          </a>
+        </div>
         <p>&copy; 2024. Code and idea credits to <a href="https://github.com/shaqdeff/Portfolio-Template" target="_blank" rel="noopener noreferrer">Shaquile's GitHub repo</a>.</p>
       </footer>
     </motion.section>
