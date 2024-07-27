@@ -1,33 +1,48 @@
 .projects-section {
-  padding: 20px;
+  padding: 2em;
   transition: background-color 2s, color 2s;
+  margin-top: 1em; /* Reduce top margin */
 }
 
 .project-category {
-  margin-bottom: 40px;
+  margin-bottom: 2em;
 }
 
-.project-category h3 {
-  font-size: 1.5em;
-  margin-bottom: 20px;
+.project-category h4 {
+  font-size: 1.2em; /* Reduce font size */
+  margin-bottom: 0.5em; /* Reduce bottom margin */
 }
 
 .projects-container {
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: nowrap;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.first-row {
+  display: flex;
+  gap: 2em;
+}
+
+.second-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
 }
 
 .project-card {
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  width: 30%;
-  height: 50vh;
+  padding: 1em;
   text-align: left;
-  transition: background-color 2s, color 2s;
+  transition: background-color 2s, color 2s, transform 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden; /* Ensure content does not overflow */
+  flex: 1;
+  margin-bottom: 1em; /* Reduce bottom margin */
 }
 
 .project-card:hover {
@@ -35,36 +50,45 @@
 }
 
 .project-card h4 {
-  font-size: 1.2em;
-  margin-bottom: 10px;
+  font-size: 1em; /* Reduce font size */
+  margin-bottom: 0.5em;
+  text-align: center;
 }
 
 .project-card p {
-  margin-bottom: 10px;
+  margin-bottom: 0.5em;
+  text-align: center;
+  font-size: 0.9em;
+  word-wrap: break-word; /* Ensure text breaks within card */
 }
 
 .project-image {
   width: 100%;
   height: auto;
+  max-height: 200px;
+  object-fit: cover; /* Ensure the image covers the entire area without distortion */
   border-radius: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 0.5em;
 }
 
 .project-tech {
-  margin-bottom: 10px;
+  margin-bottom: 0.5em;
+  text-align: center;
 }
 
 .project-tech span {
   background-color: #ddd;
   border-radius: 4px;
-  padding: 5px;
-  margin-right: 5px;
-  font-size: 0.9em;
+  padding: 0.3em;
+  margin-right: 0.3em;
+  font-size: 0.8em;
+  color: #000;
 }
 
 .project-card a {
   color: #007bff;
   text-decoration: none;
+  font-size: 0.9em;
 }
 
 .project-card a:hover {
@@ -76,24 +100,35 @@
   height: 24px;
 }
 
-.learning-project {
-  list-style-type: none;
-  padding: 0;
-  padding: 7px !important;
+.contributions-title {
+  font-size: 1.2em; /* Reduce font size */
+  margin-bottom: 0.5em; /* Reduce bottom margin */
 }
 
-.learning-projects li {
-  margin-bottom: 10px;
-  text-align: left;
+.contributions-table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.learning-projects li a {
-  color: #007bff;
-  text-decoration: none;
+.contributions-table th,
+.contributions-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
 }
 
-.learning-projects li a:hover {
-  text-decoration: underline;
+.contributions-table th {
+  background-color: #f2f2f2;
+  text-align: center; /* Center align the table headers */
+}
+
+.tech-badge {
+  display: inline-block;
+  background-color: #ddd;
+  border-radius: 4px;
+  padding: 0.3em;
+  margin-right: 0.3em;
+  font-size: 0.8em;
+  color: #000;
 }
 
 .dark-mode .projects-section {
@@ -101,14 +136,50 @@
   color: #fff;
 }
 
-.dark-mode .project-card {
+.dark-mode .project-card,
+.dark-mode .contributions-table th,
+.dark-mode .contributions-table td {
   background-color: #333;
 }
 
-.dark-mode .project-tech span {
+.dark-mode .project-tech span,
+.dark-mode .tech-badge {
   background-color: #555;
+  color: #fff;
 }
 
-.project-links{
-  margin-bottom: 5px!important;
+.project-links {
+  margin-bottom: 0.5em !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .projects-section {
+    padding: 1em; /* Reduce padding for smaller screens */
+  }
+  .first-row {
+    flex-direction: column;
+    gap: 1em; /* Reduce gap between cards */
+  }
+  .project-card {
+    padding: 0.8em; /* Reduce padding for smaller screens */
+    max-width: 100%; /* Ensure full width */
+    margin-bottom: 0.8em; /* Further reduce bottom margin */
+  }
+  .project-card h4 {
+    font-size: 0.9em; /* Further reduce font size for smaller screens */
+  }
+  .project-card p, .project-card a {
+    font-size: 0.85em; /* Reduce font size for smaller screens */
+  }
+  .project-tech span {
+    padding: 0.3em;
+    font-size: 0.75em;
+  }
+  .project-image {
+    display: none; /* Hide images on mobile */
+  }
+  .second-row {
+    margin-bottom: 0.8em; /* Further reduce bottom margin */
+  }
 }
