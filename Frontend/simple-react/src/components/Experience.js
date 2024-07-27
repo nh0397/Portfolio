@@ -7,20 +7,25 @@ import { faDownload, faChalkboardTeacher, faCode, faBriefcase } from '@fortaweso
 import resume from '../assets/Naisarg Halvadiya.pdf';  // Adjust the path to your resume file
 import './Experience.css';
 
-const ExperienceCard = ({ experience, icon }) => (
-  <VerticalTimelineElement
-    contentStyle={{ background: '#f9f9f9', color: '#333' }}
-    contentArrowStyle={{ borderRight: '7px solid  #f9f9f9' }}
-    date={experience.period}
-    dateClassName="timeline-date"
-    iconStyle={{ background: '#4A4A4A', color: '#fff' }}  // Updated color
-    icon={<FontAwesomeIcon icon={icon} />}
-  >
-    <h3 className="vertical-timeline-element-title">{experience.role}</h3>
-    <h4 className="vertical-timeline-element-subtitle">{experience.company}</h4>
-    <p>{experience.achievements.join(' ')}</p>
-  </VerticalTimelineElement>
-);
+const ExperienceCard = ({ experience, icon }) => {
+  const firstSentence = experience.achievements[0].split('. ')[0] + '.';
+
+  return (
+    <VerticalTimelineElement
+      contentStyle={{ background: '#f9f9f9', color: '#333' }}
+      contentArrowStyle={{ borderRight: '7px solid  #f9f9f9' }}
+      date={experience.period}
+      dateClassName="timeline-date"
+      iconStyle={{ background: '#4A4A4A', color: '#fff' }}  // Updated color
+      icon={<FontAwesomeIcon icon={icon} />}
+    >
+      <h3 className="vertical-timeline-element-title">{experience.role}</h3>
+      <h4 className="vertical-timeline-element-subtitle">{experience.company}</h4>
+      <p className="achievement">{firstSentence}</p>
+      <p className="additional-achievements">{experience.achievements.slice(1).join(' ')}</p>
+    </VerticalTimelineElement>
+  );
+};
 
 const Experience = ({ data }) => {
   const experienceIcons = {

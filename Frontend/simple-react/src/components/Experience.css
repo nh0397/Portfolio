@@ -1,83 +1,82 @@
 .timeline-date {
-    color: var(--text-color) !important;
-  }
-  
-  .vertical-timeline-element-content {
-    transition: transform 0.5s ease-in-out;
-    height: fit-content;
-    padding: 17px !important;
-  }
-  
-  .vertical-timeline-element-content:hover {
-    transform: scale(1.05);
-  }
-  
-  .button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-  }
-  
-  .resume-button {
-    padding: 10px 20px;
-    background-color: #333;
-    color: #fff;
-    border: 2px solid #fff;
-    border-radius: 30px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-  }
-  
-  .resume-button:hover {
-    background-color: #555;
-    border-color: #aaa;
-  }
-  
-  .vertical-timeline-element-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 0 0 4px rgb(255 255 255 / 15%), inset 0 2px 0 rgb(0 0 0 / 20%);
-    background: #4A4A4A; /* Change to a neutral color */
-  }
-  
-  .vertical-timeline::before {
-    background: var(--text-color); /* Change the timeline line color */
-  }
-  
-  .custom-icon {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  
-  .vertical-timeline-element-icon svg{
-    display: block;
-    width: 24px;
-    height: 24px;
-    position: relative;
-    left: 9%;
-    top: 10%;
-    margin-left: -12px;
-    margin-top: -12px;
+  color: var(--text-color) !important;
+}
 
-  }
+.vertical-timeline-element-content {
+  transition: transform 0.5s ease-in-out;
+  height: fit-content;
+  padding: 17px !important;
+}
 
-  .vertical-timeline-element {
-    position: relative;
-    margin: 2em 0 !important;
+.vertical-timeline-element-content:hover {
+  transform: scale(1.05);
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+
+.resume-button {
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.resume-button:hover {
+  background-color: #555;
+  border-color: #aaa;
+}
+
+.vertical-timeline-element-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 0 4px rgb(255 255 255 / 15%), inset 0 2px 0 rgb(0 0 0 / 20%);
+  background: #4A4A4A; /* Change to a neutral color */
+}
+
+.vertical-timeline::before {
+  background: var(--text-color); /* Change the timeline line color */
+}
+
+.custom-icon {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.vertical-timeline-element-icon svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  left: 9%;
+  top: 10%;
+  margin-left: -12px;
+  margin-top: -12px;
+}
+
+.vertical-timeline-element {
+  position: relative;
+  margin: 2em 0 !important;
 }
 
 @media only screen and (min-width: 1170px) {
   .vertical-timeline-element {
-      margin: 0em 0;
+    margin: 0em 0;
   }
 }
 
@@ -91,4 +90,83 @@
 
 .dark-mode .vertical-timeline-element-date {
   color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .vertical-timeline-element-content {
+    padding: 12px !important; /* Reduce padding for smaller screens */
+  }
+
+  .vertical-timeline-element-content h3,
+  .vertical-timeline-element-content h4 {
+    font-size: 1rem; /* Reduce font size for smaller screens */
+  }
+
+  .vertical-timeline-element-content p {
+    font-size: 0.875rem; /* Reduce font size for smaller screens */
+  }
+
+  .resume-button {
+    padding: 8px 16px; /* Reduce padding for smaller screens */
+    font-size: 0.875rem; /* Reduce font size for smaller screens */
+  }
+
+  .vertical-timeline-element {
+    margin: 1em 0 !important; /* Reduce margin for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .vertical-timeline-element-content {
+    padding: 10px !important; /* Further reduce padding for smaller screens */
+  }
+
+  .vertical-timeline-element-content h3,
+  .vertical-timeline-element-content h4 {
+    font-size: 0.875rem; /* Further reduce font size for smaller screens */
+  }
+
+  .vertical-timeline-element-content p {
+    font-size: 0.75rem; /* Further reduce font size for smaller screens */
+  }
+
+  .resume-button {
+    padding: 6px 12px; /* Further reduce padding for smaller screens */
+    font-size: 0.75rem; /* Further reduce font size for smaller screens */
+  }
+
+  .vertical-timeline-element {
+    margin: 0.5em 0 !important; /* Further reduce margin for smaller screens */
+  }
+}
+
+/* Additional adjustments for very small screens (below 468px) */
+@media (max-width: 468px) {
+  .vertical-timeline-element-content {
+    padding: 8px !important; /* Further reduce padding */
+    word-wrap: break-word; /* Ensure text breaks within the element */
+  }
+
+  .vertical-timeline-element-content h3,
+  .vertical-timeline-element-content h4 {
+    font-size: 0.75rem; /* Further reduce font size */
+  }
+
+  .vertical-timeline-element-content p {
+    font-size: 0.65rem; /* Further reduce font size */
+  }
+
+  .vertical-timeline-element-content .additional-achievements {
+    display: none; /* Hide additional achievements on very small screens */
+  }
+
+  .resume-button {
+    padding: 4px 8px; /* Further reduce padding */
+    font-size: 0.65rem; /* Further reduce font size */
+  }
+
+  .vertical-timeline-element {
+    margin: 0.5em 0 !important; /* Further reduce margin */
+  }
 }
