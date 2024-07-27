@@ -1,5 +1,6 @@
 .timeline-date {
   color: var(--text-color) !important;
+  white-space: nowrap; /* Prevent text from wrapping */
 }
 
 .vertical-timeline-element-content {
@@ -82,6 +83,7 @@
 
 .vertical-timeline-element-date {
   transition: color 0.5s;
+  font-size: 0.85rem; /* Reduce font size */
 }
 
 .light-mode .vertical-timeline-element-date {
@@ -113,7 +115,16 @@
   }
 
   .vertical-timeline-element {
-    margin: 1em 0 !important; /* Reduce margin for smaller screens */
+    margin: 2em 0 !important; /* Increase margin for smaller screens */
+  }
+
+  .timeline-date,
+  .vertical-timeline-element-date {
+    color: black !important; /* Set date color to black for smaller screens */
+    font-size: 0.75rem; /* Further reduce font size */
+    white-space: nowrap; /* Prevent text from wrapping */
+    text-overflow: ellipsis; /* Show ellipsis if text overflows */
+    overflow: hidden; /* Hide overflowing text */
   }
 }
 
@@ -137,12 +148,21 @@
   }
 
   .vertical-timeline-element {
-    margin: 0.5em 0 !important; /* Further reduce margin for smaller screens */
+    margin: 3em 0 !important; /* Further increase margin for smaller screens */
+  }
+
+  .timeline-date,
+  .vertical-timeline-element-date {
+    color: black !important; /* Set date color to black for smaller screens */
+    font-size: 0.75rem; /* Further reduce font size */
+    white-space: nowrap; /* Prevent text from wrapping */
+    text-overflow: ellipsis; /* Show ellipsis if text overflows */
+    overflow: hidden; /* Hide overflowing text */
   }
 }
 
-/* Additional adjustments for very small screens (below 468px) */
-@media (max-width: 468px) {
+/* Ensure consistent behavior just below 468px */
+@media (max-width: 467px) {
   .vertical-timeline-element-content {
     padding: 8px !important; /* Further reduce padding */
     word-wrap: break-word; /* Ensure text breaks within the element */
@@ -157,16 +177,21 @@
     font-size: 0.65rem; /* Further reduce font size */
   }
 
-  .vertical-timeline-element-content .additional-achievements {
-    display: none; /* Hide additional achievements on very small screens */
-  }
-
   .resume-button {
     padding: 4px 8px; /* Further reduce padding */
     font-size: 0.65rem; /* Further reduce font size */
   }
 
   .vertical-timeline-element {
-    margin: 0.5em 0 !important; /* Further reduce margin */
+    margin: 4em 0 !important; /* Further increase margin for very small screens */
+  }
+
+  .timeline-date,
+  .vertical-timeline-element-date {
+    color: black !important; /* Set date color to black for very small screens */
+    font-size: 0.65rem; /* Further reduce font size */
+    white-space: nowrap; /* Prevent text from wrapping */
+    text-overflow: ellipsis; /* Show ellipsis if text overflows */
+    overflow: hidden; /* Hide overflowing text */
   }
 }
