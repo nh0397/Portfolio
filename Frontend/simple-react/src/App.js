@@ -1,26 +1,32 @@
-import React, { useContext } from 'react';
-import { motion } from 'framer-motion';
-import Header from './components/Header';
-import Home from './components/Home';
-import Experience from './components/Experience';
-import Projects from './components/Projects';
-import Contact from './components/Contact';
-import About from './components/About';
-import { ThemeProvider, ThemeContext } from './components/ThemeContext';
-import './App.css';
-import data from './data/data.json';
+import React, { useContext, useState } from "react";
+import { motion } from "framer-motion";
+import Header from "./components/Header";
+import Home from "./components/Home";
+import Experience from "./components/Experience";
+import Projects from "./components/Projects";
+import Contact from "./components/Contact";
+import About from "./components/About";
+import { ThemeProvider, ThemeContext } from "./components/ThemeContext";
+import "./App.css";
+import data from "./data/data.json";
+import Chatbot from "./components/Chatbot";
 
 const App = () => {
   const { darkMode } = useContext(ThemeContext);
 
-  const sectionBackgroundColor = darkMode ? '#000' : '#fff';
-  const textColor = darkMode ? '#fff' : '#000';
+  const sectionBackgroundColor = darkMode ? "#000" : "#fff";
+  const textColor = darkMode ? "#fff" : "#000";
+  const [chatbotOpen, setChatbotOpen] = useState(false);
+
+  const handleChatbox = () => {
+    setChatbotOpen(!chatbotOpen);
+  };
 
   return (
     <div className="App">
-     <div className='header'>
-      <Header />
-     </div>
+      <div className="header">
+        <Header />
+      </div>
       <div className="content">
         <motion.section
           id="home"
@@ -78,6 +84,7 @@ const App = () => {
           <Contact data={data} />
         </motion.section>
       </div>
+      <Chatbot /> 
     </div>
   );
 };
