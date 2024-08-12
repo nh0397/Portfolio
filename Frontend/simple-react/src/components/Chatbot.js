@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Chatbot.css';
 import chatbotLogo from '../assets/logos/Chatbot-front.jpg';
 import Avatar from '@mui/material/Avatar';
@@ -8,10 +8,12 @@ const Chatbot = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false); // State for managing loader
+  const messageEndRef = useRef(null);
 
   useEffect(() => {
     // Set up the initial message
-    setMessages(["Welcome to Naisarg's AI buddy! How can I help you today?"]);
+    setMessages([{ text: "Welcome to Naisarg's AI buddy! How can I help you today?", isBot: true }]);
   }, []);
 
   // Reset messages on page refresh or session close
@@ -29,16 +31,39 @@ const Chatbot = () => {
 
   useEffect(() => {
     localStorage.setItem('nhBuddyMessages', JSON.stringify(messages));
+    scrollToBottom();
   }, [messages]);
+
+  const scrollToBottom = () => {
+    messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (input.trim() === '') return;
-    setMessages((prevMessages) => [...prevMessages, input]);
+
+    // Add user message to the chat
+    setMessages((prevMessages) => [...prevMessages, { text: input, isBot: false }]);
+
+    // Clear the input box and show the loader
     setInput('');
+    setLoading(true);
+
+    // Send message to the backend
+    const response = await fetch('http://127.0.0.1:5000/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: input }),
+    });
+
+    const data = await response.json();
+
+    // Add the HTML-formatted LLM response to the chat
+    setMessages((prevMessages) => [...prevMessages, { text: data.response, isBot: true }]);
+    setLoading(false); // Hide the loader
   };
 
   const handleInputChange = (e) => {
@@ -77,16 +102,16 @@ const Chatbot = () => {
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`message ${index % 2 === 0 ? 'bot-message' : 'user-message'}`}
+                className={`message ${message.isBot ? 'bot-message' : 'user-message'}`}
               >
-                {index % 2 === 0 ? (
+                {message.isBot ? (
                   <>
                     <Avatar className="message-logo" src={chatbotLogo} />
-                    <p className="message-text">{message}</p>
+                    <div className="message-text" dangerouslySetInnerHTML={{ __html: message.text }} />
                   </>
                 ) : (
                   <>
-                    <p className="message-text">{message}</p>
+                    <div className="message-text">{message.text}</div>
                     <Avatar className="message-logo">
                       <PersonIcon />
                     </Avatar>
@@ -94,6 +119,7 @@ const Chatbot = () => {
                 )}
               </div>
             ))}
+            <div ref={messageEndRef} />
           </div>
           <div className="chatbot-footer">
             <input
@@ -103,8 +129,11 @@ const Chatbot = () => {
               onKeyPress={handleKeyPress}
               placeholder="Type a message..."
               className="chatbot-input"
+              disabled={loading} // Disable input while loading
             />
-            <button onClick={handleSendMessage} className="chatbot-send-button">Send</button>
+            <button onClick={handleSendMessage} className="chatbot-send-button" disabled={loading}>
+              {loading ? 'Loading...' : 'Send'} {/* Show loader text or Send button */}
+            </button>
           </div>
         </div>
       )}

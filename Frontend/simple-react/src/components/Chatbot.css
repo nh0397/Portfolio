@@ -86,6 +86,7 @@
     overflow-y: auto;
     background-color: #fff;
     color: black;
+    cursor:default;
   }
   
   .chatbot-body::-webkit-scrollbar {
@@ -161,5 +162,17 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: 12px;
+  }
+  
+  .loader {
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    margin: 10px 0;
+  }
+  
+  .chatbot-send-button[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
   }
   
