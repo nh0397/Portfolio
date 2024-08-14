@@ -19,6 +19,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/three": "^0.165.0",
+    "dotenv": "^16.4.5",
     "framer-motion": "^11.2.11",
     "gsap": "^3.12.5",
     "react": "^18.3.1",
