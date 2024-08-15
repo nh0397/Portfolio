@@ -13,6 +13,13 @@ import re
 # Load environment variables
 load_dotenv()
 
+# Determine the base URL based on the environment
+FLASK_ENV = os.getenv('FLASK_ENV')
+if FLASK_ENV == 'production':
+    BASE_URL = os.getenv('PRODUCTION_URL')
+else:
+    BASE_URL = os.getenv('DEVELOPMENT_URL')
+
 # Encode the MongoDB username and password
 user_name = quote_plus(os.getenv('MONGO_USERNAME'))
 password = quote_plus(os.getenv('MONGO_PASSWORD'))
@@ -21,7 +28,9 @@ password = quote_plus(os.getenv('MONGO_PASSWORD'))
 MONGO_URI = f"mongodb+srv://{user_name}:{password}@cluster0.5hufumz.mongodb.net/{os.getenv('MONGO_DB_NAME')}?retryWrites=true&w=majority&appName=Cluster0"
 
 app = Flask(__name__)
-CORS(app)
+
+# Configure CORS with dynamic origins based on environment
+CORS(app, origins=[BASE_URL])
 
 # Session configuration
 app.config["SESSION_PERMANENT"] = False
@@ -126,10 +135,10 @@ def chat():
     context = get_conversation_context(session_id)
 
     # Initial prompt to let the LLM decide the type of message
-    initial_prompt = f"Classify the following message as 'casual' or 'context-specific': {message}"
+    initial_prompt = f"For the following message, respond either 'casual' or 'context-specific': {message}"
     classification_response = genai.GenerativeModel('gemini-1.5-flash').generate_content(initial_prompt)
     classification = classification_response.text.strip().lower()
-
+    print('The API call is ', classification)
     if 'context-specific' in classification:
         # Convert message to an embedding vector
         google_embeddings = GoogleEmbeddings()
@@ -174,4 +183,5 @@ def chat():
     return jsonify({'response': response_text})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
