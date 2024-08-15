@@ -30,7 +30,7 @@ MONGO_URI = f"mongodb+srv://{user_name}:{password}@cluster0.5hufumz.mongodb.net/
 app = Flask(__name__)
 
 # Configure CORS with dynamic origins based on environment
-CORS(app, origins=[BASE_URL])
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Session configuration
 app.config["SESSION_PERMANENT"] = False
