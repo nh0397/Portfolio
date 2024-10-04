@@ -2,6 +2,10 @@
 
 This is a customizable portfolio website built with React. It showcases your skills, projects, experience, and more.
 
+
+![image info](./src/assets/Screenshots/Portfolio.png)
+
+
 ## Getting Started
 
 ### Running Locally
@@ -59,3 +63,11 @@ To add new sections, follow these steps:
 - Create a new component in the src/components directory.
 - Import and include the component in App.js within the content div.
 - Add your section's data to data.json if needed.
+
+### Accessing the backend code 
+
+The portfolio has a chatbot which is powered by a flask application and its repository can be accessed [here](https://github.com/nh0397/my-portfolio-backend)
+
+### Create your own RAG Chatbot?
+
+Want to create a chatbot for your portfolio by scraping data off your linkedin profile, github repositories and Resume? Access this [repository](https://github.com/nh0397/personal-data-extractor).
