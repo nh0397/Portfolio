@@ -1,0 +1,10 @@
+# Exclude the virtual environment
+myenv/
+# Exclude environment files
+.env
+# Exclude local development files and directories
+.git/
+*.pyc
+__pycache__/
+.DS_Store
+.vscode/

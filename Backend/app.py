@@ -138,7 +138,7 @@ def chat():
     context = get_conversation_context(session_id)
 
     # Initial prompt to let the LLM decide the type of message
-    initial_prompt = f"For the following message, respond either 'casual' or 'context-specific': {message}"
+    initial_prompt = f"You are conversation classifier. If the message contains generic questions around your abilites, return 'generic' and if it talks about Naisarg or anything about him (indirectly using pronouns) return 'context-specific'. Now here's the user message that you must classify ': {message}"
     classification_response = genai.GenerativeModel('gemini-1.5-flash').generate_content(initial_prompt)
     classification = classification_response.text.strip().lower()
     print('The API call is ', classification)
@@ -174,7 +174,8 @@ def chat():
 
     else:
         # For casual or non-specific conversations, prompt without vector search
-        prompt = f"{context}\nUser: {message}\nBot:"
+        print('casual')
+        prompt = f"You are Naisarg's AI Buddy and this a generic question asked by the user to you. The message is {message}. Tell them how much you would love to answer these but for now you are configured to answer questions related to Naisarg and his professional life."
 
     # Generate a response using Gemini LLM
     response = genai.GenerativeModel('gemini-1.5-flash').generate_content(prompt)
