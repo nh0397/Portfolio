@@ -61,22 +61,40 @@ const Chatbot = () => {
     setLoading(true);
 
     const apiUrl = process.env.REACT_APP_CHATBOT_API_URL;
-    console.log("API URL IS " ,apiUrl)
-    // Send message to the backend
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: input }),
-    });
+    console.log("API URL IS ", apiUrl);
 
-    const data = await response.json();
+    try {
+      // Send message to the backend
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: input }),
+      });
 
-    // Add the HTML-formatted LLM response to the chat
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { text: data.response, isBot: true },
-    ]);
-    setLoading(false); // Hide the loader
+      // Check if the response is not ok (status not in the range 200-299)
+      if (!response.ok) {
+        throw new Error("Failed to fetch response from the server.");
+      }
+
+      const data = await response.json();
+
+      // Add the HTML-formatted LLM response to the chat
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: data.response, isBot: true },
+      ]);
+    } catch (error) {
+      console.error("Error sending message:", error);
+
+      // Add an error message to the chat for the user
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: "Failed to send the message. Please try again.", isBot: true },
+      ]);
+    } finally {
+      // Hide the loader whether it succeeds or fails
+      setLoading(false);
+    }
   };
 
   const handleInputChange = (e) => {
