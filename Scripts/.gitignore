@@ -146,3 +146,4 @@ myenv
 
 flask_session/
 .vercel
+portfolio/*

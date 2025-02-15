@@ -170,8 +170,8 @@ def format_github_with_gemini(github_data):
     Given the following parsed GitHub repositories data, extract and organize the information into a structured JSON format. The JSON should include the following fields:
     1. "repositories": A list of repositories, each containing:
        - "name": The name of the repository.
-       - "description": The description of the repository.
-       - "languages_used": An array of languages used in the repository.
+       - "description": The description of the repository. Extract it meaningfully from the readme of the input data I am providing below.
+       - "languages_used": An array of languages used in the repository Extract it meaningfully from the readme of the input data I am providing below.
        - "creation_date": The date the repository was created.
        - "last_updated": The date the repository was last updated.
 
@@ -211,7 +211,9 @@ def main():
     }
 
     github_projects = fetch_github_repositories(user_data['github_username'])
+    print("Github projects", github_projects)
     linkedin_data = scrape_linkedin_profile(user_data['linkedin_url'])
+    print(linkedin_data, "the data is here")
     resume_data = extract_resume_data("./resources/Resume.pdf")
 
     time.sleep(10)  # Wait before processing with Gemini API
@@ -251,9 +253,10 @@ def main():
 
     # Connect to MongoDB
     from urllib.parse import quote_plus
-    user_name = quote_plus("jaylodha97")
-    password = quote_plus("Jaylodha@123")
-    MONGO_URI=f"mongodb+srv://{user_name}:{password}@cluster0.5hufumz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    user_name = quote_plus(os.getenv('MONGO_USERNAME'))
+    password = quote_plus(os.getenv('MONGO_PASSWORD'))
+    MONGO_URI=f"mongodb+srv://{user_name}:{password}@personal-data-extractor.5kfcs.mongodb.net/?retryWrites=true&w=majority&appName=personal-data-extractor"
+
 
     client = MongoClient(MONGO_URI)
     print(client)
@@ -277,7 +280,7 @@ def main():
         "linkedin_data": json.dumps(final_data["linkedin"]),
         "embeddings": linkedin_embeddings
     }]
-
+    db.drop()
     db.insert_many(collection_data)
 
     # Save the final data to final_data.json
