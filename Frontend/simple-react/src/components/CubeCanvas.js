@@ -7,28 +7,33 @@ import './CubeCanvas.css';
 extend({ BoxGeometry: THREE.BoxGeometry });
 
 const Cube = ({ imgUrls, isDarkMode }) => {
-  const textures = useTexture(imgUrls);
   const meshRef = useRef();
+  const rotationSpeedRef = useRef({
+    x: Math.random() * 0.01 - 0.005,
+    y: Math.random() * 0.01 - 0.005,
+    z: Math.random() * 0.01 - 0.005
+  });
+  const nextChangeRef = useRef(Date.now() + Math.random() * 5000);
+  const textures = useTexture(imgUrls);
 
-  useEffect(() => {
-    // Initial rotation animation on load
-    const animate = () => {
-      if (meshRef.current) {
-        meshRef.current.rotation.x += 0.01;
-        meshRef.current.rotation.y += 0.01;
-      }
-    };
-    const interval = setInterval(animate, 16);
-    setTimeout(() => clearInterval(interval), 2000); // Stop after 2 seconds
+  useFrame(() => {
+    if (!meshRef.current) return;
 
-    return () => clearInterval(interval);
-  }, []);
-
-  useFrame(({ mouse }) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x = mouse.y * 0.5;
-      meshRef.current.rotation.y = mouse.x * 0.5;
+    // Check if it's time to change rotation direction
+    if (Date.now() > nextChangeRef.current) {
+      rotationSpeedRef.current = {
+        x: Math.random() * 0.01 - 0.005,
+        y: Math.random() * 0.01 - 0.005,
+        z: Math.random() * 0.01 - 0.005
+      };
+      // Set next change time to 2-7 seconds from now
+      nextChangeRef.current = Date.now() + 2000 + Math.random() * 5000;
     }
+
+    // Apply rotation
+    meshRef.current.rotation.x += rotationSpeedRef.current.x;
+    meshRef.current.rotation.y += rotationSpeedRef.current.y;
+    meshRef.current.rotation.z += rotationSpeedRef.current.z;
   });
 
   return (
@@ -56,7 +61,7 @@ const CubeCanvas = ({ icons, isDarkMode }) => {
         <ambientLight intensity={1} />
         <directionalLight position={[0, 0, 5]} />
         <Cube imgUrls={icons} isDarkMode={isDarkMode} />
-        <OrbitControls enableZoom={false} />
+        <OrbitControls enableZoom={false} enableRotate={false} />
       </Canvas>
     </div>
   );
