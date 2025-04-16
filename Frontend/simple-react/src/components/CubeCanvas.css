@@ -1,31 +1,222 @@
 .cube-container {
     position: relative;
-    height: 150px;
-    width: 150px;
-}
-
-.cube-container h4 {
+    height: 200px;
+    width: 200px;
+    perspective: 800px;
+    margin: 40px auto;
+    /* Using margin auto to center the container */
+  }
+  
+  .cube-container-wrapper {
+    width: 100%;
+    height: 100%;
+    cursor: move;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .scene {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform-style: preserve-3d;
+  }
+  
+  .cube-wrapper {
+    width: 75px;
+    height: 75px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease;
+    /* Ensure the cube is centered */
+    transform-origin: center center;
+  }
+  
+  .cube-face {
+    position: absolute;
+    width: 75px;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    transform-style: preserve-3d;
+    backface-visibility: visible;
+    transition: all 0.3s ease;
+  }
+  
+  .cube-face.hovered {
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    transform-origin: center;
+    filter: brightness(1.2);
+  }
+  
+  .face-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    /* Ensure icons stay within bounds */
+    max-width: 80%;
+    max-height: 80%;
+  }
+  
+  .cube-face.hovered .face-icon {
+    transform: scale(1.15);
+  }
+  
+  .skill-name-tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    /* Position tooltip better */
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%) translateZ(0);
+    z-index: 100;
+    pointer-events: none;
+  }
+  
+  .cube-container h4 {
     font-size: 16px;
-    margin: 0px;
-}
-
-.skill-category h4{
-    margin-top: -10px;
-    margin-bottom: 50px;
-
-}
-
-
-@media (max-width: 768px) {
+    margin: 0;
+    text-align: center;
+  }
+  
+  .skill-category {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  /* Corrected media queries for responsive design */
+  @media (max-width: 768px) {
     .cube-container {
-        height: 100px;
-        width: 100px;
+      height: 150px;
+      width: 150px;
+      perspective: 600px;
+      margin: 30px auto;
     }
-}
-
-@media (max-width: 480px) {
+    
+    .cube-wrapper {
+      width: 60px;
+      height: 60px;
+    }
+    
+    .cube-face {
+      width: 60px;
+      height: 60px;
+    }
+    
+    /* Front */
+    .cube-face:nth-child(1) {
+      transform: rotateY(0deg) translateZ(30px);
+    }
+    
+    /* Back */
+    .cube-face:nth-child(2) {
+      transform: rotateY(180deg) translateZ(30px);
+    }
+    
+    /* Right */
+    .cube-face:nth-child(3) {
+      transform: rotateY(90deg) translateZ(30px);
+    }
+    
+    /* Left */
+    .cube-face:nth-child(4) {
+      transform: rotateY(-90deg) translateZ(30px);
+    }
+    
+    /* Top */
+    .cube-face:nth-child(5) {
+      transform: rotateX(90deg) translateZ(30px);
+    }
+    
+    /* Bottom */
+    .cube-face:nth-child(6) {
+      transform: rotateX(-90deg) translateZ(30px);
+    }
+    
+    .face-icon {
+      width: 30px;
+      height: 30px;
+    }
+    
+    .skill-name-tooltip {
+      font-size: 10px;
+      padding: 2px 6px;
+      bottom: -20px;
+    }
+  }
+  
+  @media (max-width: 480px) {
     .cube-container {
-        height: 75px;
-        width: 75px;
+      height: 120px;
+      width: 120px;
+      perspective: 400px;
+      margin: 20px auto;
     }
-}
+    
+    .cube-wrapper {
+      width: 45px;
+      height: 45px;
+    }
+    
+    .cube-face {
+      width: 45px;
+      height: 45px;
+    }
+    
+    /* Front */
+    .cube-face:nth-child(1) {
+      transform: rotateY(0deg) translateZ(22.5px);
+    }
+    
+    /* Back */
+    .cube-face:nth-child(2) {
+      transform: rotateY(180deg) translateZ(22.5px);
+    }
+    
+    /* Right */
+    .cube-face:nth-child(3) {
+      transform: rotateY(90deg) translateZ(22.5px);
+    }
+    
+    /* Left */
+    .cube-face:nth-child(4) {
+      transform: rotateY(-90deg) translateZ(22.5px);
+    }
+    
+    /* Top */
+    .cube-face:nth-child(5) {
+      transform: rotateX(90deg) translateZ(22.5px);
+    }
+    
+    /* Bottom */
+    .cube-face:nth-child(6) {
+      transform: rotateX(-90deg) translateZ(22.5px);
+    }
+    
+    .face-icon {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .skill-name-tooltip {
+      font-size: 9px;
+      padding: 2px 4px;
+      bottom: -18px;
+    }
+  }
