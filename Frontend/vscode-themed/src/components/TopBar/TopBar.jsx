@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import "./TopBar.css";
-import expand from "../assets/icons/expand.png";
+import expand from "../../assets/icons/expand.png";
+import chatbot from "../../assets/icons/chatbot.png";
+import logo from "../../assets/icons/Logo.png";
 
 const TopBar = () => {
+  const [copilotClicked, setCopilotClicked] = useState(false);
+
   return (
     <div className="topbar">
       <div className="topbar-left">
@@ -24,14 +28,19 @@ const TopBar = () => {
           className="search-input"
           disabled={true}
         />
-        <span className="copilot-icon">🤖</span>
+        <span
+          title="Talk to Naisarg's AI Buddy"
+          onClick={() => setCopilotClicked(true)}
+          className={`copilot-icon ${
+            !copilotClicked ? "blink" : ""
+          }`}
+        >
+          <img src={chatbot} alt="chatbot" className="chatbot-icon" />
+        </span>
       </div>
 
       <div className="topbar-right">
-        <span className="view-icon">🧩</span>
-        <span className="view-icon">▭</span>
-        <span className="view-icon">▣</span>
-        <span className="view-icon">▥</span>
+        <img src={logo} alt="logo" className="logo-icon" />
       </div>
     </div>
   );
