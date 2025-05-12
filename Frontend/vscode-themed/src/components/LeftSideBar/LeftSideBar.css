@@ -3,7 +3,7 @@
   top: 35px; 
   left: 0;
   width: 50px;
-  height: calc(100vh - 35px);
+  height: calc(100% - 55px);
   background-color: #252526; 
   border: 0.5px gray;
   display: flex;
@@ -24,7 +24,7 @@
   opacity: 1;
 }
 .selected{
-  border-left: solid 3px rgba(255, 234, 0, 0.847);
+  border-left: solid 3px #ffea00d8;
 }
 
 .icons{

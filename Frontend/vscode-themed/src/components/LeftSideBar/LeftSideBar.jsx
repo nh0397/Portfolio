@@ -20,25 +20,25 @@ function LeftSideBar() {
     <div className="leftSideBar">
       <div className="leftSideTop">
         <div
-          className={`icon-div ${selectedIcon == 1 ? "selected" : ""}`}
+          className={`icon-div ${selectedIcon === 1 ? "selected" : ""}`}
           onClick={() => iconBorder(1)}
         >
           <VscFiles color="white" className="icons" title="Home" />
         </div>
         <div
-          className={`icon-div ${selectedIcon == 2 ? "selected" : ""}`}
+          className={`icon-div ${selectedIcon === 2 ? "selected" : ""}`}
           onClick={() => iconBorder(2)}
         >
           <GrContactInfo color="white" className="icons" title="" />
         </div>
         <div
-          className={`icon-div ${selectedIcon == 3 ? "selected" : ""}`}
+          className={`icon-div ${selectedIcon === 3 ? "selected" : ""}`}
           onClick={() => iconBorder(3)}
         >
           <BiBriefcase color="white" className="icons" title="" />
         </div>
         <div
-          className={`icon-div ${selectedIcon == 4 ? "selected" : ""}`}
+          className={`icon-div ${selectedIcon === 4 ? "selected" : ""}`}
           onClick={() => iconBorder(4)}
         >
           <RiCodeSSlashFill color="white" className="icons" title="" />
@@ -46,19 +46,19 @@ function LeftSideBar() {
       </div>
       <div className="leftSideBottom">
         <div
-          className={`icon-div ${selectedIcon == 5 ? "selected" : ""}`}
+          className={`icon-div ${selectedIcon === 5 ? "selected" : ""}`}
           onClick={() => iconBorder(5)}
         >
           <MdOutlineMailOutline color="white" className="icons" title="Home" />
         </div>
         <div
-          className={`icon-div ${selectedIcon == 6 ? "selected" : ""}`}
+          className={`icon-div ${selectedIcon === 6 ? "selected" : ""}`}
           onClick={() => iconBorder(6)}
         >
           <FaLinkedinIn color="white" className="icons" title="" />
         </div>
         <div
-          className={`icon-div ${selectedIcon == 7 ? "selected" : ""}`}
+          className={`icon-div ${selectedIcon === 7 ? "selected" : ""}`}
           onClick={() => iconBorder(7)}
         >
           <FaGithub color="white" className="icons" title="" />

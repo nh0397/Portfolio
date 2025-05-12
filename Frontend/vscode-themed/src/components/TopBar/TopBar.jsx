@@ -11,8 +11,12 @@ const TopBar = () => {
     <div className="topbar">
       <div className="topbar-left">
         <div className="topbar-button-group">
-          <div className="close-button"></div>
-          <div className="minimize-button"></div>
+          <div className="close-button">
+            <span className="window-icon">×</span>
+          </div>
+          <div className="minimize-button">
+            <span className="window-icon">–</span>
+          </div>
           <div className="expand-button">
             <img src={expand} alt="expand" className="expand-icon" />
           </div>
@@ -31,9 +35,7 @@ const TopBar = () => {
         <span
           title="Talk to Naisarg's AI Buddy"
           onClick={() => setCopilotClicked(true)}
-          className={`copilot-icon ${
-            !copilotClicked ? "blink" : ""
-          }`}
+          className={`copilot-icon ${!copilotClicked ? "blink" : ""}`}
         >
           <img src={chatbot} alt="chatbot" className="chatbot-icon" />
         </span>

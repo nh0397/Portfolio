@@ -22,7 +22,14 @@
   display: flex;
   gap: 5px;
 }
-
+.window-icon {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  font-size: 12px;
+  font-weight: bold;
+  color: black;
+  user-select: none;
+}
 .close-button,
 .minimize-button,
 .expand-button {
@@ -33,6 +40,9 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  color: black;
+  font-size: 14px;
+  padding-bottom: 1px;
 }
 
 .close-button {
@@ -55,6 +65,11 @@
 }
 
 .expand-button:hover .expand-icon {
+  opacity: 1;
+}
+
+.close-button:hover .window-icon,
+.minimize-button:hover .window-icon {
   opacity: 1;
 }
 
@@ -110,18 +125,18 @@
   gap: 6px;
 }
 
-.logo-icon{
+.logo-icon {
   height: 25px;
   width: 25px;
 }
 
-.logo-icon:hover{
+.logo-icon:hover {
   transform: scale(1.5);
 }
 
-
 @keyframes zoom-blink {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 1;
   }
@@ -130,7 +145,6 @@
     opacity: 0.6;
   }
 }
-
 
 .blink {
   animation: zoom-blink 1s infinite ease-in-out;
