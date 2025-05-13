@@ -23,7 +23,7 @@ function Explorer() {
     { name: "home.jsx", icon: <FaReact style={{ color: "#61DBFB" }} /> },
     { name: "about.html", icon: <FaHtml5 style={{ color: "#e34c26" }} /> },
     { name: "projects.js", icon: <FaJs style={{ color: "#f7df1e" }} /> },
-    { name: "style.css", icon: <SiCsswizardry style={{ color: "#2965f1" }} /> },
+    { name: "experience.css", icon: <SiCsswizardry style={{ color: "#2965f1" }} /> },
     {
       name: "contact.json",
       icon: <BsFiletypeJson style={{ color: "#7fdbff" }} />,

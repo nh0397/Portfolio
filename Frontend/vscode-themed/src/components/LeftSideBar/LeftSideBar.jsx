@@ -29,19 +29,19 @@ function LeftSideBar() {
           className={`icon-div ${selectedIcon === 2 ? "selected" : ""}`}
           onClick={() => iconBorder(2)}
         >
-          <GrContactInfo color="white" className="icons" title="" />
+          <GrContactInfo color="white" className="icons" title="About me" />
         </div>
         <div
           className={`icon-div ${selectedIcon === 3 ? "selected" : ""}`}
           onClick={() => iconBorder(3)}
         >
-          <BiBriefcase color="white" className="icons" title="" />
+          <BiBriefcase color="white" className="icons" title="Experience" />
         </div>
         <div
           className={`icon-div ${selectedIcon === 4 ? "selected" : ""}`}
           onClick={() => iconBorder(4)}
         >
-          <RiCodeSSlashFill color="white" className="icons" title="" />
+          <RiCodeSSlashFill color="white" className="icons" title="Projects" />
         </div>
       </div>
       <div className="leftSideBottom">
@@ -49,19 +49,19 @@ function LeftSideBar() {
           className={`icon-div ${selectedIcon === 5 ? "selected" : ""}`}
           onClick={() => iconBorder(5)}
         >
-          <MdOutlineMailOutline color="white" className="icons" title="Home" />
+          <MdOutlineMailOutline color="white" className="icons" title="Contact me" />
         </div>
         <div
           className={`icon-div ${selectedIcon === 6 ? "selected" : ""}`}
           onClick={() => iconBorder(6)}
         >
-          <FaLinkedinIn color="white" className="icons" title="" />
+          <FaLinkedinIn color="white" className="icons" title="LinkedIn" />
         </div>
         <div
           className={`icon-div ${selectedIcon === 7 ? "selected" : ""}`}
           onClick={() => iconBorder(7)}
         >
-          <FaGithub color="white" className="icons" title="" />
+          <FaGithub color="white" className="icons" title="GitHub" />
         </div>
       </div>
     </div>
