@@ -111,7 +111,7 @@ function Explorer() {
               {files.map((file, index) => (
                 <div
                   key={index}
-                  className={`explorer-file ${file.no === activeFile ? 'selected' : ''}`}
+                  className={`explorer-file ${file.no === activeFile ? 'selected-explorer' : ''}`}
                   style={{ paddingLeft: "16px" }}
                   onClick={() => setActiveFile(file.no) }
                 >

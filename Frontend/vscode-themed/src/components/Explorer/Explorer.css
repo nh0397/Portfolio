@@ -58,7 +58,7 @@
 
 .explorer-folder:hover,
 .explorer-file:hover,
-.selected {
+.selected-explorer {
   background-color: #2a2d2e;
 }
 

@@ -10,8 +10,7 @@ import { FaLinkedinIn } from "react-icons/fa";
 import { AppContext } from "../../context/AppContext";
 
 function LeftSideBar() {
-
-  const {activeFile, setActiveFile} = useContext(AppContext)
+  const { activeFile, setActiveFile } = useContext(AppContext);
 
   const iconBorder = (value) => {
     setActiveFile(value);
@@ -44,8 +43,6 @@ function LeftSideBar() {
         >
           <RiCodeSSlashFill color="white" className="icons" title="Projects" />
         </div>
-      </div>
-      <div className="leftSideBottom">
         <div
           className={`icon-div ${activeFile === 5 ? "selected" : ""}`}
           onClick={() => iconBorder(5)}
@@ -56,6 +53,8 @@ function LeftSideBar() {
             title="Contact me"
           />
         </div>
+      </div>
+      <div className="leftSideBottom">
         <div
           className={`icon-div ${activeFile === 6 ? "selected" : ""}`}
           onClick={() => iconBorder(6)}
