@@ -79,3 +79,9 @@
   .resize-handle:hover {
     background-color: #0078d4;
   }
+
+  @media only screen and (max-width: 600px) {
+    .explorer-container{
+      display: none;
+    }
+  }
