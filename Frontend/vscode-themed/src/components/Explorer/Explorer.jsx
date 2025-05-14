@@ -15,8 +15,8 @@ import {
   FaFolderOpen,
   FaReact,
 } from "react-icons/fa";
+import { VscTerminalPowershell } from "react-icons/vsc";
 import { SiCsswizardry } from "react-icons/si";
-import { BsFiletypeJson } from "react-icons/bs";
 import { AppContext } from "../../context/AppContext";
 
 function Explorer() {
@@ -42,8 +42,8 @@ function Explorer() {
     },
     {
       no: 5,
-      name: "contact.json",
-      icon: <BsFiletypeJson style={{ color: "#7fdbff" }} />,
+      name: "contact.sh",
+      icon: <VscTerminalPowershell style={{ color: "#7fdbff" }} />,
     },
   ];
 

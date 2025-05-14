@@ -15,7 +15,7 @@ function Content() {
     { no: 2, name: "about.html" },
     { no: 3, name: "projects.js" },
     { no: 4, name: "experience.css" },
-    { no: 5, name: "contact.json" },
+    { no: 5, name: "contact.sh" },
   ];
 
   const renderContent = () => {
