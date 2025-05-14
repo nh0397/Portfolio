@@ -12,7 +12,10 @@ function App() {
     <div className="App">
       <AppProvider>
         <TopBar />
-        <LeftSideBar />
+        <LeftSideBar
+          github={data.contact.github}
+          linkedin={data.contact.linkedin}
+        />
         <Explorer />
         <Content />
         <Footer github={data.contact.github} />

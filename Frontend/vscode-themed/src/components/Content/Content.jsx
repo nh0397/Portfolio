@@ -1,24 +1,46 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import "./Content.css";
 import { AppContext } from "../../context/AppContext";
+import Home from "./Files/Home";
+import About from "./Files/About";
+import Projects from "./Files/Projects";
+import Experience from "./Files/Experience";
+import Contact from "./Files/Contact";
 
 function Content() {
-  const {activeFile, setActiveFile} = useContext(AppContext)
+  const { activeFile, setActiveFile } = useContext(AppContext);
 
   const tabs = [
-  { no: 1, name: "home.jsx" },
-  { no: 2, name: "about.html" },
-  { no: 3, name: "projects.js" },
-  { no: 4, name: "experience.css" },
-  { no: 5, name: "contact.json" },
-];
+    { no: 1, name: "home.jsx" },
+    { no: 2, name: "about.html" },
+    { no: 3, name: "projects.js" },
+    { no: 4, name: "experience.css" },
+    { no: 5, name: "contact.json" },
+  ];
+
+  const renderContent = () => {
+    switch (activeFile) {
+      case 1:
+        return <Home />;
+      case 2:
+        return <About />;
+      case 3:
+        return <Projects />;
+      case 4:
+        return <Experience />;
+      case 5:
+        return <Contact />;
+      default:
+        return <pre>// File not found.</pre>;
+    }
+  };
 
   return (
     <div className="content-container">
       <div className="tab-bar">
         {tabs.map((tab) => (
           <div
-            key={tab.name}
+            key={tab.no}
             className={`tab ${activeFile === tab.no ? "active-tab" : ""}`}
             onClick={() => setActiveFile(tab.no)}
           >
@@ -28,9 +50,7 @@ function Content() {
         ))}
       </div>
 
-      <div className="content-display">
-        <pre>{`// Content for ${activeFile}`}</pre>
-      </div>
+      <div className="content-display">{renderContent()}</div>
     </div>
   );
 }

@@ -4,27 +4,26 @@
   position: fixed;
   top: 35px;
   left: 300px;
-  height: calc(100% - 55px); 
+  height: calc(100vh - 55px); /* Use viewport height instead of percentage */
   width: calc(100% - 300px);
   background-color: #1e1e1e;
   color: white;
   font-family: Consolas, monospace;
-}
-
-@media only screen and (max-width: 600px) {
-  .content-container {
-    left: 50px;
-    width: calc(100% - 50px);
-    overflow-x: scroll;
-  }
+  overflow: hidden; /* Contain overflow */
+  
 }
 
 .tab-bar {
   display: flex;
   background-color: #1e1e1e;
   height: 30px;
+  min-height: 30px; /* Enforce minimum height */
   align-items: center;
   overflow-x: auto;
+  width: 100%;
+  flex-shrink: 0; /* Prevent tab bar from shrinking */
+  z-index: 20; /* Ensure tabs are above content */
+  border-bottom: 1px solid #444; /* Add visual separation */
 }
 
 .tab {
@@ -39,6 +38,9 @@
   border-top: 2px solid transparent;
   border-right: 1px solid #2d2d2d;
   border-bottom: 1px solid #444;
+  white-space: nowrap; /* Prevent text wrapping in tabs */
+  height: 100%;
+  box-sizing: border-box; /* Include padding and border in element's size */
 }
 
 .tab:hover {
@@ -48,14 +50,42 @@
 .active-tab {
   color: #fff;
   border-top: 2px solid #ffea00d8;
+  border-bottom: 0px solid #2d2d2d;
 }
 
 .close-tab {
   font-weight: bold;
   color: #999;
   cursor: pointer;
+  margin-left: 5px;
 }
 
-.active-tab {
-  border-bottom: 0px solid #2d2d2d;
+.content-display {
+  flex: 1;
+  height: calc(100% - 85px); 
+  overflow-y: auto; 
+  position: relative;
+}
+
+@media only screen and (max-width: 600px) {
+  .content-container {
+    left: 50px;
+    width: calc(100vw - 50px); 
+    overflow: hidden;
+  }
+
+  .tab {
+    font-size: 11px;
+    padding: 5px 8px;
+  }
+
+  
+  .hero-content {
+    min-height: initial; 
+    flex-direction: column !important; 
+  }
+
+  .code-editor{
+    height: 300px;
+  }
 }

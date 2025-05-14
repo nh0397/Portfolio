@@ -9,7 +9,7 @@ import { FaGithub } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa";
 import { AppContext } from "../../context/AppContext";
 
-function LeftSideBar() {
+function LeftSideBar({ github, linkedin }) {
   const { activeFile, setActiveFile } = useContext(AppContext);
 
   const iconBorder = (value) => {
@@ -57,15 +57,17 @@ function LeftSideBar() {
       <div className="leftSideBottom">
         <div
           className={`icon-div ${activeFile === 6 ? "selected" : ""}`}
-          onClick={() => iconBorder(6)}
+          // onClick={() => iconBorder(6)}
         >
           <FaLinkedinIn color="white" className="icons" title="LinkedIn" />
         </div>
         <div
           className={`icon-div ${activeFile === 7 ? "selected" : ""}`}
-          onClick={() => iconBorder(7)}
+          // onClick={() => iconBorder(7)}
         >
-          <FaGithub color="white" className="icons" title="GitHub" />
+          <a href={github} target="_blank" rel="noreferrer">
+            <FaGithub color="white" className="icons" title="GitHub" />
+          </a>
         </div>
       </div>
     </div>
