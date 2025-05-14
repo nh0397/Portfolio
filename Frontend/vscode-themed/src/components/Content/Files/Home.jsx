@@ -8,7 +8,7 @@ import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 function Home() {
   const { homeVisited, setHomeVisited } = useContext(AppContext);
   const [animationsComplete, setAnimationsComplete] = useState(homeVisited);
-
+  const {activeFile, setActiveFile} = useContext(AppContext)
   const developerInfo = {
     name: "Naisarg Halvadiya",
     role: "AI Engineer | Software + Data",
@@ -88,12 +88,12 @@ function Home() {
             <h2>{developerInfo.role}</h2>
             <p>{developerInfo.bio}</p>
             <div className={`cta ${!animationsComplete ? "fadeIn" : ""}`}>
-              <a
-                href="/about"
+              <div
                 className={`cta-button ${!animationsComplete ? "buttonGlow" : ""}`}
+                onClick={() => setActiveFile(2)}
               >
                 Know More About Me <span>→</span>
-              </a>
+              </div>
             </div>
           </div>
         </div>
