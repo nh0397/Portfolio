@@ -62,9 +62,10 @@
 
 .content-display {
   flex: 1;
-  height: calc(100% - 85px); 
+  height: calc(100vh - 85px); 
   overflow-y: auto; 
   position: relative;
+  z-index: 10;
 }
 
 @media only screen and (max-width: 600px) {
