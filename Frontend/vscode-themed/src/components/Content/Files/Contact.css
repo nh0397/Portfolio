@@ -249,7 +249,7 @@
 .panel-tab.active {
   background-color: #1e1e1e;
   color: #ffffff;
-  border-top: 1px solid #15539e;
+  border-top: 1px solid #ffea00d8;
 }
 
 /* VSCode terminal body */
