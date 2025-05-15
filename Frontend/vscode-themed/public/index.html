@@ -1,20 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Meta -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Naisarg Halvadiya's Portfolio</title>
-    <meta name="description" content="Welcome to Naisarg Halvadiya's portfolio. Explore my projects and skills in web development." />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Mova:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../src/index.css" />
+
+    <!-- Primary Meta Tags -->
+    <title>Naisarg Halvadiya – AI Engineer | Full Stack | Portfolio</title>
+    <meta name="title" content="Naisarg Halvadiya – AI Engineer | Full Stack | Portfolio" />
+    <meta name="description" content="Explore Naisarg Halvadiya's portfolio featuring AI-powered solutions, full stack projects, and data-driven applications. Tech-agnostic and impact-driven." />
+    <meta name="keywords" content="Naisarg Halvadiya, AI Engineer, Full Stack Developer, Data Scientist, React Developer, Portfolio, Projects, GitHub, Software Engineer" />
+    <meta name="author" content="Naisarg Halvadiya" />
     <link rel="canonical" href="https://naisarg-halvadiya.me" />
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-QPK4DJETRM"
-    ></script>
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Mova:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../src/index.css" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://naisarg-halvadiya.me" />
+    <meta property="og:title" content="Naisarg Halvadiya – AI Engineer Portfolio" />
+    <meta property="og:description" content="Explore my work in AI, software engineering, and full-stack development." />
+    <meta property="og:image" content="https://naisarg-halvadiya.me/og-image.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://naisarg-halvadiya.me" />
+    <meta name="twitter:title" content="Naisarg Halvadiya – Portfolio" />
+    <meta name="twitter:description" content="Building real-world AI + software solutions through data." />
+    <meta name="twitter:image" content="https://naisarg-halvadiya.me/og-image.png" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Naisarg Halvadiya",
+        "url": "https://naisarg-halvadiya.me",
+        "sameAs": [
+          "https://www.linkedin.com/in/naisarg-h",
+          "https://github.com/nh0397",
+          "https://twitter.com/naisarg_xyz"
+        ],
+        "jobTitle": "AI Engineer",
+        "alumniOf": {
+          "@type": "CollegeOrUniversity",
+          "name": "San Francisco State University"
+        },
+        "worksFor": {
+          "@type": "Organization",
+          "name": "San Francisco State University"
+        }
+      }
+    </script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QPK4DJETRM"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -23,21 +70,8 @@
       gtag("js", new Date());
       gtag("config", "G-QPK4DJETRM");
     </script>
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Naisarg Halvadiya",
-        "url": "https://naisarg-halvadiya.netlify.app/",
-        "sameAs": [
-          "https://www.instagram.com/nh0397",
-          "http://www.linkedin.com/in/naisarg-h",
-          "http://plus.google.com/yourprofile"
-        ]
-      }
-    </script>
   </head>
+
   <body>
     <div id="root"></div>
     <script src="%PUBLIC_URL%/index.js"></script>
