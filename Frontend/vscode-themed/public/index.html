@@ -1,43 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+    <!-- Meta -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
+    <!-- Primary Meta Tags -->
+    <title>Naisarg Halvadiya – AI Engineer | Full Stack | Portfolio</title>
+    <meta name="title" content="Naisarg Halvadiya – AI Engineer | Full Stack | Portfolio" />
+    <meta name="description" content="Explore Naisarg Halvadiya's portfolio featuring AI-powered solutions, full stack projects, and data-driven applications. Tech-agnostic and impact-driven." />
+    <meta name="keywords" content="Naisarg Halvadiya, AI Engineer, Full Stack Developer, Data Scientist, React Developer, Portfolio, Projects, GitHub, Software Engineer" />
+    <meta name="author" content="Naisarg Halvadiya" />
+    <link rel="canonical" href="https://naisarg-halvadiya.me" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Mova:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../src/index.css" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://naisarg-halvadiya.me" />
+    <meta property="og:title" content="Naisarg Halvadiya – AI Engineer Portfolio" />
+    <meta property="og:description" content="Explore my work in AI, software engineering, and full-stack development." />
+    <meta property="og:image" content="https://naisarg-halvadiya.me/og-image.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://naisarg-halvadiya.me" />
+    <meta name="twitter:title" content="Naisarg Halvadiya – Portfolio" />
+    <meta name="twitter:description" content="Building real-world AI + software solutions through data." />
+    <meta name="twitter:image" content="https://naisarg-halvadiya.me/og-image.png" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Naisarg Halvadiya",
+        "url": "https://naisarg-halvadiya.me",
+        "sameAs": [
+          "https://www.linkedin.com/in/naisarg-h",
+          "https://github.com/nh0397",
+          "https://twitter.com/naisarg_xyz"
+        ],
+        "jobTitle": "AI Engineer",
+        "alumniOf": {
+          "@type": "CollegeOrUniversity",
+          "name": "San Francisco State University"
+        },
+        "worksFor": {
+          "@type": "Organization",
+          "name": "San Francisco State University"
+        }
+      }
+    </script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QPK4DJETRM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-QPK4DJETRM");
+    </script>
   </head>
+
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+    <script src="%PUBLIC_URL%/index.js"></script>
   </body>
 </html>

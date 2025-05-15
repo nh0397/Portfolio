@@ -1,0 +1,151 @@
+.about-container {
+  padding: 2rem;
+  color: #ccc;
+  background-color: #1e1e1e;
+  font-family: "Courier New", monospace;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.about-intro h2 {
+  color: #ffea00;
+  margin-bottom: 1rem;
+}
+
+.about-intro p {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: #aaa;
+}
+
+.skills-section {
+  margin-top: 2rem;
+}
+
+.skills-section h3 {
+  color: #ffea00;
+  margin-bottom: 1rem;
+}
+
+.skill-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.skill-tab {
+  padding: 0.4rem 0.8rem;
+  background-color: #2d2d2d;
+  color: #ccc;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.skill-tab.active {
+  background-color: #ffea00;
+  color: #111;
+  font-weight: bold;
+}
+
+.skill-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.skill-badge {
+  background-color: #2a2a2a;
+  color: #ffea00;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.linkedin-section {
+  margin-top: 3rem;
+}
+
+.linkedin-section h3 {
+  color: #ffea00;
+  margin-bottom: 0.5rem;
+}
+
+.linkedin-post {
+  border: 1px solid #444;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .about-container {
+    padding: 1rem;
+  }
+
+  .skill-tab {
+    font-size: 12px;
+  }
+
+  .skill-badge {
+    font-size: 13px;
+  }
+}
+.skill-badge {
+  background-color: #2a2a2a;
+  color: #ffea00;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+.skill-badge:hover {
+  transform: scale(1.05);
+}
+
+.skill-icon {
+  height: 20px;
+  width: 20px;
+}
+
+.linkedin-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.skill-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.skill-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.skill-tab {
+  padding: 0.4rem 0.8rem;
+  background-color: #2d2d2d;
+  color: #ccc;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.skill-tab.active {
+  background-color: #ffea00;
+  color: #111;
+  font-weight: bold;
+}

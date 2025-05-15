@@ -1,0 +1,15 @@
+.experience-container {
+  padding: 2rem;
+  background-color: #1e1e1e;
+  color: #ccc;
+  font-family: "Courier New", Courier, monospace;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.experience-heading {
+  font-size: 1.25rem;
+  color: #ffea00;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}

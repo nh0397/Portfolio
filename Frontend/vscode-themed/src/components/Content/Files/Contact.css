@@ -1,0 +1,369 @@
+.file-explorer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50px;
+  height: 100%;
+  background-color: #252526;
+  border-right: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  z-index: 10;
+}
+
+.file-explorer-icon {
+  color: #858585;
+  font-size: 24px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.file-explorer-icon:hover,
+.file-explorer-icon.active {
+  color: #ffffff;
+}
+
+/* Contact Form Styles */
+.contact-form-container {
+  width: 100%;
+  padding: 20px;
+  background-color: #1e1e1e;
+  border-bottom: 1px solid #333;
+  position: relative;
+}
+
+.contact-form-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #333;
+}
+
+.contact-form {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.form-title {
+  color: #ffffff;
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-title::before {
+  content: "✉️";
+  font-size: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.form-label {
+  color: #9cdcfe;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-label::before {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-color: #3c3c3c;
+  border-radius: 2px;
+}
+
+.form-input {
+  background-color: #1e1e1e;
+  border: 1px solid #3c3c3c;
+  color: #d4d4d4;
+  padding: 10px 12px;
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 14px;
+  border-radius: 0;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus {
+  border-color: #007acc;
+  box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+}
+
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.5;
+  background-color: #1e1e1e;
+  background-image: linear-gradient(transparent 23px, #3c3c3c 24px);
+  background-size: 100% 24px;
+  border-left: 3px solid #3c3c3c;
+}
+
+.form-textarea:focus {
+  border-left: 3px solid #007acc;
+}
+
+.form-button {
+  background-color: #0e639c;
+  color: #ffffff;
+  border: none;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-family: "Consolas", "Courier New", monospace;
+  border-radius: 0;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.form-button::before {
+  content: ">";
+  font-weight: bold;
+  font-family: monospace;
+}
+
+.form-button:hover {
+  background-color: #1177bb;
+}
+
+.form-button:active {
+  background-color: #0e5384;
+  transform: translateY(1px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.quick-mode-container {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px dashed #3c3c3c;
+}
+
+.quick-mode-title {
+  color: #ce9178;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.quick-mode-button {
+  background-color: #252526;
+  color: #dcdcaa;
+  border: 1px solid #3c3c3c;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "Consolas", "Courier New", monospace;
+  position: relative;
+  overflow: hidden;
+}
+
+.quick-mode-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background-color: #569cd6;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.quick-mode-button:hover {
+  background-color: #2d2d2d;
+  border-color: #569cd6;
+}
+
+.quick-mode-button:hover::before {
+  opacity: 1;
+}
+
+.quick-mode-button:active {
+  background-color: #1e1e1e;
+  transform: translateY(1px);
+}
+
+/* VSCode editor layout */
+.editor-container {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  background-color: #1e1e1e;
+}
+
+.terminal-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* VSCode panel tabs */
+.panel-tabs {
+  display: flex;
+  background-color: #252526;
+  height: 35px;
+  border-top: 1px solid #333;
+}
+
+.panel-tab {
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  color: #909090;
+  text-transform: uppercase;
+  border-right: 1px solid #333;
+}
+
+.panel-tab.active {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border-top: 1px solid #ffea00d8;
+}
+
+/* VSCode terminal body */
+.terminal-body {
+  flex: 1;
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  font-family: "Consolas", "Courier New", monospace;
+  padding: 8px 12px;
+  line-height: 1.5;
+  font-size: 14px;
+  overflow-y: auto;
+  min-height: 250px;
+}
+
+.terminal-line {
+  margin: 2px 0;
+  white-space: pre-wrap;
+}
+
+.login-info {
+  color: #a9a9a9;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+.prompt-user {
+  color: #85c46c;
+  font-weight: 500;
+}
+
+.prompt-command {
+  color: #ffcb6b;
+  font-weight: 500;
+}
+
+.terminal-output {
+  color: #d4d4d4;
+  margin-left: 16px;
+  margin-bottom: 4px;
+}
+
+.icon {
+  margin-right: 4px;
+  display: inline-block;
+}
+
+.terminal-output a {
+  color: #45a0ff;
+  text-decoration: none;
+}
+
+.terminal-output a:hover {
+  text-decoration: underline;
+  color: #67b1ff;
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 18px;
+  background-color: #d4d4d4;
+  animation: blink 1s infinite;
+  vertical-align: middle;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* VSCode status bar */
+.status-bar {
+  height: 22px;
+  background-color: #007acc;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.status-item {
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.status-icon {
+  margin-right: 5px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .terminal-body {
+    padding: 6px 8px;
+    font-size: 13px;
+  }
+
+  .panel-tab,
+  .tab {
+    padding: 0 8px;
+    font-size: 11px;
+  }
+  
+  .quick-mode-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

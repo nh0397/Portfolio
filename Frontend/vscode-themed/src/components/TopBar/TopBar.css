@@ -1,0 +1,151 @@
+.topbar {
+  background-color: #252526;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 35px;
+  width: 100vw;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  border-bottom: solid 1px gray;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.topbar-button-group {
+  display: flex;
+  gap: 5px;
+}
+.window-icon {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  font-size: 12px;
+  font-weight: bold;
+  color: black;
+  user-select: none;
+}
+.close-button,
+.minimize-button,
+.expand-button {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: black;
+  font-size: 14px;
+  padding-bottom: 1px;
+}
+
+.close-button {
+  background-color: #ff605c;
+}
+
+.minimize-button {
+  background-color: #ffbd44;
+}
+
+.expand-button {
+  background-color: #00ca4e;
+}
+
+.expand-icon {
+  width: 9px;
+  height: 9px;
+  transform: rotate(45deg);
+  opacity: 0;
+}
+
+.expand-button:hover .expand-icon {
+  opacity: 1;
+}
+
+.close-button:hover .window-icon,
+.minimize-button:hover .window-icon {
+  opacity: 1;
+}
+
+.topbar-center {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+}
+
+.arrow-button {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.search-input {
+  background-color: #2b2b2b;
+  border: 1px solid #444;
+  border-radius: 5px;
+  padding: 2px 8px;
+  color: white;
+  font-size: 12px;
+  width: 35vw;
+}
+
+.copilot-icon {
+  margin-left: 8px;
+  font-size: 16px;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.view-icon {
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.logo-icon {
+  height: 25px;
+  width: 25px;
+}
+
+.logo-icon:hover {
+  transform: scale(1.5);
+}
+
+@keyframes zoom-blink {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.6;
+  }
+}
+
+.blink {
+  animation: zoom-blink 1s infinite ease-in-out;
+}
