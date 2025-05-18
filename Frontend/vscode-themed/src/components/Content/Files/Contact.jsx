@@ -177,7 +177,7 @@ function Contact() {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    linkedin.com/in/naisarg-halvadiya
+                    linkedin.com/in/naisarg-h
                   </a>
                 </div>
                 <div className="terminal-output">
