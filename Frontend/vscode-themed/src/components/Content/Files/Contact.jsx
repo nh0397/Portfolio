@@ -173,7 +173,7 @@ function Contact() {
                 <div className="terminal-output">
                   <span className="icon">🌐</span>{" "}
                   <a
-                    href="https://linkedin.com/in/naisarg-halvadiya"
+                    href="https://linkedin.com/in/naisarg-h"
                     target="_blank"
                     rel="noreferrer"
                   >
