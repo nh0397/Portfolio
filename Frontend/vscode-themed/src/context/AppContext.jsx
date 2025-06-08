@@ -6,6 +6,7 @@ export const AppProvider = ({ children }) => {
   const [activeFile, setActiveFile] = useState(1);
   const [explorerWidth, setExplorerWidth] = useState(250);
   const [homeVisited, setHomeVisited] = useState(false);
+  const [copilotClicked, setCopilotClicked] = useState(false);
 
   return (
     <AppContext.Provider
@@ -16,6 +17,8 @@ export const AppProvider = ({ children }) => {
         setExplorerWidth,
         homeVisited,
         setHomeVisited,
+        copilotClicked,
+        setCopilotClicked,
       }}
     >
       {children}

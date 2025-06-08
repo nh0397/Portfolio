@@ -4,26 +4,26 @@
   position: fixed;
   top: 35px;
   left: 300px;
-  height: calc(100vh - 55px); /* Use viewport height instead of percentage */
+  height: calc(100vh - 55px);
   width: calc(100% - 300px);
   background-color: #1e1e1e;
   color: white;
   font-family: Consolas, monospace;
-  overflow: hidden; /* Contain overflow */
-  
+  overflow: hidden;
+  transition: width 0.3s ease-in-out; /* Smooth transition for width change */
 }
 
 .tab-bar {
   display: flex;
   background-color: #1e1e1e;
   height: 30px;
-  min-height: 30px; /* Enforce minimum height */
+  min-height: 30px;
   align-items: center;
   overflow-x: auto;
   width: 100%;
-  flex-shrink: 0; /* Prevent tab bar from shrinking */
-  z-index: 20; /* Ensure tabs are above content */
-  border-bottom: 1px solid #444; /* Add visual separation */
+  flex-shrink: 0;
+  z-index: 20;
+  border-bottom: 1px solid #444;
 }
 
 .tab {
@@ -38,9 +38,9 @@
   border-top: 2px solid transparent;
   border-right: 1px solid #2d2d2d;
   border-bottom: 1px solid #444;
-  white-space: nowrap; /* Prevent text wrapping in tabs */
+  white-space: nowrap;
   height: 100%;
-  box-sizing: border-box; /* Include padding and border in element's size */
+  box-sizing: border-box;
 }
 
 .tab:hover {
@@ -68,6 +68,11 @@
   z-index: 10;
 }
 
+/* Updated reduced container class */
+.reduced-content-container {
+  width: calc(100% - 800px); /* Adjust based on your chatbot width */
+}
+
 @media only screen and (max-width: 600px) {
   .content-container {
     left: 50px;
@@ -80,7 +85,6 @@
     padding: 5px 8px;
   }
 
-  
   .hero-content {
     min-height: initial; 
     flex-direction: column !important; 
@@ -89,4 +93,11 @@
   .code-editor{
     height: 300px;
   }
+  
+  /* Mobile responsive for chatbot */
+  .reduced-content-container {
+    width: calc(100vw - 50px); /* Full width on mobile when chatbot is open */
+  }
 }
+
+/* Remove the old copilot-container styles as they're not needed anymore */
