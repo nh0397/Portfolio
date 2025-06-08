@@ -1,14 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './Chatbot.css';
+import ChatbotService from '../../../services/ChatbotService';
 
 const Chatbot = ({ isOpen, onClose }) => {
-  const [messages, setMessages] = useState([
-    { 
-      text: "Hi I am Naisarg's AI Buddy! You can ask me anything about him and I'd be happy to help you out!", 
-      isBot: true, 
-      timestamp: new Date() 
-    }
-  ]);
+  const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
@@ -20,6 +15,44 @@ const Chatbot = ({ isOpen, onClose }) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Load conversation from sessionStorage on component mount
+  useEffect(() => {
+    const savedMessages = ChatbotService.loadConversationFromSession();
+    if (savedMessages.length > 0) {
+      setMessages(savedMessages);
+      console.log('Loaded conversation from session:', savedMessages.length, 'messages');
+    } else {
+      // Set initial message if no saved conversation
+      const initialMessage = {
+        text: "Hi! I'm Naisarg's AI Buddy! You can ask me anything about him and I'd be happy to help you out!",
+        isBot: true,
+        timestamp: new Date()
+      };
+      setMessages([initialMessage]);
+    }
+  }, []);
+
+  // Save conversation to sessionStorage whenever messages change
+  useEffect(() => {
+    if (messages.length > 0) {
+      ChatbotService.saveConversationToSession(messages);
+    }
+  }, [messages]);
+
+  // Clear conversation on page unload (optional)
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      // Keep conversation in sessionStorage even on page unload
+      // Only clear if you want to reset on page refresh
+      // ChatbotService.clearConversationSession();
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   const handleInputChange = (e) => {
     setUserInput(e.target.value);
@@ -34,20 +67,41 @@ const Chatbot = ({ isOpen, onClose }) => {
       timestamp: new Date()
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
+    
+    const currentInput = userInput;
     setUserInput('');
     setIsLoading(true);
 
-    // Placeholder for your API call
-    setTimeout(() => {
+    try {
+      // Format conversation history for context
+      const conversationHistory = ChatbotService.formatConversationHistory(updatedMessages);
+      
+      const response = await ChatbotService.sendMessage(currentInput, conversationHistory);
+      
       const botMessage = {
-        text: "Thanks for your message! This will connect to the backend soon.",
+        text: response.response,
         isBot: true,
         timestamp: new Date()
       };
+
       setMessages(prev => [...prev, botMessage]);
+      
+    } catch (error) {
+      console.error('Error sending message:', error);
+      
+      const errorMessage = {
+        text: `Error: ${error.message}`,
+        isBot: true,
+        timestamp: new Date(),
+        isError: true
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleKeyPress = (e) => {
@@ -55,6 +109,17 @@ const Chatbot = ({ isOpen, onClose }) => {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  // Add function to clear conversation
+  const clearConversation = () => {
+    ChatbotService.clearConversationSession();
+    const initialMessage = {
+      text: "Hi! I'm Naisarg's AI Buddy! You can ask me anything about him and I'd be happy to help you out!",
+      isBot: true,
+      timestamp: new Date()
+    };
+    setMessages([initialMessage]);
   };
 
   return (
@@ -69,6 +134,13 @@ const Chatbot = ({ isOpen, onClose }) => {
           </div>
         </div>
         <div className="header-right">
+          <button 
+            className="clear-button" 
+            onClick={clearConversation}
+            title="Clear conversation"
+          >
+            🗑️
+          </button>
           <button className="close-button" onClick={onClose}>×</button>
         </div>
       </div>
@@ -92,12 +164,15 @@ const Chatbot = ({ isOpen, onClose }) => {
 
         <div className="messages-container">
           {messages.map((message, index) => (
-            <div key={index} className={`message-line ${message.isBot ? 'bot-message' : 'user-message'}`}>
+            <div key={index} className={`message-line ${message.isBot ? 'bot-message' : 'user-message'} ${message.isError ? 'error-message' : ''}`}>
               <div className="message-code">
                 <span className="message-syntax">
-                  {message.isBot ? 'assistant' : 'user'}.say(
+                  {message.isError ? 'error' : message.isBot ? 'assistant' : 'user'}.say(
                 </span>
-                <span className="message-content">"{message.text}"</span>
+                <span 
+                  className="message-content"
+                  dangerouslySetInnerHTML={{ __html: `"${message.text}"` }}
+                />
                 <span className="message-syntax">);</span>
               </div>
             </div>
