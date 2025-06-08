@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import { AppContext } from "../../context/AppContext";
 import "./TopBar.css";
 import expand from "../../assets/icons/expand.png";
 import chatbot from "../../assets/icons/chatbot.png";
 import logo from "../../assets/icons/Logo.png";
 
 const TopBar = () => {
-  const [copilotClicked, setCopilotClicked] = useState(false);
+  const { copilotClicked, setCopilotClicked } = useContext(AppContext);
 
   return (
     <div className="topbar">
@@ -34,7 +35,7 @@ const TopBar = () => {
         />
         <span
           title="COMING SOON! :)"
-          onClick={() => setCopilotClicked(true)}
+          onClick={() => setCopilotClicked(!copilotClicked)}
           className={`copilot-icon ${!copilotClicked ? "blink" : ""}`}
         >
           <img src={chatbot} alt="chatbot" className="chatbot-icon" />
