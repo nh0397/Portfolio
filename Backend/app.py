@@ -348,9 +348,13 @@ def chat():
             return jsonify({'response': 'Sorry, database connection is not available. Please try again later.'}), 500
             
         data = request.json
+        print("data is here", data)
         message = data.get('message')
+        print('message is here', message)
         conversation_history = data.get('conversation_history', '')
+        print('conv hist', conversation_history)
         session_id = data.get('session_id', 'default_session')
+        print('session id', session_id)
 
         print(f"💬 Received message: {message}")
 
