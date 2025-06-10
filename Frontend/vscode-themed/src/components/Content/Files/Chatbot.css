@@ -60,7 +60,7 @@
     align-items: center;
   }
   
-  .close-button {
+  .close-button-chatbot {
     background: none;
     border: none;
     color: #d4d4d4;
@@ -71,7 +71,7 @@
     transition: background-color 0.2s;
   }
   
-  .close-button:hover {
+  .close-button-chatbot:hover {
     background: rgba(255, 255, 255, 0.1);
   }
   

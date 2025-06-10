@@ -141,7 +141,7 @@ const Chatbot = ({ isOpen, onClose }) => {
           >
             🗑️
           </button>
-          <button className="close-button" onClick={onClose}>×</button>
+          <button className="close-button-chatbot" onClick={onClose}>×</button>
         </div>
       </div>
 
