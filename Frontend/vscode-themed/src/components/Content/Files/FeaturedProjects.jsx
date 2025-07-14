@@ -1,6 +1,6 @@
 import React from "react";
 import "./FeaturedProjects.css";
-import { featuredProjects } from "./featuredProjectsData";
+import { portfolioConfig } from "../../../config/portfolioConfig";
 import { FiGithub } from "react-icons/fi";
 import secureSenseGif from "../../../assets/images/Secure Sense.gif";
 
@@ -46,7 +46,7 @@ function FeaturedProjects() {
   return (
     <div className="featured-wrapper">
       <h2 className="featured-heading">📌 Featured Projects</h2>
-      {featuredProjects.map((proj, i) => (
+      {portfolioConfig.featuredProjects.map((proj, i) => (
         <div key={i} className="project-card expanded">
           <div className="project-header">
             <div>

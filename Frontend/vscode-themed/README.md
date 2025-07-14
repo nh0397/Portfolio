@@ -64,23 +64,127 @@ npm run build
 
 ---
 
+## 🎨 **Easy Customization - One File to Rule Them All!**
+
+### 📝 **Main Configuration File**
+All your portfolio data is now centralized in one file: **`src/config/portfolioConfig.js`**
+
+This single file contains everything you need to customize:
+
+```javascript
+// ========================================
+// PORTFOLIO CONFIGURATION FILE
+// ========================================
+export const portfolioConfig = {
+  // Personal Information
+  personal: {
+    name: "YOUR NAME",
+    title: "Your Title",
+    bio: "Your bio...",
+    // ... more personal details
+  },
+
+  // Skills & Technologies
+  skills: {
+    frontend: [...],
+    backend: [...],
+    // ... more skill categories
+  },
+
+  // Featured Projects
+  featuredProjects: [
+    {
+      title: "Your Project",
+      subtitle: "Project Description",
+      // ... project details
+    }
+  ],
+
+  // Work Experience
+  experience: [
+    {
+      company: "Company Name",
+      role: "Your Role",
+      // ... experience details
+    }
+  ],
+
+  // Education
+  education: [
+    {
+      degree: "Your Degree",
+      institution: "University Name",
+      // ... education details
+    }
+  ],
+
+  // Achievements & Awards
+  achievements: [
+    {
+      title: "Your Achievement",
+      // ... achievement details
+    }
+  ]
+};
+```
+
+### 🔧 **What You Can Customize:**
+
+#### **Personal Information**
+- Name, title, bio, photo
+- Contact information (email, LinkedIn, GitHub)
+- Location and social links
+
+#### **Skills & Technologies**
+- Frontend, Backend, DevOps, Database, Tools
+- Each skill with name and icon URL
+- Organized by categories
+
+#### **Featured Projects**
+- Project titles, descriptions, problems, solutions
+- Impact metrics and future plans
+- Tech stack and GitHub links
+- Media (images, GIFs, YouTube videos)
+
+#### **Work Experience**
+- Company names, roles, durations
+- Company logos and locations
+- Detailed project descriptions
+- Impact metrics and tech stacks
+
+#### **Education**
+- Degrees, institutions, GPAs
+- University logos and graduation dates
+
+#### **Achievements & Awards**
+- Award titles and descriptions
+- Project details and tech stacks
+
+#### **Theme & Styling**
+- Color scheme (primary, secondary, accent colors)
+- Background colors and fonts
+
+---
+
 ## 🏗 Project Structure
 
 ```
 src/
+├── config/
+│   └── portfolioConfig.js      # 🎯 MAIN CONFIGURATION FILE
 ├── components/
 │   ├── Content/
-│   │   └── Files/           # Main content components
+│   │   └── Files/              # Main content components
 │   │       ├── About.jsx
 │   │       ├── Projects.jsx
 │   │       ├── FeaturedProjects.jsx
-│   │       └── featuredProjectsData.js
-│   ├── Sidebar/             # File explorer sidebar
-│   └── Terminal/            # Terminal component
+│   │       └── Experience.jsx
+│   ├── Sidebar/                # File explorer sidebar
+│   └── Terminal/               # Terminal component
 ├── assets/
-│   └── images/              # Project images and GIFs
-├── context/                 # React context providers
-└── services/                # API services
+│   └── images/                 # Project images and GIFs
+├── context/                    # React context providers
+└── services/                   # API services
 ```
 
 ---
@@ -149,22 +253,91 @@ src/
 
 ---
 
-## 🎨 Customization
+## 🎨 **Customization Guide**
 
-### Adding New Projects
-1. Update `src/components/Content/Files/featuredProjectsData.js`
-2. Add project details, tech stack, and media
-3. Include GitHub links and descriptions
+### **Step 1: Update Personal Information**
+```javascript
+// In src/config/portfolioConfig.js
+personal: {
+  name: "Your Name",
+  title: "Your Professional Title",
+  bio: "Your professional bio...",
+  photo: "../assets/images/your-photo.jpg",
+  email: "your.email@example.com",
+  linkedin: "https://linkedin.com/in/your-profile",
+  github: "https://github.com/your-username"
+}
+```
 
-### Styling Changes
-- Modify `src/components/Content/Files/FeaturedProjects.css`
-- Update VSCode theme colors in CSS variables
-- Customize animations and transitions
+### **Step 2: Add Your Projects**
+```javascript
+featuredProjects: [
+  {
+    title: "Your Amazing Project",
+    subtitle: "What it does",
+    problem: "The problem it solves",
+    solution: "How you solved it",
+    impact: [
+      "Impact point 1",
+      "Impact point 2"
+    ],
+    tech: ["React", "Node.js", "Python"],
+    github: "https://github.com/your-username/project",
+    media: {
+      type: "youtube", // "image", "gif", "youtube"
+      url: "video-id", // YouTube video ID or image URL
+      alt: "Project description"
+    }
+  }
+]
+```
 
-### Adding Media
-- Place images/GIFs in `src/assets/images/`
-- Import and use in components
-- Support for YouTube videos and local assets
+### **Step 3: Update Work Experience**
+```javascript
+experience: [
+  {
+    type: "work",
+    company: "Your Company",
+    logo: "https://company-logo-url.com/logo.png",
+    role: "Your Role",
+    duration: "Jan 2023 - Present",
+    location: "City, Country",
+    description: "What you do",
+    projects: [
+      {
+        title: "Project Name",
+        description: "What you built",
+        impact: ["Impact 1", "Impact 2"],
+        stack: ["Tech 1", "Tech 2"]
+      }
+    ]
+  }
+]
+```
+
+### **Step 4: Add Your Skills**
+```javascript
+skills: {
+  frontend: [
+    { name: "React", icon: "https://icon-url.com/react.svg" }
+  ],
+  backend: [
+    { name: "Node.js", icon: "https://icon-url.com/nodejs.svg" }
+  ]
+  // ... more categories
+}
+```
+
+### **Step 5: Customize Theme Colors**
+```javascript
+theme: {
+  primaryColor: "#ffea00",    // Your brand color
+  secondaryColor: "#9f7aea",  // Secondary color
+  accentColor: "#ff6b6b",     // Accent color
+  backgroundColor: "#1e1e1e", // Background
+  cardBackground: "#2a2a2a"   // Card background
+}
+```
 
 ---
 
@@ -175,6 +348,14 @@ The portfolio automatically fetches and displays:
 - **Contribution calendar** visualization
 - **Real-time project** statistics
 - **Dynamic content** updates
+
+**Update GitHub username in config:**
+```javascript
+github: {
+  username: "your-github-username",
+  apiUrl: "https://api.github.com/users/your-github-username/repos"
+}
+```
 
 ---
 

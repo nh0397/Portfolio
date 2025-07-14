@@ -4,23 +4,24 @@ import profilePic from "../../../assets/images/Photo.jpeg";
 import { AppContext } from "../../../context/AppContext";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { portfolioConfig } from "../../../config/portfolioConfig";
 
 function Home() {
   const { homeVisited, setHomeVisited } = useContext(AppContext);
   const [animationsComplete, setAnimationsComplete] = useState(homeVisited);
-  const {activeFile, setActiveFile} = useContext(AppContext)
+  const {setActiveFile} = useContext(AppContext)
   const developerInfo = {
-    name: "Naisarg Halvadiya",
-    role: "AI Engineer | Software + Data",
-    bio: "Transforming insights into impact: A data-savvy software engineer passionate about solving real-world problems using AI."
+    name: portfolioConfig.personal.name,
+    role: portfolioConfig.personal.title,
+    bio: portfolioConfig.personal.bio
   };
 
   const codeString = `const HomePage = () => {
   const [isLoaded, setIsLoaded] = useState(true);
   const developerInfo = {
-    name: 'Naisarg Halvadiya',
-    role: 'AI Engineer | Software + Data',
-    bio: 'Building modern web experiences'
+    name: '${portfolioConfig.personal.name}',
+    role: '${portfolioConfig.personal.title}',
+    bio: '${portfolioConfig.personal.brief}'
   };
 
   useEffect(() => {
@@ -29,11 +30,11 @@ function Home() {
   }, []);
 
   return (
-    <main className=\"hero-container\">
+    <main className="hero-container">
       <h1>{developerInfo.name}</h1>
       <p>{developerInfo.role}</p>
-      <div className=\"cta\">
-        <Link href=\"/about\">Know More About Me</Link>
+      <div className="cta">
+        <Link href="/about">Know More About Me</Link>
       </div>
     </main>
   );

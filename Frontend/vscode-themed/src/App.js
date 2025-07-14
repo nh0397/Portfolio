@@ -2,7 +2,7 @@ import "./App.css";
 import TopBar from "./components/TopBar/TopBar";
 import LeftSideBar from "./components/LeftSideBar/LeftSideBar";
 import Footer from "./components/Footer/Footer";
-import data from "./data/data.json";
+import { portfolioConfig } from "./config/portfolioConfig";
 import Explorer from "./components/Explorer/Explorer";
 import Content from "./components/Content/Content";
 import { AppProvider } from "./context/AppContext";
@@ -13,12 +13,12 @@ function App() {
       <AppProvider>
         <TopBar />
         <LeftSideBar
-          github={data.contact.github}
-          linkedin={data.contact.linkedin}
+          github={portfolioConfig.personal.github}
+          linkedin={portfolioConfig.personal.linkedin}
         />
         <Explorer />
         <Content />
-        <Footer github={data.contact.github} />
+        <Footer github={portfolioConfig.personal.github} />
       </AppProvider>
     </div>
   );
