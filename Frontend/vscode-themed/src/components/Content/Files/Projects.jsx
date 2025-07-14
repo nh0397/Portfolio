@@ -3,7 +3,7 @@ import "./Projects.css";
 import { FiGithub, FiExternalLink } from "react-icons/fi";
 import { AiOutlineStar, AiOutlineEye } from "react-icons/ai";
 import { BiGitRepoForked } from "react-icons/bi";
-
+import FeaturedProjects from "./FeaturedProjects";
 function Projects() {
   const [repos, setRepos] = useState([]);
 
@@ -20,6 +20,7 @@ function Projects() {
 
   return (
     <div className="projects-container">
+      <FeaturedProjects />
       <div className="projects-grid">
         {repos.map((repo) => (
           <div className="project-card" key={repo.id}>
@@ -40,9 +41,6 @@ function Projects() {
             <div className="repo-actions">
               <a href={repo.html_url} target="_blank" rel="noreferrer">
                 <FiGithub />
-              </a>
-              <a href={repo.homepage || repo.html_url} target="_blank" rel="noreferrer">
-                <FiExternalLink />
               </a>
             </div>
           </div>
