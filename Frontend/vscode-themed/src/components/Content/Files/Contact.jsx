@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Contact.css";
+import ResumeViewer from "./ResumeViewer";
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -7,6 +8,7 @@ function Contact() {
     email: "",
     message: "",
   });
+  const [showResume, setShowResume] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -199,9 +201,9 @@ function Contact() {
                 </div>
                 <div className="terminal-output">
                   <span className="icon">📄</span>{" "}
-                  <a href="/assets/Resume.pdf" target="_blank" rel="noreferrer">
+                  <button className="resume-viewer-btn" onClick={() => setShowResume(true)}>
                     View Resume
-                  </a>
+                  </button>
                 </div>
 
                 <div className="terminal-line">
@@ -224,6 +226,7 @@ function Contact() {
           </div>
         </div>
       </div>
+      {showResume && <ResumeViewer onClose={() => setShowResume(false)} />}
     </div>
   );
 }
