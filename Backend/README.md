@@ -1,82 +1,96 @@
-# Personal Portfolio with RAG Chatbot
+# Portfolio RAG Chatbot Backend
 
-This project is a personal portfolio website built with React.js, featuring a personalized RAG (Retrieval-Augmented Generation) Chatbot. The chatbot can answer questions related to the portfolio owner using data from their LinkedIn profile, resume, and GitHub repositories.
+A Flask backend that powers a RAG (Retrieval-Augmented Generation) chatbot for my portfolio websites. The chatbot can answer questions about my skills, projects, and experience using data from LinkedIn, GitHub, and resume.
 
-## Project Overview
+## 🚀 Quick Setup
 
-The portfolio consists of two main components:
+### 1. Environment Variables
 
-1. **Frontend**: A React.js application showcasing the portfolio.
-2. **Backend**: A Flask application that powers the RAG Chatbot.
+Create a `.env` file in your project root:
 
-The chatbot uses vector embeddings stored in MongoDB to fetch relevant information and Google Gemini to summarize and generate responses.
+```env
+# Google Gemini API
+GOOGLE_API_KEY=your_gemini_api_key_here
 
-## Backend Setup
+# MongoDB Atlas Configuration
+MONGO_USERNAME=your_mongodb_username
+MONGO_PASSWORD=your_mongodb_password
+MONGO_APP_NAME=your_app_name
+MONGO_DB_NAME=detail-extractor
+MONGO_CL_NAME=detail-extractor-collection
+MONGO_INDEX_NAME=vector_index_3
+MONGO_EMBEDDING_FIELD_NAME=embedding
 
-To run the backend locally, follow these steps:
+# Environment Configuration
+FLASK_ENV=development
+DEVELOPMENT_URL=http://localhost:3000
+PRODUCTION_URL=https://your-production-domain.com
+```
 
-1. Clone the repository (if available).
-2. Install the required dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Set up the following environment variables:
-   ```
-   GOOGLE_API_KEY=
-   MONGODB_API_KEY=
-   MONGO_DB_NAME=
-   MONGO_CL_NAME=
-   MONGO_INDEX_NAME=
-   MONGO_USERNAME=
-   MONGO_PASSWORD=
-   MONGO_EMBEDDING_FIELD_NAME=
-   DEVELOPMENT_URL=
-   PRODUCTION_URL=
-   FLASK_ENV=
-   ```
-4. Run the Flask application:
-   ```bash
-   python app.py
-   ```
+### 2. Install Dependencies
 
-## Frontend Repository
+```bash
+pip install -r requirements.txt
+```
 
-The frontend React application repository can be found at:
-[https://github.com/nh0397/my-portfolio](https://github.com/nh0397/my-portfolio)
+### 3. Run the Server
 
-## How It Works
+```bash
+python app.py
+```
 
-1. User asks a question through the portfolio interface.
-2. The backend receives the question and queries the MongoDB database to retrieve relevant vector embeddings.
-3. The retrieved data is sent to Google Gemini for summarization and answer generation.
-4. The generated answer is returned to the user through the frontend interface.
+The server will start on `http://localhost:5000`
 
-## Technologies Used
+## 🔧 API Endpoints
 
-- **Frontend**: React.js
+- **`GET /health`** - Server health check and MongoDB status
+- **`GET /config`** - Configuration information
+- **`POST /chat`** - Main chatbot endpoint
+- **`GET /debug-vector-search`** - Test vector search functionality
+
+### Chat Endpoint
+
+```bash
+POST /chat
+Content-Type: application/json
+
+{
+  "message": "What are Naisarg's skills?",
+  "conversation_history": "",
+  "session_id": "user_session_123"
+}
+```
+
+## 🧪 Testing
+
+```bash
+python test_api.py
+```
+
+## 🌐 Deployment
+
+Deploy to Vercel:
+
+```bash
+npm i -g vercel
+vercel
+```
+
+Set the same environment variables in Vercel dashboard.
+
+## 🔗 Related Repositories
+
+- **Frontend Portfolio**: [VSCode-Themed Portfolio](https://github.com/nh0397/VSCode-Themed-Portfolio)
+- **React Portfolio**: [My Portfolio](https://github.com/nh0397/my-portfolio)
+- **Data Extraction**: [Extract-your-Data-to-Create-A-RAG-Chatbot](https://github.com/nh0397/Extract-your-Data-to-Create-A-RAG-Chatbot)
+
+## 🛠️ Technologies
+
 - **Backend**: Flask
-- **Database**: MongoDB
+- **Database**: MongoDB Atlas with Vector Search
 - **AI Model**: Google Gemini
 - **Vector Embeddings**: Google's models/embedding-001
 
-## Contributing
-
-If you'd like to contribute to this project, please follow these steps:
-
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## License
+## 📝 License
 
 [MIT License](https://opensource.org/licenses/MIT)
-
-## Contact
-
-For any questions or inquiries about this project, please contact Naisarg at naisarg.halvadiya@gmail.com
-
----
-
-**Note**: This project uses Google's `models/embedding-001` for generating vector embeddings of the textual data. This model provides high-quality embeddings that enable efficient and accurate retrieval of relevant information for the RAG Chatbot.
