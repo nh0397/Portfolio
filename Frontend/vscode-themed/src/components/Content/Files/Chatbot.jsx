@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './Chatbot.css';
 import ChatbotService from '../../../services/ChatbotService';
+import { ui } from '../../../config/portfolioConfig';
 
 const Chatbot = ({ isOpen, onClose }) => {
   const [messages, setMessages] = useState([]);
@@ -25,7 +26,7 @@ const Chatbot = ({ isOpen, onClose }) => {
     } else {
       // Set initial message if no saved conversation
       const initialMessage = {
-        text: "Hi! I'm Naisarg's AI Buddy! You can ask me anything about him and I'd be happy to help you out!",
+        text: ui.chatbot.initialMessage,
         isBot: true,
         timestamp: new Date()
       };
@@ -115,7 +116,7 @@ const Chatbot = ({ isOpen, onClose }) => {
   const clearConversation = () => {
     ChatbotService.clearConversationSession();
     const initialMessage = {
-      text: "Hi! I'm Naisarg's AI Buddy! You can ask me anything about him and I'd be happy to help you out!",
+      text: ui.chatbot.initialMessage,
       isBot: true,
       timestamp: new Date()
     };
@@ -223,13 +224,13 @@ const Chatbot = ({ isOpen, onClose }) => {
         <div className="status-left">
           <span className="status-item">
             <span className="status-icon">🟢</span>
-            Connected
+            {ui.chatbot.statusBar.left[0]}
           </span>
-          <span className="status-item">Messages: {messages.length}</span>
+          <span className="status-item">{ui.chatbot.statusBar.left[1]}: {messages.length}</span>
         </div>
         <div className="status-right">
-          <span className="status-item">JavaScript</span>
-          <span className="status-item">UTF-8</span>
+          <span className="status-item">{ui.chatbot.statusBar.right[0]}</span>
+          <span className="status-item">{ui.chatbot.statusBar.right[1]}</span>
         </div>
       </div>
     </div>

@@ -7,18 +7,13 @@ import Projects from "./Files/Projects";
 import Experience from "./Files/Experience";
 import Contact from "./Files/Contact";
 import Chatbot from "./Files/Chatbot";
+import { ui } from "../../config/portfolioConfig";
 
 function Content() {
   const { activeFile, setActiveFile } = useContext(AppContext);
   const { copilotClicked, setCopilotClicked } = useContext(AppContext);
 
-  const tabs = [
-    { no: 1, name: "home.jsx" },
-    { no: 2, name: "about.html" },
-    { no: 3, name: "projects.js" },
-    { no: 4, name: "experience.css" },
-    { no: 5, name: "contact.sh" },
-  ];
+  const tabs = ui.tabs;
 
   const renderContent = () => {
     switch (activeFile) {

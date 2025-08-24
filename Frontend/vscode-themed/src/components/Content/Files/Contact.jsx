@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Contact.css";
 import ResumeViewer from "./ResumeViewer";
+import { ui, personal, social } from "../../../config/portfolioConfig";
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -27,21 +28,7 @@ function Contact() {
   };
 
   const setQuickMode = (mode) => {
-    let message = "";
-    switch (mode) {
-      case "job":
-        message = "I'd like to discuss a job opportunity with you.";
-        break;
-      case "project":
-        message = "I have a project idea I'd like to collaborate on.";
-        break;
-      case "question":
-        message = "I have a question about your work.";
-        break;
-      default:
-        message = "";
-    }
-
+    const message = ui.contact.quickTemplates[mode] || "";
     setFormData((prevState) => ({
       ...prevState,
       message,
@@ -54,7 +41,7 @@ function Contact() {
         <div className="main-content">
           <div className="contact-form-container">
             <form className="contact-form" onSubmit={handleSubmit}>
-              <h2 className="form-title">Contact Form</h2>
+              <h2 className="form-title">{ui.contact.formTitle}</h2>
 
               <div className="form-group">
                 <label htmlFor="name" className="form-label">
@@ -138,66 +125,66 @@ function Contact() {
           <div className="editor-container">
             <div className="terminal-container">
               <div className="panel-tabs">
-                <div className="panel-tab">Problems</div>
-                <div className="panel-tab">Output</div>
-                <div className="panel-tab">Debug Console</div>
-                <div className="panel-tab active">Terminal</div>
-                <div className="panel-tab">Ports</div>
+                {ui.contact.panelTabs.map((tab, index) => (
+                  <div key={index} className={`panel-tab ${tab === "Terminal" ? "active" : ""}`}>
+                    {tab}
+                  </div>
+                ))}
               </div>
               <div className="terminal-body">
                 <div className="terminal-line login-info">
-                  Last login: Tue May 13 09:45:53 on console
+                  {ui.contact.terminal.loginInfo}
                 </div>
 
                 <div className="terminal-line">
                   <span className="prompt-user">
-                    nh@Naisargs-MacBook-Pro ~ $
+                    {ui.contact.terminal.prompt}
                   </span>
                 </div>
 
                 <div className="terminal-line">
                   <span className="prompt-command">{"> whoami"}</span>
                 </div>
-                <div className="terminal-output">Naisarg Halvadiya</div>
+                <div className="terminal-output">{ui.contact.terminal.whoami}</div>
                 <div className="terminal-output">
-                  📦 Ready to be deployed to your dev team!
+                  {ui.contact.terminal.readyMessage}
                 </div>
 
                 <div className="terminal-line">
-                  <span className="prompt-command">{"> contact"}</span>
+                  <span className="prompt-command">{ui.contact.terminal.contactCommand}</span>
                 </div>
                 <div className="terminal-output">
                   <span className="icon">📧</span>{" "}
-                  <a href="mailto:naisarg.halvadiya@gmail.com">
-                    naisarg.halvadiya@gmail.com
+                  <a href={`mailto:${personal.email}`}>
+                    {personal.email}
                   </a>
                 </div>
                 <div className="terminal-output">
                   <span className="icon">🌐</span>{" "}
                   <a
-                    href="https://linkedin.com/in/naisarg-h"
+                    href={social.linkedin}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    linkedin.com/in/naisarg-h
+                    {social.linkedin.replace('https://', '')}
                   </a>
                 </div>
                 <div className="terminal-output">
                   <span className="icon">💻</span>{" "}
                   <a
-                    href="https://github.com/nh0397"
+                    href={social.github}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    github.com/nh0397
+                    {social.github.replace('https://', '')}
                   </a>
                 </div>
                 <div className="terminal-output">
-                  <span className="icon">📍</span> San Francisco, CA
+                  <span className="icon">📍</span> {personal.location}
                 </div>
 
                 <div className="terminal-line">
-                  <span className="prompt-command">{"> resume"}</span>
+                  <span className="prompt-command">{ui.contact.terminal.resumeCommand}</span>
                 </div>
                 <div className="terminal-output">
                   <span className="icon">📄</span>{" "}
@@ -208,16 +195,16 @@ function Contact() {
 
                 <div className="terminal-line">
                   <span className="prompt-command">
-                    {'> echo "Let\'s build something awesome together!"'}
+                    {ui.contact.terminal.echoCommand}
                   </span>
                 </div>
                 <div className="terminal-output">
-                  Let's build something awesome together! 🚀
+                  {ui.contact.terminal.echoOutput}
                 </div>
 
                 <div className="terminal-line">
                   <span className="prompt-user">
-                    nh@Naisargs-MacBook-Pro ~ $
+                    {ui.contact.terminal.prompt}
                   </span>
                   <span className="cursor"></span>
                 </div>
