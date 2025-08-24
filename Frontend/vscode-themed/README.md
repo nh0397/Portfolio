@@ -2,7 +2,7 @@
 
 ## 🎯 About This Project
 
-A **VSCode-themed interactive portfolio** that showcases my development journey, projects, and skills in a familiar code editor interface. Built with React and styled to look like your favorite IDE!
+This is my **VSCode-themed interactive portfolio** that showcases my development journey, projects, and skills in a familiar code editor interface. I built this with React and styled it to look like my favorite IDE - VSCode!
 
 <div align="center">
   <img src="src/assets/images/image.png" alt="VSCode Portfolio Demo" width="600" style="border-radius: 8px; border: 2px solid #333;">
@@ -67,9 +67,9 @@ npm run build
 ## 🎨 **Easy Customization - One File to Rule Them All!**
 
 ### 📝 **Main Configuration File**
-All your portfolio data is now centralized in one file: **`src/config/portfolioConfig.js`**
+Everything in my portfolio is centralized in one file: **`src/config/portfolioConfig.js`**
 
-This single file contains everything you need to customize:
+Feel free to clone this repository and customize it as per your use. Everything you need to change is in this single configuration file:
 
 ```javascript
 // ========================================
@@ -343,7 +343,7 @@ theme: {
 
 ## 📊 GitHub Integration
 
-The portfolio automatically fetches and displays:
+My portfolio automatically fetches and displays:
 - **Repository list** from GitHub API
 - **Contribution calendar** visualization
 - **Real-time project** statistics
@@ -401,7 +401,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- **VSCode** for the amazing IDE design inspiration
+- **VSCode** for being my favorite code editor and providing the amazing IDE design inspiration
 - **GitHub** for the comprehensive API
 - **React community** for the excellent ecosystem
 - **Tailwind CSS** for the utility-first approach

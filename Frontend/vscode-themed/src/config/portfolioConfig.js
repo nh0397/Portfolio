@@ -414,6 +414,7 @@ export const portfolioConfig = {
       skillsTitle: "🧰 Skills",
       featuredPostsTitle: "📢 Featured Posts",
       linkedinPosts: [
+        "https://www.linkedin.com/embed/feed/update/urn:li:share:7350411566250401793",
         "https://www.linkedin.com/embed/feed/update/urn:li:activity:7324986252401741825",
         "https://www.linkedin.com/embed/feed/update/urn:li:activity:7314908175084789763",
         "https://www.linkedin.com/embed/feed/update/urn:li:activity:7263450357144403969"
