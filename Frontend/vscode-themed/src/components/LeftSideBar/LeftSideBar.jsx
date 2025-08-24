@@ -59,7 +59,9 @@ function LeftSideBar({ github, linkedin }) {
           className={`icon-div ${activeFile === 6 ? "selected" : ""}`}
           // onClick={() => iconBorder(6)}
         >
-          <FaLinkedinIn color="white" className="icons" title="LinkedIn" />
+          <a href={linkedin} target="_blank" rel="noreferrer">
+            <FaLinkedinIn color="white" className="icons" title="LinkedIn" />
+          </a>
         </div>
         <div
           className={`icon-div ${activeFile === 7 ? "selected" : ""}`}

@@ -102,9 +102,36 @@
 .copilot-icon {
   margin-left: 8px;
   font-size: 16px;
-  height: 20px;
-  width: 20px;
   cursor: pointer;
+  display: inline-block;
+  height: 35px;
+}
+
+
+
+.chatbot-icon {
+  height: 30px;
+  width: 30px;
+  margin-top: 2px;
+
+  object-fit: cover;
+  border-radius: 100%;
+}
+
+@keyframes zoom-blink {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.8;
+  }
+}
+
+.blink {
+  animation: zoom-blink 2s infinite ease-in-out;
 }
 
 .topbar-right {
@@ -134,18 +161,4 @@
   transform: scale(1.5);
 }
 
-@keyframes zoom-blink {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 0.6;
-  }
-}
 
-.blink {
-  animation: zoom-blink 1s infinite ease-in-out;
-}

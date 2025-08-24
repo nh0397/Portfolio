@@ -34,7 +34,7 @@ const TopBar = () => {
           disabled={true}
         />
         <span
-          title="COMING SOON! :)"
+          title="Talk to my AI Buddy!"
           onClick={() => setCopilotClicked(!copilotClicked)}
           className={`copilot-icon ${!copilotClicked ? "blink" : ""}`}
         >
