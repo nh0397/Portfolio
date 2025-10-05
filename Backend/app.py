@@ -5,6 +5,7 @@ from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
 import os
 from google import genai
+import openai
 import numpy as np
 from urllib.parse import quote_plus
 import json
@@ -139,27 +140,28 @@ if GEMINI_API_KEY:
 else:
     print("❌ Gemini API key not found")
 
-class GoogleEmbeddings:
-    def __init__(self, model_name: str = "models/embedding-001") -> None:
-        self.model_name = model_name
-        self.client = genai.Client(api_key=GEMINI_API_KEY)
+class FireworksEmbeddings:
+    def __init__(self) -> None:
+        self.client = openai.OpenAI(
+            api_key=os.getenv('FIREWORKS_API_KEY'),
+            base_url="https://api.fireworks.ai/inference/v1"
+        )
 
-    def generate_embeddings(self, inp: str) -> np.ndarray:
-        if not GEMINI_API_KEY:
-            print("Please set correct Google API key")
+    def generate_embeddings(self, inp: str) -> list:
+        """Generate embeddings for input text using Fireworks.ai."""
+        if not os.getenv('FIREWORKS_API_KEY'):
+            print("Please set correct Fireworks API key")
             return []
 
         try:
-            result = self.client.models.embed_content(
-                model=self.model_name,
-                contents=inp
+            response = self.client.embeddings.create(
+                model="nomic-ai/nomic-embed-text-v1.5",
+                input=inp
             )
-            embds = np.array(result.embedding)
+            return response.data[0].embedding
         except Exception as e:
             print(f"Embeddings not found: {e}")
             return []
-
-        return list(list(embds.reshape(1, -1))[0])
 
 # Function to format the text based on symbols (*, **)
 def format_text(text: str) -> str:
@@ -403,8 +405,8 @@ Answer: """
         
         if 'context-specific' in classification:
             print("🔍 Performing vector search...")
-            google_embeddings = GoogleEmbeddings()
-            message_embedding = google_embeddings.generate_embeddings(message)
+            fireworks_embeddings = FireworksEmbeddings()
+            message_embedding = fireworks_embeddings.generate_embeddings(message)
 
             if not message_embedding:
                 print("❌ Failed to generate embeddings")
