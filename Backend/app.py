@@ -152,8 +152,7 @@ class GoogleEmbeddings:
         try:
             result = self.client.models.embed_content(
                 model=self.model_name,
-                text=inp,
-                task_type="retrieval_document"
+                contents=inp
             )
             embds = np.array(result.embedding)
         except Exception as e:
