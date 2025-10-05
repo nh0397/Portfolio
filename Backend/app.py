@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
-from flask_session import Session
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
@@ -31,6 +30,9 @@ MONGO_URI = f"mongodb+srv://{user_name}:{password}@{os.getenv('MONGO_APP_NAME')}
 
 app = Flask(__name__)
 
+# Secret key for session (use environment variable in production)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
+
 # Get environment URLs with fallbacks
 development_url = os.getenv('DEVELOPMENT_URL', 'http://localhost:3000')
 production_url = os.getenv('PRODUCTION_URL', 'https://your-production-domain.com')
@@ -44,11 +46,6 @@ CORS(app, resources={
         "supports_credentials": True
     }
 })
-
-# Session configuration
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
 
 # Debug environment variables
 def debug_env_variables():
