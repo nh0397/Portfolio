@@ -1,18 +1,27 @@
 # Portfolio Repository
 
-A comprehensive portfolio ecosystem showcasing multiple frontend implementations, intelligent backend services, and advanced data processing capabilities for creating personalized AI-powered experiences.
+A comprehensive portfolio ecosystem featuring AI-powered chatbot, sliding window chunking RAG system, and multiple frontend implementations for creating intelligent, personalized experiences.
+
+## 🚀 What's New
+
+### Latest Updates (October 2025)
+- ✅ **Sliding Window Chunking**: Implemented advanced text chunking with overlapping windows for better context preservation
+- ✅ **Google Gemini 2.5 Integration**: Upgraded to latest Gemini API for embeddings and content generation
+- ✅ **Simplified Architecture**: Restructured Scripts folder with clean, modular organization
+- ✅ **MongoDB Vector Database**: Enhanced vector search with chunked embeddings for precise retrieval
+- ✅ **Vercel Deployment**: Added complete deployment configuration for serverless Backend
 
 ## Motivation
 
-This portfolio ecosystem evolved from a simple desire to experiment with different technologies and create something truly unique:
+This portfolio ecosystem evolved from experimentation with cutting-edge technologies to create something truly unique:
 
 **The Journey:**
-1. **Simple React Portfolio** - Started as my first attempt to explore Three.js and create a clean, minimalist portfolio
-2. **VS Code Themed Portfolio** - As a software developer, I have a weird inclination towards VS Code, so I decided to build a portfolio that looks and feels like my favorite IDE
-3. **AI-Powered Backend** - With the rise of GenAI, I realized that just having a static website is very banal. Why not make it more immersive? Hence, I created an AI buddy that knows everything about my professional life
-4. **RAG Data Processing** - To make the AI truly intelligent, I built comprehensive data extraction tools that process my LinkedIn, GitHub, and resume data to create a personalized knowledge base
+1. **Simple React Portfolio** - Clean, minimalist portfolio exploring Three.js
+2. **VS Code Themed Portfolio** - Immersive IDE-inspired developer experience
+3. **AI-Powered Backend** - GenAI chatbot that knows everything about my professional life
+4. **RAG Data Processing** - Advanced data extraction with sliding window chunking for intelligent responses
 
-The result is a portfolio that not only showcases technical skills but provides visitors with an interactive, intelligent experience that can answer questions about my background, projects, and expertise in real-time.
+The result is a portfolio that provides visitors with an interactive, intelligent AI buddy that can answer questions about my background, projects, and expertise in real-time with precise, context-aware responses.
 
 ## Repository Structure
 
@@ -21,36 +30,42 @@ Portfolio/
 ├── Frontend/
 │   ├── simple-react/          # Minimalist React portfolio
 │   └── vscode-themed/         # VS Code themed portfolio
-├── Backend/                   # Flask API for portfolio chatbot
-└── Scripts/                   # RAG data extraction and processing tools
+├── Backend/                   # Flask API with RAG chatbot
+│   ├── app.py                # Main Flask application
+│   ├── requirements.txt      # Python dependencies
+│   ├── vercel.json          # Vercel deployment config
+│   └── DEPLOYMENT.md        # Deployment guide
+└── Scripts/                   # RAG data processing
+    ├── main.py               # Data processing pipeline
+    ├── linkedin/             # LinkedIn scraping
+    ├── github/               # GitHub scraping
+    ├── resume/               # Resume parsing
+    └── chunking/             # Sliding window chunking
+        ├── text_chunker.py
+        └── chunking_config.py
 ```
 
 ## Components Overview
 
-### Frontend Applications
+### 🎨 Frontend Applications
 
 #### Simple React Portfolio (`Frontend/simple-react/`)
 
-A clean, minimalist portfolio website built with React.js that focuses on content and user experience.
+A clean, minimalist portfolio website built with React.js focusing on content and UX.
 
 **Key Features:**
 - Responsive design with dark/light theme toggle
-- Smooth animations and transitions between sections
-- Customizable content through JSON configuration
-- Modern UI with accessibility compliance
-- Fast loading times with optimized assets
+- Smooth animations and transitions
+- JSON-based configuration
 - SEO-friendly structure
+- Fast loading with optimized assets
 
-**Technologies Used:**
-- React 18+ with functional components and hooks
-- CSS3 with custom animations
+**Technologies:**
+- React 18+ with hooks
+- CSS3 animations
 - Context API for theme management
-- Responsive design principles
 
-**Screenshots:**
-![Simple React Portfolio](./Frontend/simple-react/src/assets/Screenshots/Portfolio.png)
-
-**Getting Started:**
+**Quick Start:**
 ```bash
 cd Frontend/simple-react
 npm install
@@ -58,37 +73,18 @@ npm start
 # Open http://localhost:3000
 ```
 
-**Configuration:**
-Edit `src/data/data.json` to customize:
-- Personal information and bio
-- Skills and technologies
-- Project details and links
-- Experience and education
-- Contact information
-
 #### VS Code Themed Portfolio (`Frontend/vscode-themed/`)
 
-A unique portfolio website that mimics the VS Code interface, providing an immersive developer experience.
+Unique portfolio mimicking VS Code interface for an immersive developer experience.
 
 **Key Features:**
-- VS Code-inspired UI with file explorer, terminal, and editor panels
-- Interactive file navigation system
+- VS Code-inspired UI (explorer, terminal, editor)
+- Interactive file navigation
 - Real-time chatbot integration
-- Professional developer-focused design
-- Component-based architecture with Tailwind CSS
-- Advanced theming and customization options
+- Tailwind CSS styling
+- Component-based architecture
 
-**Technologies Used:**
-- React with modern hooks and context
-- Tailwind CSS for styling
-- Custom component library
-- Real-time API integration
-- Advanced state management
-
-**Screenshots:**
-![VS Code Themed Portfolio](./Frontend/vscode-themed/src/assets/images/image.png)
-
-**Getting Started:**
+**Quick Start:**
 ```bash
 cd Frontend/vscode-themed
 npm install
@@ -96,42 +92,51 @@ npm start
 # Open http://localhost:3000
 ```
 
-**Configuration:**
-Update `src/config/portfolioConfig.js` for:
-- File structure and navigation
-- Theme colors and styling
-- API endpoints and services
-- Component behavior and interactions
+### 🤖 Backend - AI-Powered RAG Chatbot
 
-### Backend Service
+A Flask-based API providing intelligent chatbot functionality using Retrieval-Augmented Generation (RAG) with sliding window chunking.
 
-#### Portfolio Chatbot API (`Backend/`)
-
-A robust Flask-based REST API that powers intelligent chatbot functionality across all portfolio sites.
+**Architecture:**
+```
+User Query → Embedding → Vector Search → Chunked Context → Gemini 2.5 → Response
+```
 
 **Key Features:**
-- Natural language processing for user queries
-- Integration with multiple AI services (OpenAI, Ollama, etc.)
-- RESTful API design with comprehensive error handling
-- CORS support for cross-origin requests
-- Rate limiting and security measures
-- Scalable architecture for production deployment
-- Comprehensive logging and monitoring
+- **Sliding Window Chunking**: 512-token chunks with 50-token overlap
+- **Google Gemini 2.5 Flash**: Latest AI model for generation
+- **MongoDB Atlas**: Vector search with 3072-dimension embeddings
+- **Context-Aware**: Distinguishes casual vs. context-specific queries
+- **Conversation Memory**: Maintains session-based conversation history
+- **CORS Support**: Cross-origin requests for frontend integration
 
 **API Endpoints:**
-- `POST /chat` - Main chat endpoint for user interactions
-- `GET /health` - Health check endpoint
-- `POST /feedback` - User feedback collection
-- `GET /analytics` - Usage analytics (if implemented)
 
-**Technologies Used:**
-- Python 3.8+ with Flask framework
-- RESTful API design principles
-- JSON Web Tokens for authentication
-- SQLite/PostgreSQL for data persistence
-- Docker support for containerization
+```bash
+# Health Check
+GET /health
 
-**Getting Started:**
+# Configuration Info
+GET /config
+
+# Main Chat Endpoint
+POST /chat
+{
+  "message": "What are your skills?",
+  "conversation_history": "",
+  "session_id": "user_123"
+}
+
+# Debug Vector Search
+GET /debug-vector-search?query=python
+```
+
+**Technologies:**
+- Flask 3.0.3 with Flask-CORS
+- Google Gemini 2.5 Flash API
+- MongoDB Atlas with vector search
+- Python 3.9+
+
+**Quick Start:**
 ```bash
 cd Backend
 pip install -r requirements.txt
@@ -140,332 +145,306 @@ python app.py
 ```
 
 **Environment Variables:**
-```bash
-# Required environment variables
-OPENAI_API_KEY=your_openai_api_key
-OLLAMA_BASE_URL=http://localhost:11434
-DATABASE_URL=sqlite:///portfolio.db
-SECRET_KEY=your_secret_key
+```env
+# Google Gemini API
+GOOGLE_API_KEY=your_api_key
+
+# MongoDB Atlas
+MONGO_USERNAME=username
+MONGO_PASSWORD=password
+MONGO_APP_NAME=app_name
+MONGO_DB_NAME=detail-extractor
+MONGO_CL_NAME=detail-extractor-collection
+MONGO_INDEX_NAME=vector_index_3
+MONGO_EMBEDDING_FIELD_NAME=embedding
+
+# Flask Config
+FLASK_ENV=development
+DEVELOPMENT_URL=http://localhost:3000
+PRODUCTION_URL=https://your-domain.com
 ```
 
-**Deployment:**
-The API can be deployed to:
-- Vercel (serverless functions)
-- Heroku (container deployment)
-- AWS/GCP/Azure (cloud platforms)
-- Docker containers (any platform)
+**Deployment to Vercel:**
+```bash
+cd Backend
+vercel
+# Set environment variables in Vercel dashboard
+vercel --prod
+```
 
-### Data Processing Scripts
+See `Backend/DEPLOYMENT.md` for complete deployment guide.
 
-#### RAG Data Extraction (`Scripts/`)
+### 📊 Scripts - RAG Data Processing
 
-Comprehensive tools for creating a Retrieval-Augmented Generation (RAG) system that processes personal data to create an intelligent knowledge base.
+Simple, focused data processing pipeline that reads, chunks, and stores your data in MongoDB vector database.
 
-**Key Features:**
-- LinkedIn profile data extraction and processing
-- GitHub repository scraping and analysis
-- Resume parsing and skill extraction
-- MongoDB integration for scalable data storage
-- Automated data processing pipeline
-- Docker containerization for easy deployment
-- Data validation and cleaning utilities
+**Single Purpose:**
+1. **Read** latest data from GitHub, LinkedIn, Resume
+2. **Chunk** with sliding window strategy (512 tokens, 50 overlap)
+3. **Create** embeddings using Google Gemini
+4. **Write** to MongoDB vector database
 
-**Processing Pipeline:**
-1. **Data Collection**: Scrape LinkedIn, GitHub, and resume data
-2. **Data Processing**: Clean, validate, and structure collected data
-3. **Vectorization**: Convert text data to embeddings for semantic search
-4. **Storage**: Store processed data in MongoDB with proper indexing
-5. **Retrieval**: Implement semantic search for relevant information retrieval
+**Folder Structure:**
+```
+Scripts/
+├── main.py                    # Main data processing script
+├── linkedin/
+│   └── linkedin_scraper.py   # LinkedIn profile scraping
+├── github/
+│   └── github_scraper.py     # GitHub repository data
+├── resume/
+│   └── resume_parser.py      # Resume PDF parsing
+└── chunking/
+    ├── text_chunker.py       # SlidingWindowChunker class
+    └── chunking_config.py    # Configuration
+```
 
-**Technologies Used:**
-- Python 3.8+ with async/await support
-- BeautifulSoup and Selenium for web scraping
-- MongoDB for document storage
-- OpenAI embeddings for vectorization
-- Docker for containerization
-- Pandas for data manipulation
+**Sliding Window Chunking:**
+```
+Original Text (1500 tokens)
+    ↓
+Chunk 1: tokens 0-512 (512 tokens)
+Chunk 2: tokens 462-974 (512 tokens, 50 overlap)
+Chunk 3: tokens 924-1436 (512 tokens, 50 overlap)
+    ↓
+Generate embeddings (3072 dimensions each)
+    ↓
+Store in MongoDB with metadata
+```
 
-**Getting Started:**
+**Features:**
+- **Context Preservation**: Overlapping chunks maintain context
+- **Metadata Rich**: Each chunk includes source type, section, index
+- **Token-Accurate**: Uses tiktoken for precise token counting
+- **Sentence Boundary Aware**: Respects natural text boundaries
+- **Section Identification**: Auto-identifies work_experience, skills, etc.
+
+**Configuration:**
+```python
+# chunking/chunking_config.py
+CHUNKING_CONFIG = {
+    "chunk_size": 512,           # Tokens per chunk
+    "overlap_size": 50,          # Overlap between chunks
+    "max_chunks_per_query": 5,   # Retrieval limit
+    "embedding_delay": 1,        # API rate limiting
+}
+```
+
+**Environment Variables:**
+```env
+# Google Gemini API
+GOOGLE_API_KEY=your_api_key
+
+# MongoDB Atlas
+MONGO_USERNAME=username
+MONGO_PASSWORD=password
+MONGO_DB_NAME=detail-extractor
+MONGO_CL_NAME=detail-extractor-collection
+
+# User Profile Data
+USER_NAME=Your Name
+USER_EMAIL=your@email.com
+GITHUB_USERNAME=your_github
+LINKEDIN_URL=https://linkedin.com/in/yourprofile
+
+# Optional (for scraping)
+LINKEDIN_EMAIL=email
+LINKEDIN_PASSWORD=password
+GITHUB_ACCESS_TOKEN=token
+```
+
+**Quick Start:**
 ```bash
 cd Scripts
+
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
 pip install -r requirements.txt
+
+# Add your resume
+cp /path/to/resume.pdf resources/Resume.pdf
+
+# Create .env file with credentials
+
+# Run the processing pipeline
 python main.py
 ```
 
-**Configuration:**
-Set up the following in `config.py`:
-```python
-# MongoDB connection
-MONGODB_URI = "mongodb://localhost:27017"
-DATABASE_NAME = "portfolio_rag"
-
-# API keys
-LINKEDIN_API_KEY = "your_linkedin_api_key"
-GITHUB_TOKEN = "your_github_token"
-OPENAI_API_KEY = "your_openai_api_key"
-
-# Processing settings
-BATCH_SIZE = 100
-MAX_RETRIES = 3
+**What Happens:**
+```
+🚀 Portfolio RAG Data Processing Script
+📖 Step 1: Reading latest data from sources...
+   📂 Fetching GitHub repositories...
+   🔗 Scraping LinkedIn profile...
+   📄 Parsing resume...
+🤖 Step 2: Formatting data with Gemini AI...
+🔪 Step 4: Setting up chunking system...
+✂️ Step 5: Chunking data with sliding window...
+🔮 Step 6: Creating embeddings for chunks...
+💾 Step 7: Writing chunks to MongoDB vector database...
+🎉 Data processing completed successfully!
 ```
 
-**Data Sources:**
-- **LinkedIn**: Professional experience, education, skills, connections
-- **GitHub**: Repository analysis, commit history, language usage
-- **Resume**: Skills, experience, education, certifications
-- **Custom Data**: Additional personal information and preferences
+**Output:**
+- MongoDB vector database with chunked embeddings
+- `final_data.json` backup file
+- Console logs with detailed progress
 
-## Architecture Overview
+## 🔧 Technical Highlights
 
-```mermaid
-graph TB
-    A[Frontend Applications] --> B[Backend API]
-    B --> C[AI Services]
-    B --> D[Database]
-    E[RAG Scripts] --> D
-    E --> F[External APIs]
-    F --> G[LinkedIn API]
-    F --> H[GitHub API]
-    C --> I[OpenAI API]
-    C --> J[Ollama Local]
+### Sliding Window Chunking Benefits
+
+**Before (Monolithic):**
+- Retrieved entire resume/LinkedIn/GitHub documents
+- Large context windows with irrelevant information
+- No overlap between sections
+- 3 documents in database
+
+**After (Chunked):**
+- Retrieves specific relevant sections
+- Focused chunks with only relevant content
+- Overlapping chunks maintain context
+- ~10-15 chunks in database with metadata
+
+**Performance Gains:**
+- 🎯 **Better Precision**: Specific sections vs. entire documents
+- 📊 **Token Efficiency**: Smaller, focused chunks
+- 🔗 **Context Preservation**: Overlapping maintains continuity
+- 📈 **Scalability**: Grows efficiently with more data
+
+### RAG Architecture
+
+```
+┌─────────────┐
+│ User Query  │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────────────┐
+│ Gemini Embedding    │ (3072 dimensions)
+└──────┬──────────────┘
+       │
+       ▼
+┌─────────────────────┐
+│ MongoDB Vector      │
+│ Search              │ (Find top 5 chunks)
+└──────┬──────────────┘
+       │
+       ▼
+┌─────────────────────┐
+│ Chunk Assembly      │ (Combine with metadata)
+└──────┬──────────────┘
+       │
+       ▼
+┌─────────────────────┐
+│ Gemini 2.5 Flash    │ (Generate response)
+└──────┬──────────────┘
+       │
+       ▼
+┌─────────────────────┐
+│ Formatted Response  │
+└─────────────────────┘
 ```
 
+## 🚀 Getting Started
 
-## Development Workflow
+### Prerequisites
+- Node.js 16+ (for Frontend)
+- Python 3.9+ (for Backend/Scripts)
+- MongoDB Atlas account
+- Google Gemini API key
 
-### Local Development Setup
+### Quick Setup
 
-1. **Clone the repository:**
+1. **Clone Repository:**
 ```bash
-git clone https://github.com/your-username/portfolio.git
-cd portfolio
+git clone https://github.com/yourusername/Portfolio.git
+cd Portfolio
 ```
 
-2. **Set up Frontend Applications:**
+2. **Setup Frontend:**
 ```bash
-# Simple React Portfolio
-cd Frontend/simple-react
-npm install
-npm start
-
-# VS Code Themed Portfolio (in another terminal)
 cd Frontend/vscode-themed
 npm install
 npm start
 ```
 
-3. **Set up Backend API:**
+3. **Setup Backend:**
 ```bash
 cd Backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
+# Create .env with credentials
 python app.py
 ```
 
-4. **Set up RAG Processing:**
+4. **Process Your Data:**
 ```bash
 cd Scripts
-python -m venv venv
-source venv/bin/activate
 pip install -r requirements.txt
+# Create .env with credentials
+# Add Resume.pdf to resources/
 python main.py
 ```
 
-### Environment Configuration
+## 📦 Deployment
 
-Create `.env` files in each component directory:
-
-**Frontend/.env:**
+### Frontend (Netlify)
 ```bash
-REACT_APP_API_URL=http://localhost:5000
-REACT_APP_ENVIRONMENT=development
-```
-
-**Backend/.env:**
-```bash
-FLASK_ENV=development
-OPENAI_API_KEY=your_key_here
-DATABASE_URL=sqlite:///portfolio.db
-```
-
-**Scripts/.env:**
-```bash
-MONGODB_URI=mongodb://localhost:27017
-LINKEDIN_API_KEY=your_key_here
-GITHUB_TOKEN=your_token_here
-```
-
-## Deployment Strategies
-
-### Frontend Deployment
-
-**Netlify (Recommended):**
-```bash
-# Build the application
+cd Frontend/vscode-themed
 npm run build
-
-# Deploy to Netlify
-netlify deploy --prod --dir=build
+# Deploy dist/ folder to Netlify
 ```
 
-**Vercel:**
+### Backend (Vercel)
 ```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
+cd Backend
+vercel
+# Set environment variables in dashboard
 vercel --prod
 ```
 
-### Backend Deployment
+See `Backend/DEPLOYMENT.md` for detailed instructions.
 
-**Vercel (Serverless):**
-```bash
-# Install Vercel CLI
-npm i -g vercel
+## 🔐 Security
 
-# Deploy
-vercel --prod
-```
+- ✅ Environment variables for sensitive data
+- ✅ `.env` files excluded from git
+- ✅ CORS properly configured
+- ✅ MongoDB Atlas with authentication
+- ✅ Rate limiting on API endpoints
 
-**Docker:**
-```bash
-# Build image
-docker build -t portfolio-api .
+## 📊 Project Stats
 
-# Run container
-docker run -p 5000:5000 portfolio-api
-```
+- **Frontend**: 2 implementations (React, React+Tailwind)
+- **Backend**: Flask API with RAG capabilities
+- **Data Sources**: LinkedIn, GitHub, Resume
+- **Chunking**: Sliding window (512 tokens, 50 overlap)
+- **Embeddings**: 3072 dimensions (Gemini)
+- **Database**: MongoDB Atlas with vector search
+- **AI Model**: Google Gemini 2.5 Flash
 
-### RAG Scripts Deployment
+## 🤝 Contributing
 
-**Docker Compose:**
-```yaml
-version: '3.8'
-services:
-  rag-processor:
-    build: .
-    environment:
-      - MONGODB_URI=mongodb://mongo:27017
-    depends_on:
-      - mongo
-  
-  mongo:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-```
+This is a personal portfolio project, but feel free to:
+- Open issues for bugs or suggestions
+- Fork and adapt for your own portfolio
+- Share improvements or optimizations
 
-## Performance Optimization
+## 📝 License
 
-### Frontend Optimizations
-- Code splitting and lazy loading
-- Image optimization and compression
-- Bundle size analysis and optimization
-- Service worker implementation for caching
-- CDN integration for static assets
+MIT License - See LICENSE file for details
 
-### Backend Optimizations
-- Database query optimization
-- Caching strategies (Redis)
-- Rate limiting and request throttling
-- Connection pooling
-- Async processing for heavy operations
+## 🔗 Links
 
-### RAG System Optimizations
-- Batch processing for large datasets
-- Vector indexing for fast retrieval
-- Data compression and storage optimization
-- Parallel processing for multiple data sources
-- Incremental updates for real-time data
-
-## Security Considerations
-
-### Frontend Security
-- Content Security Policy (CSP) implementation
-- XSS protection and input sanitization
-- HTTPS enforcement
-- Secure API communication
-
-### Backend Security
-- API authentication and authorization
-- Input validation and sanitization
-- Rate limiting and DDoS protection
-- Secure environment variable management
-- Database security and access control
-
-### Data Processing Security
-- Secure API key management
-- Data encryption at rest and in transit
-- Access logging and monitoring
-- Privacy compliance (GDPR, CCPA)
-
-## Monitoring and Analytics
-
-### Application Monitoring
-- Error tracking and logging
-- Performance monitoring
-- User analytics and behavior tracking
-- API usage metrics
-- System health monitoring
-
-### Recommended Tools
-- **Error Tracking**: Sentry, Rollbar
-- **Analytics**: Google Analytics, Mixpanel
-- **Performance**: Lighthouse, WebPageTest
-- **Monitoring**: DataDog, New Relic
-- **Logging**: Winston, LogRocket
-
-## Contributing
-
-We welcome contributions to improve this portfolio ecosystem. Here's how you can help:
-
-### Development Process
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes with proper testing
-4. Update documentation as needed
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
-
-### Code Standards
-- Follow existing code style and conventions
-- Write comprehensive tests for new features
-- Update documentation for any API changes
-- Ensure all components work together seamlessly
-- Follow security best practices
-
-### Areas for Contribution
-- New frontend themes and designs
-- Backend API enhancements
-- RAG system improvements
-- Documentation and examples
-- Performance optimizations
-- Security enhancements
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contact and Support
-
-For questions, collaboration opportunities, or support:
-
-- **Email**: [Your Email]
-- **LinkedIn**: [Your LinkedIn Profile]
-- **GitHub**: [Your GitHub Profile]
-- **Portfolio**: [Your Portfolio URL]
-
-## Acknowledgments
-
-- React community for excellent documentation and ecosystem
-- VS Code team for design inspiration and developer experience
-- OpenAI for powerful AI capabilities
-- MongoDB team for flexible document storage
-- All open source contributors whose libraries make this project possible
+- **Live Portfolio**: [Your Portfolio URL]
+- **LinkedIn**: [Your LinkedIn]
+- **GitHub**: [Your GitHub]
 
 ---
 
-*This portfolio repository demonstrates modern full-stack development practices, AI integration, and scalable architecture design. Each component can be used independently or together to create a comprehensive portfolio solution.*
+**Built with ❤️ using React, Flask, MongoDB, and Google Gemini AI**
+
+*Last Updated: October 2025*

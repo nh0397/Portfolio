@@ -1,10 +1,17 @@
-# Exclude the virtual environment
-myenv/
-# Exclude environment files
 .env
-# Exclude local development files and directories
-.git/
+__pycache__
 *.pyc
-__pycache__/
-.DS_Store
-.vscode/
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+dist
+build
+.pytest_cache
+.coverage
+htmlcov
+venv
+env
+ENV
