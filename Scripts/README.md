@@ -1,128 +1,226 @@
-# Personal Data Extractor
+# Portfolio RAG System - Data Processing Script
 
-This project is designed to automate the extraction of personal data from LinkedIn profiles, GitHub repositories, and resumes, and then generate a structured JSON file with the extracted information. 
+A simple data processing script that reads latest data from GitHub, LinkedIn, and Resume, chunks it, creates embeddings, and writes to MongoDB vector database.
 
-The project uses Python, Selenium, BeautifulSoup, and various other libraries to accomplish this.
+## 🎯 **Single Purpose**
 
-Before you begin, ensure you have the following installed:
+This Scripts folder has **ONE JOB**:
+1. **Read** latest data from GitHub, LinkedIn, and Resume
+2. **Chunk** the data with sliding window strategy  
+3. **Create** embeddings using Google Gemini
+4. **Write** everything to MongoDB vector database
 
-- Python 3.x
-- pip (Python package installer)
-- Google Chrome Browser
-- ChromeDriver (automatically managed by webdriver_manager)
+That's it. No server, no API, just data processing.
 
-## Installation
-
-
-Clone the Repository
+## 🏗️ **Simple Structure**
 
 ```
-git clone https://github.com/yourusername/RAG-Personal-Data-Extractor.git
-cd RAG-Personal-Data-Extractor
+Scripts/
+├── main.py                    # THE ONLY SCRIPT YOU NEED
+├── requirements.txt           # Python dependencies
+├── .env                       # Environment variables (create this)
+├── final_data.json           # Generated final data (backup)
+├── resources/                 # Static resources
+│   └── Resume.pdf            # Your resume file
+├── linkedin/                  # LinkedIn scraping
+│   └── linkedin_scraper.py
+├── github/                    # GitHub scraping
+│   └── github_scraper.py
+├── resume/                    # Resume parsing
+│   └── resume_parser.py
+└── chunking/                  # Text chunking
+    ├── text_chunker.py
+    └── chunking_config.py
 ```
 
-Install Required Python Packages
+## 🚀 **How to Use**
 
-Install all the required Python packages using pip:
+### 1. **Setup Environment**
 
-```
+```bash
+# Navigate to Scripts directory
+cd Scripts
+
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-If you don't have a requirements.txt file, you can manually install the required packages:
+### 2. **Create .env File**
 
-```
-pip install selenium beautifulsoup4 webdriver-manager python-dotenv pymupdf
-```
+Create `.env` file in the Scripts directory:
 
-Environment Setup
+```env
+# Google Gemini API
+GOOGLE_API_KEY=your_gemini_api_key_here
 
-Create a .env file in the project root directory and add your credentials:
+# MongoDB Atlas Configuration
+MONGO_USERNAME=your_mongodb_username
+MONGO_PASSWORD=your_mongodb_password
+MONGO_APP_NAME=your_app_name
+MONGO_DB_NAME=detail-extractor
+MONGO_CL_NAME=detail-extractor-collection
+MONGO_INDEX_NAME=vector_index_3
+MONGO_EMBEDDING_FIELD_NAME=embedding
 
-```
-LINKEDIN_EMAIL=your_email@example.com
-LINKEDIN_PASSWORD=your_password
-GITHUB_ACCESS_TOKEN=your_github_access_token
+# User Profile Data
+USER_NAME=your_full_name
+USER_EMAIL=your_email@example.com
+GITHUB_USERNAME=your_github_username
 LINKEDIN_URL=https://www.linkedin.com/in/your-profile-url/
-GOOGLE_API_KEY=your_google_api_key
-MONGO_URI=your_mongodb_uri
-MONGO_DB_NAME=your_database_name
-MONGO_CL_NAME=your_collection_name
-USER_NAME=your_name
-USER_EMAIL=your_email
+
+# Optional (for scraping)
+LINKEDIN_EMAIL=your_linkedin_email@example.com
+LINKEDIN_PASSWORD=your_linkedin_password
+GITHUB_ACCESS_TOKEN=your_github_access_token
 ```
-- Replace `your_email@example.com` with your LinkedIn email.
-- Replace `your_password` with your LinkedIn password.
-- Replace `your_github_access_token` with your GitHub Personal Access Token.
-- Replace `https://www.linkedin.com/in/your-profile-url/` with your LinkedIn profile URL.
-- Replace `your_google_api_key` with your Google API key.
-- Replace `your_mongodb_uri` with your MongoDB connection string.
-- Replace `your_database_name` with your MongoDB database name.
-- Replace `your_collection_name` with your MongoDB collection name for basic details.
-- Replace `your_name` with your name.
-- Replace `your_email` with your email.
 
-### Add Your Resume
+### 3. **Add Your Resume**
 
-Place your resume file named `Resume.pdf` in the `./resources/` directory of the project. This file will be used for resume parsing.
-
-
-## Running the Project
-
-Execute the main Python script to start the data extraction process:
+```bash
+# Place your resume in the resources directory
+cp /path/to/your/resume.pdf resources/Resume.pdf
 ```
+
+### 4. **Run the Script**
+
+```bash
+# That's it! Just run main.py
 python main.py
 ```
-The script will:
 
-- Log in to your LinkedIn account and scrape the profile data.
-- Fetch all repositories from your GitHub account and extract README content.
-- Parse your resume from a PDF file located in ./resources/Resume.pdf.
-- Combine the extracted data into a structured JSON file and save it as final_data.json.
-- Review the Output
+## 📊 **What main.py Does**
 
-The extracted data will be printed in the terminal and saved in a JSON file named final_data.json in the project root directory.
-
-## Project Structure
 ```
-├── linkedin_scraper.py         # LinkedIn scraping script
-├── github_scraper.py           # GitHub scraping script
-├── resume_parser.py            # Resume parsing script
-├── user_input.py               # Script for handling user input
-├── data_processing.py          # Script for processing and generating final JSON
-├── main.py                     # Main script to run the project
-├── .env                        # Environment variables file
-├── README.md                   # Project documentation
-├── requirements.txt            # Python package dependencies
-└── resources/
-    └── Resume.pdf              # Your resume file for parsing
-```    
-## Troubleshooting
+🚀 Portfolio RAG Data Processing Script
+==================================================
+Job: Read data → Chunk → Embed → Store in vector DB
+==================================================
 
-403 Error When Fetching GitHub Data:
+📖 Step 1: Reading latest data from sources...
+   📂 Fetching latest GitHub repositories...
+   🔗 Scraping latest LinkedIn profile...
+   📄 Parsing resume...
 
-- Ensure your GitHub Personal Access Token has the necessary permissions to read your repositories.
-- Check your API rate limits on GitHub.
-- If you don't have a personal access token, go to https://github.com/settings/tokens
+🤖 Step 2: Formatting data with Gemini AI...
+   📝 Formatting resume data...
+   🔗 Formatting LinkedIn data...
+   📂 Formatting GitHub data...
 
-LinkedIn Scraping Issues:
+🔪 Step 4: Setting up chunking system...
+   📏 Chunk size: 512 tokens
+   🔄 Overlap size: 50 tokens
 
-- If Selenium is not able to log in to LinkedIn, ensure that the email and password in the .env file are correct.
-- If LinkedIn profile data is not being scraped correctly, verify the profile URL and the page structure for any changes.
+✂️ Step 5: Chunking data with sliding window...
+   📄 Created X resume chunks
+   🔗 Created Y LinkedIn chunks
+   📂 Created Z GitHub chunks
 
-PDF Extraction Issues:
+🔮 Step 6: Creating embeddings for chunks...
+   📝 Creating embedding for resume chunk 1/X...
+   🔗 Creating embedding for LinkedIn chunk 1/Y...
+   📂 Creating embedding for GitHub chunk 1/Z...
 
-- Ensure that the pymupdf package is installed correctly and that your resume file is located in the ./resources/ directory.
+💾 Step 7: Writing chunks to MongoDB vector database...
+   ✅ Written N chunks to MongoDB vector database
+   📊 Database: detail-extractor
+   📁 Collection: detail-extractor-collection
 
-MongoDB Connection Issues:
+🎉 Data processing completed successfully!
+✅ Script completed - Vector database is ready for your chatbot!
+```
 
-- Ensure that your MongoDB connection string (`MONGO_URI`) is correct and includes the proper username and password.
-- Verify that the user has the necessary permissions to access the database and collections.
-- Check MongoDB logs for more detailed error messages if authentication fails.
+## 📦 **Folder Structure**
 
-## Contributing
+### **🔗 linkedin/**
+- **File**: `linkedin_scraper.py`
+- **Purpose**: Scrape latest LinkedIn profile data
 
-Contributions are welcome! If you find any issues or have suggestions for improvements, feel free to create a pull request or open an issue on GitHub.
+### **📂 github/**
+- **File**: `github_scraper.py`
+- **Purpose**: Fetch latest GitHub repository data
 
-## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+### **📄 resume/**
+- **File**: `resume_parser.py`
+- **Purpose**: Parse resume PDF and extract text
+
+### **🔪 chunking/**
+- **Files**: 
+  - `text_chunker.py` - SlidingWindowChunker class
+  - `chunking_config.py` - Configuration settings
+- **Purpose**: Chunk text with overlapping windows and metadata
+
+## 🔧 **Configuration**
+
+### **Chunking Parameters**
+```python
+# In chunking/chunking_config.py
+CHUNKING_CONFIG = {
+    "chunk_size": 512,           # Maximum tokens per chunk
+    "overlap_size": 50,          # Tokens to overlap between chunks
+    "max_chunks_per_query": 5,   # Maximum chunks to retrieve per query
+    "embedding_delay": 1,        # API rate limiting (seconds)
+}
+```
+
+## 🎯 **When to Run**
+
+Run this script whenever you want to update your vector database with:
+
+- **New GitHub repositories** or updated descriptions
+- **Updated LinkedIn profile** information
+- **Updated resume** with new experiences/skills
+- **After making changes** to any of your data sources
+
+## 📈 **Performance Features**
+
+### **Sliding Window Chunking**
+- **Context Preservation**: Overlapping chunks maintain context
+- **Precise Retrieval**: Specific sections instead of entire documents
+- **Token Efficiency**: Optimized chunk sizes for LLM processing
+- **Metadata Enhancement**: Section-aware retrieval
+
+### **Vector Search Ready**
+- **Semantic Similarity**: Google Gemini embeddings
+- **MongoDB Atlas**: Vector search index
+- **Multi-source**: Resume, LinkedIn, GitHub data
+- **Real-time Ready**: Fast retrieval for chatbot responses
+
+## 🔒 **Security**
+
+- **Environment Variables**: Sensitive data in `.env` file
+- **API Key Management**: Secure Google API key handling
+- **Rate Limiting**: API call throttling to avoid limits
+
+## 🛠️ **Development**
+
+### **Adding New Data Sources**
+1. Create new folder (e.g., `twitter/`, `medium/`)
+2. Add scraper file
+3. Import and use in `main.py`
+
+### **Modifying Chunking**
+1. Edit `chunking/chunking_config.py`
+2. Adjust parameters as needed
+
+## 📊 **Output**
+
+The script creates:
+- **MongoDB Vector Database**: All chunks with embeddings stored
+- **final_data.json**: Backup of processed data
+- **Console Output**: Detailed progress and summary
+
+## 🚀 **Integration**
+
+Once you run this script, your MongoDB vector database is ready to be used by:
+- Your portfolio website chatbot
+- Any RAG application
+- Vector search queries
+- AI-powered resume matching
+
+---
+
+**🎉 Simple, focused, and effective - exactly what you need!**

@@ -5,7 +5,7 @@ from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
 import os
-import google.generativeai as genai
+from google import genai
 import numpy as np
 from urllib.parse import quote_plus
 import json
@@ -138,7 +138,6 @@ except Exception as e:
 # Configure Gemini API
 GEMINI_API_KEY = os.getenv('GOOGLE_API_KEY')
 if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
     print("✅ Gemini API configured")
 else:
     print("❌ Gemini API key not found")
@@ -146,21 +145,22 @@ else:
 class GoogleEmbeddings:
     def __init__(self, model_name: str = "models/embedding-001") -> None:
         self.model_name = model_name
+        self.client = genai.Client(api_key=GEMINI_API_KEY)
 
     def generate_embeddings(self, inp: str) -> np.ndarray:
         if not GEMINI_API_KEY:
             print("Please set correct Google API key")
             return []
 
-        genai.configure(api_key=GEMINI_API_KEY)
-        result = genai.embed_content(model=self.model_name,
-                                     content=inp,
-                                     task_type="retrieval_document",)
-
         try:
-            embds = np.array(result.get("embedding", []))
-        except:
-            print("Embeddings not found")
+            result = self.client.models.embed_content(
+                model=self.model_name,
+                content=inp,
+                task_type="retrieval_document"
+            )
+            embds = np.array(result.embedding)
+        except Exception as e:
+            print(f"Embeddings not found: {e}")
             return []
 
         return list(list(embds.reshape(1, -1))[0])
@@ -217,9 +217,11 @@ def find_similar_documents(
             {"$match": query},
             {
                 "$project": {
-                    "resume_data": 1,
-                    "github_data": 1,
-                    "linkedin_data": 1,
+                    "chunk_text": 1,
+                    "source_type": 1,
+                    "chunk_index": 1,
+                    "metadata": 1,
+                    "token_count": 1,
                     "score": {"$meta": "vectorSearchScore"},
                 }
             },
@@ -302,9 +304,11 @@ def debug_vector_search():
             },
             {
                 "$project": {
-                    "resume_data": 1,
-                    "github_data": 1, 
-                    "linkedin_data": 1,
+                    "chunk_text": 1,
+                    "source_type": 1,
+                    "chunk_index": 1,
+                    "metadata": 1,
+                    "token_count": 1,
                     "score": {"$meta": "vectorSearchScore"},
                     "_id": 1
                 }
@@ -348,14 +352,29 @@ def chat():
         if client is None or db is None or collection is None:
             return jsonify({'response': 'Sorry, database connection is not available. Please try again later.'}), 500
             
-        data = request.json
-        print("data is here", data)
-        message = data.get('message')
-        print('message is here', message)
+        # Get data from request - try JSON first, then parse manually
+        try:
+            data = request.get_json(force=True, silent=True)
+            if not data or not isinstance(data, dict):
+                raise ValueError("Not valid JSON")
+        except:
+            # Parse the weird format manually
+            data = {}
+            body_str = request.data.decode('utf-8')
+            for line in body_str.split('\n'):
+                if ':' in line:
+                    key, value = line.split(':', 1)
+                    data[key.strip()] = value.strip().strip('"')
+        
+        message = data.get('message', '')
         conversation_history = data.get('conversation_history', '')
-        print('conv hist', conversation_history)
         session_id = data.get('session_id', 'default_session')
-        print('session id', session_id)
+        
+        if not message:
+            return jsonify({'response': 'Error: No message provided'}), 400
+        
+        print(f"💬 Received message: {message}")
+        print(f"📝 Session ID: {session_id}")
 
         print(f"💬 Received message: {message}")
 
@@ -375,7 +394,11 @@ Classify as:
 Answer: """
         
         try:
-            classification_response = genai.GenerativeModel('gemini-1.5-flash').generate_content(initial_prompt)
+            gemini_client = genai.Client(api_key=GEMINI_API_KEY)
+            classification_response = gemini_client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=initial_prompt
+            )
             classification = classification_response.text.strip().lower()
             print(f'🤖 Classification: {classification}')
         except Exception as e:
@@ -409,19 +432,30 @@ Question: {message}
 You are Naisarg's AI assistant. Answer the question about Naisarg directly and naturally. Be conversational but informative. Don't use repetitive greetings."""
 
             else:
-                # Extract document content
+                # Extract chunk content
                 similar_texts = []
-                for doc in similar_docs:
-                    for key in ["resume_data", "github_data", "linkedin_data"]:
-                        if key in doc:
-                            try:
-                                parsed_data = json.loads(doc[key])
-                                similar_texts.append(json.dumps(parsed_data, indent=2))
-                            except json.JSONDecodeError as e:
-                                print(f"Error parsing JSON data: {e}")
+                chunk_metadata = []
+                
+                for chunk in similar_docs:
+                    if "chunk_text" in chunk:
+                        similar_texts.append(chunk["chunk_text"])
+                        # Collect metadata for better context
+                        metadata = {
+                            "source_type": chunk.get("source_type", "unknown"),
+                            "chunk_index": chunk.get("chunk_index", 0),
+                            "section": chunk.get("metadata", {}).get("section", "general"),
+                            "score": chunk.get("score", 0)
+                        }
+                        chunk_metadata.append(metadata)
 
-                combined_texts = "\n".join(similar_texts)
-                print(f"📄 Found {len(similar_texts)} relevant text sections")
+                # Combine texts with source information
+                combined_texts = ""
+                for i, (text, meta) in enumerate(zip(similar_texts, chunk_metadata)):
+                    source_info = f"[Source: {meta['source_type']} - {meta['section']} - Chunk {meta['chunk_index']}]"
+                    combined_texts += f"{source_info}\n{text}\n\n"
+
+                print(f"📄 Retrieved {len(similar_docs)} relevant chunks")
+                print(f"📊 Chunk sources: {[meta['source_type'] for meta in chunk_metadata]}")
 
                 prompt = f"""Information about Naisarg:
 {combined_texts}
@@ -478,7 +512,10 @@ DON'T:
 
         # Generate response
         try:
-            response = genai.GenerativeModel('gemini-1.5-flash').generate_content(prompt)
+            response = gemini_client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt
+            )
             response_text = format_text(response.text)
         except Exception as e:
             print(f"❌ Gemini API failed: {e}")
