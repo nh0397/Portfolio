@@ -152,7 +152,7 @@ class GoogleEmbeddings:
         try:
             result = self.client.models.embed_content(
                 model=self.model_name,
-                content=inp,
+                text=inp,
                 task_type="retrieval_document"
             )
             embds = np.array(result.embedding)
