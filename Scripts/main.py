@@ -18,6 +18,7 @@ import numpy as np
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from google import genai
+import openai
 
 # Import from folders
 from linkedin.linkedin_scraper import scrape_linkedin_profile
@@ -33,31 +34,30 @@ load_dotenv()
 GEMINI_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 
-class GoogleEmbeddings:
-    """Google Embeddings class for generating embeddings using Gemini API."""
+class FireworksEmbeddings:
+    """Fireworks.ai Embeddings class for generating embeddings."""
     
-    def __init__(self, model_name: str = "models/embedding-001") -> None:
-        self.model_name = model_name
-        self.client = genai.Client(api_key=GEMINI_API_KEY)
+    def __init__(self) -> None:
+        self.client = openai.OpenAI(
+            api_key=os.getenv('FIREWORKS_API_KEY'),
+            base_url="https://api.fireworks.ai/inference/v1"
+        )
 
-    def generate_embeddings(self, inp: str) -> np.ndarray:
-        """Generate embeddings for input text."""
-        if not GEMINI_API_KEY:
-            print("Please set correct Google API key")
+    def generate_embeddings(self, inp: str) -> list:
+        """Generate embeddings for input text using Fireworks.ai."""
+        if not os.getenv('FIREWORKS_API_KEY'):
+            print("Please set correct Fireworks API key")
             return []
 
         try:
-            result = self.client.models.embed_content(
-                model="gemini-embedding-001",
-                contents=inp
+            response = self.client.embeddings.create(
+                model="nomic-ai/nomic-embed-text-v1.5",
+                input=inp
             )
-            # Extract embedding values from the first embedding in the list
-            embds = list(result.embeddings[0].values)
+            return response.data[0].embedding
         except Exception as e:
             print(f"Embeddings not found: {e}")
             return []
-
-        return embds
 
 
 def format_resume_with_gemini(resume_data):
@@ -309,7 +309,7 @@ def main():
     
     # Step 4: Setup chunking system
     print("\n🔪 Step 4: Setting up chunking system...")
-    google_embeddings = GoogleEmbeddings()
+    fireworks_embeddings = FireworksEmbeddings()
     config = get_chunking_config()
     
     chunker = SlidingWindowChunker(
@@ -340,7 +340,7 @@ def main():
     # Process resume chunks
     for i, chunk in enumerate(resume_chunks):
         print(f"   📝 Creating embedding for resume chunk {i+1}/{len(resume_chunks)}")
-        chunk_embedding = google_embeddings.generate_embeddings(chunk["chunk_text"])
+        chunk_embedding = fireworks_embeddings.generate_embeddings(chunk["chunk_text"])
         chunk["embedding"] = chunk_embedding
         chunk["source_type"] = "resume"
         all_chunks.append(chunk)
@@ -349,7 +349,7 @@ def main():
     # Process LinkedIn chunks
     for i, chunk in enumerate(linkedin_chunks):
         print(f"   🔗 Creating embedding for LinkedIn chunk {i+1}/{len(linkedin_chunks)}")
-        chunk_embedding = google_embeddings.generate_embeddings(chunk["chunk_text"])
+        chunk_embedding = fireworks_embeddings.generate_embeddings(chunk["chunk_text"])
         chunk["embedding"] = chunk_embedding
         chunk["source_type"] = "linkedin"
         all_chunks.append(chunk)
@@ -358,7 +358,7 @@ def main():
     # Process GitHub chunks
     for i, chunk in enumerate(github_chunks):
         print(f"   📂 Creating embedding for GitHub chunk {i+1}/{len(github_chunks)}")
-        chunk_embedding = google_embeddings.generate_embeddings(chunk["chunk_text"])
+        chunk_embedding = fireworks_embeddings.generate_embeddings(chunk["chunk_text"])
         chunk["embedding"] = chunk_embedding
         chunk["source_type"] = "github"
         all_chunks.append(chunk)
