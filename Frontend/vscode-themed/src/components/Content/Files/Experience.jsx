@@ -22,11 +22,11 @@ function Experience() {
                     <h4 className="company-name">{job.company}</h4>
                     <h5 className="job-role">{job.role}</h5>
                     <div className="job-meta">
-                      <span className="meta-item">
-                        <FiCalendar /> {job.duration}
+                      <span className="meta-item" aria-label={`Duration: ${job.duration}`}>
+                        <FiCalendar aria-hidden="true" /> {job.duration}
                       </span>
-                      <span className="meta-item">
-                        <FiMapPin /> {job.location}
+                      <span className="meta-item" aria-label={`Location: ${job.location}`}>
+                        <FiMapPin aria-hidden="true" /> {job.location}
                       </span>
                     </div>
                   </div>
@@ -85,9 +85,9 @@ function Experience() {
             <div key={index} className="achievement-card">
               <div className="achievement-header">
                 {achievement.title.includes("Hack") ? (
-                  <FaTrophy className="achievement-icon" />
+                  <FaTrophy className="achievement-icon" aria-hidden="true" />
                 ) : (
-                  <FaUsers className="achievement-icon" />
+                  <FaUsers className="achievement-icon" aria-hidden="true" />
                 )}
                 <h4 className="achievement-title">{achievement.title}</h4>
               </div>

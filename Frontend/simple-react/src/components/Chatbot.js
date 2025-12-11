@@ -117,11 +117,19 @@ const Chatbot = () => {
     <div
       className={`chatbot ${isExpanded ? "expanded" : ""}`}
       onClick={handleClickOutside}
+      role="dialog"
+      aria-label="AI Chatbot"
+      aria-modal={isExpanded}
     >
       {!isExpanded && (
-        <div className="chatbot-collapsed" onClick={handleToggle}>
+        <button 
+          className="chatbot-collapsed" 
+          onClick={handleToggle}
+          aria-label="Open AI chatbot"
+          aria-expanded="false"
+        >
           <img src={chatbotLogo} alt="Chatbot Logo" className="chatbot-logo" />
-        </div>
+        </button>
       )}
       {isExpanded && (
         <div className="chatbot-content" onClick={(e) => e.stopPropagation()}>
@@ -129,60 +137,85 @@ const Chatbot = () => {
             <div className="chatbot-header-logo">
               <img
                 src={chatbotLogo}
-                alt="chatbot"
+                alt="NH's AI Buddy chatbot"
                 className="chatbot-header-logo-img"
               />
             </div>
-            <div className="chatbot-header-title">NH's Buddy</div>
-            <button className="chatbot-close-button" onClick={handleToggle}>
-              X
+            <h2 className="chatbot-header-title">NH's Buddy</h2>
+            <button 
+              className="chatbot-close-button" 
+              onClick={handleToggle}
+              aria-label="Close chatbot"
+            >
+              <span aria-hidden="true">X</span>
             </button>
           </div>
-          <div className="chatbot-body">
+          <div 
+            className="chatbot-body"
+            role="log"
+            aria-live="polite"
+            aria-atomic="false"
+            aria-label="Chat messages"
+          >
             {messages.map((message, index) => (
               <div
                 key={index}
                 className={`message ${
                   message.isBot ? "bot-message" : "user-message"
                 }`}
+                role="listitem"
               >
                 {message.isBot ? (
                   <>
-                    <Avatar className="message-logo" src={chatbotLogo} />
+                    <Avatar className="message-logo" src={chatbotLogo} alt="AI Assistant" />
                     <div
                       className="message-text"
                       dangerouslySetInnerHTML={{ __html: message.text }}
+                      role="article"
                     />
                   </>
                 ) : (
                   <>
-                    <div className="message-text">{message.text}</div>
-                    <Avatar className="message-logo">
+                    <div className="message-text" role="article">{message.text}</div>
+                    <Avatar className="message-logo" aria-label="User">
                       <PersonIcon />
                     </Avatar>
                   </>
                 )}
               </div>
             ))}
-            <div ref={messageEndRef} />
+            {loading && (
+              <div className="message bot-message" role="status" aria-live="polite">
+                <Avatar className="message-logo" src={chatbotLogo} alt="AI Assistant" />
+                <div className="message-text">Thinking...</div>
+              </div>
+            )}
+            <div ref={messageEndRef} aria-hidden="true" />
           </div>
           <div className="chatbot-footer">
+            <label htmlFor="chatbot-input" className="sr-only">Type your message</label>
             <input
+              id="chatbot-input"
               type="text"
               value={input}
               onChange={handleInputChange}
               onKeyPress={handleKeyPress}
               placeholder="Type a message..."
               className="chatbot-input"
-              disabled={loading} // Disable input while loading
+              disabled={loading}
+              aria-label="Chat message input"
+              aria-describedby="chatbot-status"
             />
+            <span id="chatbot-status" className="sr-only">
+              {loading ? "Sending message" : "Ready to send"}
+            </span>
             <button
               onClick={handleSendMessage}
               className="chatbot-send-button"
               disabled={loading}
+              aria-label={loading ? "Sending message" : "Send message"}
             >
-              {loading ? "Loading..." : "Send"}{" "}
-              {/* Show loader text or Send button */}
+              {loading ? "Loading..." : "Send"}
             </button>
           </div>
         </div>

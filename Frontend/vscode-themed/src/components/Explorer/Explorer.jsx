@@ -92,32 +92,46 @@ function Explorer() {
 
       <div className="explorer-content">
         <div>
-          <div className="explorer-folder" onClick={() => setIsOpen(!isOpen)}>
+          <button 
+            className="explorer-folder" 
+            onClick={() => setIsOpen(!isOpen)}
+            aria-expanded={isOpen}
+            aria-label={`${isOpen ? 'Collapse' : 'Expand'} portfolio folder`}
+          >
             {isOpen ? (
-              <FaChevronDown size={10} />
+              <FaChevronDown size={10} aria-hidden="true" />
             ) : (
-              <FaChevronRight size={10} />
+              <FaChevronRight size={10} aria-hidden="true" />
             )}
             {isOpen ? (
-              <FaFolderOpen style={{ color: "#dcb67a" }} />
+              <FaFolderOpen style={{ color: "#dcb67a" }} aria-hidden="true" />
             ) : (
-              <FaFolder style={{ color: "#dcb67a" }} />
+              <FaFolder style={{ color: "#dcb67a" }} aria-hidden="true" />
             )}
             <span>Naisarg's Portfolio</span>
-          </div>
+          </button>
 
           {isOpen && (
-            <div className="folder-contents">
+            <div className="folder-contents" role="list">
               {files.map((file, index) => (
-                <div
+                <button
                   key={index}
+                  role="listitem"
                   className={`explorer-file ${file.no === activeFile ? 'selected-explorer' : ''}`}
                   style={{ paddingLeft: "16px" }}
-                  onClick={() => setActiveFile(file.no) }
+                  onClick={() => setActiveFile(file.no)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setActiveFile(file.no);
+                    }
+                  }}
+                  aria-label={`Open ${file.name}`}
+                  aria-current={file.no === activeFile ? 'page' : undefined}
                 >
-                  <span className="file-icon">{file.icon}</span>
+                  <span className="file-icon" aria-hidden="true">{file.icon}</span>
                   <span>{file.name}</span>
-                </div>
+                </button>
               ))}
             </div>
           )}
@@ -128,6 +142,19 @@ function Explorer() {
         className="resize-handle"
         ref={resizeRef}
         onMouseDown={handleMouseDown}
+        role="separator"
+        aria-orientation="vertical"
+        aria-label="Resize explorer panel"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            const newWidth = e.key === 'ArrowLeft' ? width - 10 : width + 10;
+            if (newWidth > 100 && newWidth < 300) {
+              setWidth(newWidth);
+            }
+          }
+        }}
       />
     </div>
   );

@@ -25,10 +25,12 @@ function About() {
 
       <div className="skills-section">
         <h3>{ui.about.skillsTitle}</h3>
-        <div className="skill-filters">
+        <div className="skill-filters" role="tablist" aria-label="Skill categories">
           {categories.map((cat) => (
             <button
               key={cat}
+              role="tab"
+              aria-selected={activeCategory === cat}
               className={`skill-tab ${activeCategory === cat ? "active" : ""}`}
               onClick={() => setActiveCategory(cat)}
             >
@@ -58,7 +60,8 @@ function About() {
               height="400"
               width="100%"
               frameBorder="0"
-              title={`Post ${index + 1}`}
+              title={`LinkedIn post ${index + 1}`}
+              aria-label={`LinkedIn post ${index + 1}`}
             />
           ))}
         </div>

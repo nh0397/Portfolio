@@ -39,20 +39,46 @@ function Content() {
           copilotClicked ? "reduced-content-container" : ""
         }`}
       >
-        <div className="tab-bar">
+        <div className="tab-bar" role="tablist" aria-label="File tabs">
           {tabs.map((tab) => (
             <div
               key={tab.no}
+              role="tab"
+              tabIndex={0}
+              aria-selected={activeFile === tab.no}
+              aria-controls={`tabpanel-${tab.no}`}
               className={`tab ${activeFile === tab.no ? "active-tab" : ""}`}
               onClick={() => setActiveFile(tab.no)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setActiveFile(tab.no);
+                }
+              }}
             >
               {tab.name}
-              <span className="close-tab">×</span>
+              <button
+                className="close-tab"
+                aria-label={`Close ${tab.name} tab`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // Handle close tab logic here if needed
+                }}
+              >
+                <span aria-hidden="true">×</span>
+              </button>
             </div>
           ))}
         </div>
 
-        <div className="content-display">{renderContent()}</div>
+        <div 
+          className="content-display"
+          role="tabpanel"
+          id={`tabpanel-${activeFile}`}
+          aria-labelledby={`tab-${activeFile}`}
+        >
+          {renderContent()}
+        </div>
       </div>
       
       {/* Always render Chatbot, control visibility via props */}

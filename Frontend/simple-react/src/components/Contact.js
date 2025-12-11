@@ -104,10 +104,19 @@ const Contact = ({ data }) => {
       transition={{ duration: 0.75, delay: 0.75 }}
     >
       {showToast && (
-        <div className={`toast ${data.mode}`}>
+        <div 
+          className={`toast ${data.mode}`}
+          role="alert"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           <span>Message sent successfully! ✨</span>
-          <button onClick={closeToast} className="toast-close">
-            <FontAwesomeIcon icon={faTimes} />
+          <button 
+            onClick={closeToast} 
+            className="toast-close"
+            aria-label="Close notification"
+          >
+            <FontAwesomeIcon icon={faTimes} aria-hidden="true" />
           </button>
         </div>
       )}
@@ -169,12 +178,24 @@ const Contact = ({ data }) => {
         </div>
       </form>
       <footer className="footer">
-        <div className="contact-icons">
-          <a href={data.contact.linkedin} target="_blank" rel="noopener noreferrer" className="linkedin-icon">
-            <FontAwesomeIcon icon={faLinkedin} className="contact-icon" />
+        <div className="contact-icons" role="list" aria-label="Social media links">
+          <a 
+            href={data.contact.linkedin} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="linkedin-icon"
+            aria-label="Visit Naisarg Halvadiya's LinkedIn profile"
+          >
+            <FontAwesomeIcon icon={faLinkedin} className="contact-icon" aria-hidden="true" />
           </a>
-          <a href={data.contact.github} target="_blank" rel="noopener noreferrer" className={`github-icon-${data.mode}`}>
-            <FontAwesomeIcon icon={faGithub} className="contact-icon" />
+          <a 
+            href={data.contact.github} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className={`github-icon-${data.mode}`}
+            aria-label="Visit Naisarg Halvadiya's GitHub profile"
+          >
+            <FontAwesomeIcon icon={faGithub} className="contact-icon" aria-hidden="true" />
           </a>
         </div>
         <p>&copy; 2024. Code and idea credits to <a href="https://github.com/shaqdeff/Portfolio-Template" target="_blank" rel="noopener noreferrer">Shaquile's GitHub repo</a>.</p>

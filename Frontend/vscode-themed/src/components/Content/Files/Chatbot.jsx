@@ -139,10 +139,17 @@ const Chatbot = ({ isOpen, onClose }) => {
             className="clear-button" 
             onClick={clearConversation}
             title="Clear conversation"
+            aria-label="Clear conversation"
           >
-            🗑️
+            <span aria-hidden="true">🗑️</span>
           </button>
-          <button className="close-button-chatbot" onClick={onClose}>×</button>
+          <button 
+            className="close-button-chatbot" 
+            onClick={onClose}
+            aria-label="Close chatbot"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
         </div>
       </div>
 
@@ -156,50 +163,63 @@ const Chatbot = ({ isOpen, onClose }) => {
 
       {/* Code Editor Style Messages */}
       <div className="chatbot-editor">
-        <div className="line-numbers">
+        <div className="line-numbers" aria-hidden="true">
           {messages.map((_, index) => (
             <div key={index} className="line-number">{index + 1}</div>
           ))}
           {isLoading && <div className="line-number">{messages.length + 1}</div>}
         </div>
 
-        <div className="messages-container">
+        <div 
+          className="messages-container"
+          role="log"
+          aria-live="polite"
+          aria-atomic="false"
+          aria-label="Chat messages"
+        >
           {messages.map((message, index) => (
-            <div key={index} className={`message-line ${message.isBot ? 'bot-message' : 'user-message'} ${message.isError ? 'error-message' : ''}`}>
+            <div 
+              key={index} 
+              className={`message-line ${message.isBot ? 'bot-message' : 'user-message'} ${message.isError ? 'error-message' : ''}`}
+              role="listitem"
+            >
               <div className="message-code">
-                <span className="message-syntax">
+                <span className="message-syntax" aria-hidden="true">
                   {message.isError ? 'error' : message.isBot ? 'assistant' : 'user'}.say(
                 </span>
                 <span 
                   className="message-content"
                   dangerouslySetInnerHTML={{ __html: `"${message.text}"` }}
+                  role="article"
                 />
-                <span className="message-syntax">);</span>
+                <span className="message-syntax" aria-hidden="true">);</span>
               </div>
             </div>
           ))}
           
           {isLoading && (
-            <div className="message-line bot-message">
+            <div className="message-line bot-message" role="status" aria-live="polite">
               <div className="message-code">
-                <span className="message-syntax">assistant.thinking(</span>
-                <span className="typing-dots">
+                <span className="message-syntax" aria-hidden="true">assistant.thinking(</span>
+                <span className="typing-dots" aria-label="AI is thinking">
                   <span></span><span></span><span></span>
                 </span>
-                <span className="message-syntax">);</span>
+                <span className="message-syntax" aria-hidden="true">);</span>
               </div>
             </div>
           )}
-          <div ref={messagesEndRef} />
+          <div ref={messagesEndRef} aria-hidden="true" />
         </div>
       </div>
 
       {/* Input Area */}
       <div className="chatbot-input-area">
-        <div className="input-line-number">{messages.length + (isLoading ? 2 : 1)}</div>
+        <div className="input-line-number" aria-hidden="true">{messages.length + (isLoading ? 2 : 1)}</div>
         <div className="input-container">
-          <span className="input-syntax">user.ask(</span>
+          <label htmlFor="chatbot-textarea" className="sr-only">Type your message</label>
+          <span className="input-syntax" aria-hidden="true">user.ask(</span>
           <textarea
+            id="chatbot-textarea"
             value={userInput}
             onChange={handleInputChange}
             onKeyPress={handleKeyPress}
@@ -207,14 +227,20 @@ const Chatbot = ({ isOpen, onClose }) => {
             disabled={isLoading}
             className="message-input"
             rows="1"
+            aria-label="Chat message input"
+            aria-describedby="chatbot-input-status"
           />
-          <span className="input-syntax">);</span>
+          <span id="chatbot-input-status" className="sr-only">
+            {isLoading ? "Sending message, please wait" : userInput.trim() === '' ? "Enter a message to send" : "Press Enter to send"}
+          </span>
+          <span className="input-syntax" aria-hidden="true">);</span>
           <button 
             onClick={handleSendMessage}
             disabled={isLoading || userInput.trim() === ''}
             className="send-button"
+            aria-label={isLoading ? "Sending message" : "Send message"}
           >
-            ▶
+            <span aria-hidden="true">▶</span>
           </button>
         </div>
       </div>

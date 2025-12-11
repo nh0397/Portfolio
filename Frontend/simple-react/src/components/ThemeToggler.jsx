@@ -10,6 +10,7 @@ const ThemeToggler = () => {
       onChange={setDarkMode}
       checked={darkMode}
       size={50}
+      aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
     />
   );
 };

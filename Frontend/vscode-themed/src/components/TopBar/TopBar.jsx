@@ -11,39 +11,67 @@ const TopBar = () => {
   return (
     <div className="topbar">
       <div className="topbar-left">
-        <div className="topbar-button-group">
-          <div className="close-button">
-            <span className="window-icon">×</span>
-          </div>
-          <div className="minimize-button">
-            <span className="window-icon">–</span>
-          </div>
-          <div className="expand-button">
-            <img src={expand} alt="expand" className="expand-icon" />
-          </div>
+        <div className="topbar-button-group" role="toolbar" aria-label="Window controls">
+          <button 
+            className="close-button"
+            aria-label="Close window"
+            title="Close window"
+          >
+            <span className="window-icon" aria-hidden="true">×</span>
+          </button>
+          <button 
+            className="minimize-button"
+            aria-label="Minimize window"
+            title="Minimize window"
+          >
+            <span className="window-icon" aria-hidden="true">–</span>
+          </button>
+          <button 
+            className="expand-button"
+            aria-label="Expand window"
+            title="Expand window"
+          >
+            <img src={expand} alt="" className="expand-icon" aria-hidden="true" />
+          </button>
         </div>
       </div>
 
       <div className="topbar-center">
-        <button className="arrow-button">←</button>
-        <button className="arrow-button">→</button>
+        <button 
+          className="arrow-button"
+          aria-label="Navigate back"
+          title="Navigate back"
+        >
+          <span aria-hidden="true">←</span>
+        </button>
+        <button 
+          className="arrow-button"
+          aria-label="Navigate forward"
+          title="Navigate forward"
+        >
+          <span aria-hidden="true">→</span>
+        </button>
         <input
           type="text"
           placeholder="Naisarg Halvadiya's Portfolio"
           className="search-input"
           disabled={true}
+          aria-label="Portfolio title"
+          readOnly
         />
-        <span
+        <button
           title="Talk to my AI Buddy!"
           onClick={() => setCopilotClicked(!copilotClicked)}
           className={`copilot-icon ${!copilotClicked ? "blink" : ""}`}
+          aria-label={copilotClicked ? "Close AI chatbot" : "Open AI chatbot"}
+          aria-expanded={copilotClicked}
         >
-          <img src={chatbot} alt="chatbot" className="chatbot-icon" />
-        </span>
+          <img src={chatbot} alt="" className="chatbot-icon" aria-hidden="true" />
+        </button>
       </div>
 
       <div className="topbar-right">
-        <img src={logo} alt="logo" className="logo-icon" />
+        <img src={logo} alt="Naisarg Halvadiya Logo" className="logo-icon" />
       </div>
     </div>
   );

@@ -47,7 +47,7 @@ const Projects = ({ data }) => {
       <div className="projects-container">
         <div className="first-row">
           {projectCategories["Full-Stack Development"].map((project, index) => (
-            <motion.div
+            <motion.article
               className="project-card"
               key={index}
               initial={{ opacity: 0, x: -50 }}
@@ -65,10 +65,20 @@ const Projects = ({ data }) => {
                   <span key={idx}>{tech}</span>
                 ))}
               </div>
-              <a href={project.link} target="_blank" rel="noopener noreferrer">
-                <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" className="github-logo" />
+              <a 
+                href={project.link} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label={`View ${project.title} project on GitHub`}
+              >
+                <img 
+                  src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" 
+                  alt="GitHub" 
+                  className="github-logo" 
+                  aria-hidden="true"
+                />
               </a>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
         <div className="second-row">
@@ -91,8 +101,18 @@ const Projects = ({ data }) => {
                     ))}
                   </td>
                   <td>
-                    <a href={project.link} target="_blank" rel="noopener noreferrer">
-                      <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" className="github-logo" />
+                    <a 
+                      href={project.link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      aria-label={`View ${project.title} project on GitHub`}
+                    >
+                      <img 
+                        src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" 
+                        alt="GitHub" 
+                        className="github-logo"
+                        aria-hidden="true"
+                      />
                     </a>
                   </td>
                 </tr>

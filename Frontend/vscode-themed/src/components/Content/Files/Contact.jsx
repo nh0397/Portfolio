@@ -96,6 +96,7 @@ function Contact() {
                   type="button"
                   className="quick-mode-button"
                   onClick={() => setQuickMode("job")}
+                  aria-label="Fill form with job opportunity template"
                 >
                   Job Opportunity
                 </button>
@@ -103,6 +104,7 @@ function Contact() {
                   type="button"
                   className="quick-mode-button"
                   onClick={() => setQuickMode("project")}
+                  aria-label="Fill form with project idea template"
                 >
                   Project Idea
                 </button>
@@ -110,6 +112,7 @@ function Contact() {
                   type="button"
                   className="quick-mode-button"
                   onClick={() => setQuickMode("question")}
+                  aria-label="Fill form with question template"
                 >
                   Question
                 </button>
@@ -154,27 +157,29 @@ function Contact() {
                   <span className="prompt-command">{ui.contact.terminal.contactCommand}</span>
                 </div>
                 <div className="terminal-output">
-                  <span className="icon">📧</span>{" "}
-                  <a href={`mailto:${personal.email}`}>
+                  <span className="icon" aria-hidden="true">📧</span>{" "}
+                  <a href={`mailto:${personal.email}`} aria-label={`Send email to ${personal.email}`}>
                     {personal.email}
                   </a>
                 </div>
                 <div className="terminal-output">
-                  <span className="icon">🌐</span>{" "}
+                  <span className="icon" aria-hidden="true">🌐</span>{" "}
                   <a
                     href={social.linkedin}
                     target="_blank"
                     rel="noreferrer"
+                    aria-label="Visit LinkedIn profile"
                   >
                     {social.linkedin.replace('https://', '')}
                   </a>
                 </div>
                 <div className="terminal-output">
-                  <span className="icon">💻</span>{" "}
+                  <span className="icon" aria-hidden="true">💻</span>{" "}
                   <a
                     href={social.github}
                     target="_blank"
                     rel="noreferrer"
+                    aria-label="Visit GitHub profile"
                   >
                     {social.github.replace('https://', '')}
                   </a>
@@ -187,8 +192,12 @@ function Contact() {
                   <span className="prompt-command">{ui.contact.terminal.resumeCommand}</span>
                 </div>
                 <div className="terminal-output">
-                  <span className="icon">📄</span>{" "}
-                  <button className="resume-viewer-btn" onClick={() => setShowResume(true)}>
+                  <span className="icon" aria-hidden="true">📄</span>{" "}
+                  <button 
+                    className="resume-viewer-btn" 
+                    onClick={() => setShowResume(true)}
+                    aria-label="View resume"
+                  >
                     View Resume
                   </button>
                 </div>

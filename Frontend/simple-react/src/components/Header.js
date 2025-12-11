@@ -22,35 +22,60 @@ const Header = ({ onNavClick }) => {
       <div className="logo-container">
         <img src={Logo} alt="Naisarg Halvadiya Logo" className="logo" />
       </div>
-      <nav className="nav-container">
+      <nav className="nav-container" aria-label="Main navigation">
         <ul className="nav-list">
           <li>
-            <a href="#home" className="nav-item" onClick={handleNavClick}>
-              <FontAwesomeIcon icon={faHome} />
+            <a 
+              href="#home" 
+              className="nav-item" 
+              onClick={handleNavClick}
+              aria-label="Navigate to Home section"
+            >
+              <FontAwesomeIcon icon={faHome} aria-hidden="true" />
               <span className="nav-text">Home</span>
             </a>
           </li>
           <li>
-            <a href="#about" className="nav-item" onClick={handleNavClick}>
-              <FontAwesomeIcon icon={faUser} />
+            <a 
+              href="#about" 
+              className="nav-item" 
+              onClick={handleNavClick}
+              aria-label="Navigate to About section"
+            >
+              <FontAwesomeIcon icon={faUser} aria-hidden="true" />
               <span className="nav-text">About</span>
             </a>
           </li>
           <li>
-            <a href="#experience" className="nav-item" onClick={handleNavClick}>
-              <FontAwesomeIcon icon={faBriefcase} />
+            <a 
+              href="#experience" 
+              className="nav-item" 
+              onClick={handleNavClick}
+              aria-label="Navigate to Experience section"
+            >
+              <FontAwesomeIcon icon={faBriefcase} aria-hidden="true" />
               <span className="nav-text">Experience</span>
             </a>
           </li>
           <li>
-            <a href="#projects" className="nav-item" onClick={handleNavClick}>
-              <FontAwesomeIcon icon={faProjectDiagram} />
+            <a 
+              href="#projects" 
+              className="nav-item" 
+              onClick={handleNavClick}
+              aria-label="Navigate to Projects section"
+            >
+              <FontAwesomeIcon icon={faProjectDiagram} aria-hidden="true" />
               <span className="nav-text">Projects</span>
             </a>
           </li>
           <li>
-            <a href="#contact" className="nav-item" onClick={handleNavClick}>
-              <FontAwesomeIcon icon={faEnvelope} />
+            <a 
+              href="#contact" 
+              className="nav-item" 
+              onClick={handleNavClick}
+              aria-label="Navigate to Contact section"
+            >
+              <FontAwesomeIcon icon={faEnvelope} aria-hidden="true" />
               <span className="nav-text">Contact</span>
             </a>
           </li>

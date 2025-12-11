@@ -89,12 +89,13 @@ function Home() {
             <h2>{developerInfo.role}</h2>
             <p>{developerInfo.bio}</p>
             <div className={`cta ${!animationsComplete ? "fadeIn" : ""}`}>
-              <div
+              <button
                 className={`cta-button ${!animationsComplete ? "buttonGlow" : ""}`}
                 onClick={() => setActiveFile(2)}
+                aria-label="Navigate to About section"
               >
-                Know More About Me <span>→</span>
-              </div>
+                Know More About Me <span aria-hidden="true">→</span>
+              </button>
             </div>
           </div>
         </div>

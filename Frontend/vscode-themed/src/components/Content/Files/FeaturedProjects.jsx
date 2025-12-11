@@ -54,8 +54,14 @@ function FeaturedProjects() {
               <p className="subtitle">{proj.subtitle}</p>
             </div>
             {proj.github && (
-              <a href={proj.github} target="_blank" rel="noreferrer" className="github-icon">
-                <FiGithub />
+              <a 
+                href={proj.github} 
+                target="_blank" 
+                rel="noreferrer" 
+                className="github-icon"
+                aria-label={`View ${proj.title} project on GitHub`}
+              >
+                <FiGithub aria-hidden="true" />
               </a>
             )}
           </div>
@@ -77,8 +83,14 @@ function FeaturedProjects() {
               <div className="backend-info">
                 <p><strong>🔧 Backend:</strong> {proj.backend.title}</p>
                 <p>{proj.backend.description}</p>
-                <a href={proj.backend.github} target="_blank" rel="noreferrer" className="backend-github-link">
-                  <FiGithub /> View Backend Code →
+                <a 
+                  href={proj.backend.github} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="backend-github-link"
+                  aria-label={`View backend code for ${proj.title} on GitHub`}
+                >
+                  <FiGithub aria-hidden="true" /> View Backend Code <span aria-hidden="true">→</span>
                 </a>
               </div>
             )}
