@@ -416,26 +416,22 @@ export const portfolioConfig = {
       linkedinPosts: [
         {
           title: "An unexpected office tour that turned into a weekend full of perspective!",
-          description: "Thanks to my friend for an amazing Netflix office visit that provided incredible insights and a fresh perspective on the tech industry.",
-          date: "Recent",
+          description: "Thanks to my friend for a Netflix office visit.",
           url: "https://www.linkedin.com/feed/update/urn:li:share:7350411566250401793"
         },
         {
           title: "Tech Has No Boundaries — A Lucid Experience!",
-          description: "Had an amazing experience visiting the Lucid Motors Studio in Newark, CA. From learning about electric motors and drive units to experiencing the auto-park feature and test driving the Lucid Air Grand Touring — the acceleration was insane!",
-          date: "Recent",
+          description: "Visited the Lucid Motors Studio in Newark, CA. Learned about electric motors, drive units, and test drove the Lucid Air Grand Touring.",
           url: "https://www.linkedin.com/feed/update/urn:li:activity:7324986252401741825"
         },
         {
           title: "🏆 Best AI Emerging Technology Hack | SF Hacks 2025",
-          description: "Won 'Best AI Emerging Technology Hack' at SF Hacks 2025! Developed a guardrail solution to prevent data leaks while allowing organizations to safely leverage Generative AI technologies. Working with an amazing team made this hackathon experience truly unforgettable.",
-          date: "8 months ago",
+          description: "Won 'Best AI Emerging Technology Hack' at SF Hacks 2025. Developed a guardrail solution to prevent data leaks while allowing organizations to safely leverage Generative AI technologies.",
           url: "https://www.linkedin.com/feed/update/urn:li:activity:7314908175084789763"
         },
         {
           title: "LinkedIn Office Visit — Climate HQ Initiative",
-          description: "Had an amazing time visiting LinkedIn's San Francisco office with the Climate HQ initiative! Learned about green skills, networking strategies, and career growth. The breakout rooms and overall office vibe were super impressive.",
-          date: "Recent",
+          description: "Visited LinkedIn's San Francisco office with the Climate HQ initiative. Learned about green skills, networking strategies, and career growth.",
           url: "https://www.linkedin.com/feed/update/urn:li:activity:7263450357144403969"
         }
       ]
