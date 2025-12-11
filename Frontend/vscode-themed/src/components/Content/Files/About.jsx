@@ -62,6 +62,8 @@ function About() {
               frameBorder="0"
               title={`LinkedIn post ${index + 1}`}
               aria-label={`LinkedIn post ${index + 1}`}
+              allow="clipboard-write"
+              loading="lazy"
             />
           ))}
         </div>
