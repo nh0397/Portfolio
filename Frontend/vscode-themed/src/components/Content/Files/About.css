@@ -121,6 +121,65 @@
   margin-top: 1rem;
 }
 
+.linkedin-post-wrapper {
+  width: 100%;
+  min-height: 400px;
+  position: relative;
+}
+
+.linkedin-post-card {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.linkedin-post-card:hover {
+  border-color: #ffea00;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 234, 0, 0.2);
+}
+
+.linkedin-post-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  color: #ffea00;
+}
+
+.linkedin-post-header svg {
+  width: 24px;
+  height: 24px;
+  fill: #0a66c2;
+}
+
+.linkedin-post-content {
+  color: #ccc;
+  line-height: 1.6;
+}
+
+.linkedin-post-content p {
+  margin-bottom: 1rem;
+  color: #aaa;
+}
+
+.linkedin-post-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #0a66c2;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.linkedin-post-link:hover {
+  color: #ffea00;
+  text-decoration: underline;
+}
+
 .skill-grid {
   display: flex;
   flex-wrap: wrap;
