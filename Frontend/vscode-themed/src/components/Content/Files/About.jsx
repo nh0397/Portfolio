@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./About.css";
 import { skills, ui } from "../../../config/portfolioConfig";
 
@@ -53,19 +53,60 @@ function About() {
       <div className="linkedin-section">
         <h3>{ui.about.featuredPostsTitle}</h3>
         <div className="linkedin-posts">
-          {ui.about.linkedinPosts.map((postUrl, index) => (
-            <iframe
-              key={index}
-              src={postUrl}
-              height="400"
-              width="100%"
-              frameBorder="0"
-              title={`LinkedIn post ${index + 1}`}
-              aria-label={`LinkedIn post ${index + 1}`}
-              allow="clipboard-write"
-              loading="lazy"
-            />
-          ))}
+          {ui.about.linkedinPosts.map((postUrl, index) => {
+            const iframeRef = useRef(null);
+            
+            useEffect(() => {
+              const iframe = iframeRef.current;
+              if (iframe) {
+                const handleLoad = () => {
+                  console.log(`✅ LinkedIn embed ${index + 1} loaded:`, postUrl);
+                };
+                
+                const handleError = () => {
+                  console.error(`❌ LinkedIn embed ${index + 1} failed:`, postUrl);
+                  console.error('Check browser console for CSP violations');
+                };
+                
+                iframe.addEventListener('load', handleLoad);
+                iframe.addEventListener('error', handleError);
+                
+                // Timeout check for blocked iframes
+                const timeout = setTimeout(() => {
+                  try {
+                    // Try to access iframe content - will fail if blocked
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+                    if (!iframeDoc) {
+                      console.warn(`⚠️ LinkedIn embed ${index + 1} may be blocked (CSP or CORS):`, postUrl);
+                    }
+                  } catch (e) {
+                    console.warn(`⚠️ LinkedIn embed ${index + 1} blocked (cross-origin):`, postUrl, e.message);
+                  }
+                }, 3000);
+                
+                return () => {
+                  iframe.removeEventListener('load', handleLoad);
+                  iframe.removeEventListener('error', handleError);
+                  clearTimeout(timeout);
+                };
+              }
+            }, [postUrl, index]);
+            
+            return (
+              <iframe
+                ref={iframeRef}
+                key={index}
+                src={postUrl}
+                height="400"
+                width="100%"
+                frameBorder="0"
+                title={`LinkedIn post ${index + 1}`}
+                aria-label={`LinkedIn post ${index + 1}`}
+                allow="clipboard-write; encrypted-media"
+                loading="lazy"
+              />
+            );
+          })}
         </div>
       </div>
     </div>
