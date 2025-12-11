@@ -4,6 +4,61 @@ import { skills, ui } from "../../../config/portfolioConfig";
 
 const categories = ["All", ...Object.keys(skills)];
 
+// Separate component for LinkedIn embed to properly use hooks
+function LinkedInEmbed({ postUrl, index }) {
+  const iframeRef = useRef(null);
+  
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (iframe) {
+      const handleLoad = () => {
+        console.log(`✅ LinkedIn embed ${index + 1} loaded:`, postUrl);
+      };
+      
+      const handleError = () => {
+        console.error(`❌ LinkedIn embed ${index + 1} failed:`, postUrl);
+        console.error('Check browser console for CSP violations');
+      };
+      
+      iframe.addEventListener('load', handleLoad);
+      iframe.addEventListener('error', handleError);
+      
+      // Timeout check for blocked iframes
+      const timeout = setTimeout(() => {
+        try {
+          // Try to access iframe content - will fail if blocked
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+          if (!iframeDoc) {
+            console.warn(`⚠️ LinkedIn embed ${index + 1} may be blocked (CSP or CORS):`, postUrl);
+          }
+        } catch (e) {
+          console.warn(`⚠️ LinkedIn embed ${index + 1} blocked (cross-origin):`, postUrl, e.message);
+        }
+      }, 3000);
+      
+      return () => {
+        iframe.removeEventListener('load', handleLoad);
+        iframe.removeEventListener('error', handleError);
+        clearTimeout(timeout);
+      };
+    }
+  }, [postUrl, index]);
+  
+  return (
+    <iframe
+      ref={iframeRef}
+      src={postUrl}
+      height="400"
+      width="100%"
+      frameBorder="0"
+      title={`LinkedIn post ${index + 1}`}
+      aria-label={`LinkedIn post ${index + 1}`}
+      allow="clipboard-write; encrypted-media"
+      loading="lazy"
+    />
+  );
+}
+
 function About() {
   const [activeCategory, setActiveCategory] = useState("All");
 
@@ -53,60 +108,9 @@ function About() {
       <div className="linkedin-section">
         <h3>{ui.about.featuredPostsTitle}</h3>
         <div className="linkedin-posts">
-          {ui.about.linkedinPosts.map((postUrl, index) => {
-            const iframeRef = useRef(null);
-            
-            useEffect(() => {
-              const iframe = iframeRef.current;
-              if (iframe) {
-                const handleLoad = () => {
-                  console.log(`✅ LinkedIn embed ${index + 1} loaded:`, postUrl);
-                };
-                
-                const handleError = () => {
-                  console.error(`❌ LinkedIn embed ${index + 1} failed:`, postUrl);
-                  console.error('Check browser console for CSP violations');
-                };
-                
-                iframe.addEventListener('load', handleLoad);
-                iframe.addEventListener('error', handleError);
-                
-                // Timeout check for blocked iframes
-                const timeout = setTimeout(() => {
-                  try {
-                    // Try to access iframe content - will fail if blocked
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-                    if (!iframeDoc) {
-                      console.warn(`⚠️ LinkedIn embed ${index + 1} may be blocked (CSP or CORS):`, postUrl);
-                    }
-                  } catch (e) {
-                    console.warn(`⚠️ LinkedIn embed ${index + 1} blocked (cross-origin):`, postUrl, e.message);
-                  }
-                }, 3000);
-                
-                return () => {
-                  iframe.removeEventListener('load', handleLoad);
-                  iframe.removeEventListener('error', handleError);
-                  clearTimeout(timeout);
-                };
-              }
-            }, [postUrl, index]);
-            
-            return (
-              <iframe
-                ref={iframeRef}
-                key={index}
-                src={postUrl}
-                height="400"
-                width="100%"
-                frameBorder="0"
-                title={`LinkedIn post ${index + 1}`}
-                aria-label={`LinkedIn post ${index + 1}`}
-                allow="clipboard-write; encrypted-media"
-                loading="lazy"
-              />
-            );
-          })}
+          {ui.about.linkedinPosts.map((postUrl, index) => (
+            <LinkedInEmbed key={index} postUrl={postUrl} index={index} />
+          ))}
         </div>
       </div>
     </div>
