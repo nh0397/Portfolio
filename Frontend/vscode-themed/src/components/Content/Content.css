@@ -73,13 +73,20 @@
   width: calc(100% - 800px); /* Adjust based on your chatbot width */
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 1024px) {
   .content-container {
     left: 50px;
     width: calc(100vw - 50px); 
     overflow: hidden;
   }
+  
+  /* Mobile responsive for chatbot */
+  .reduced-content-container {
+    width: calc(100vw - 50px); /* Full width when chatbot is open */
+  }
+}
 
+@media only screen and (max-width: 600px) {
   .tab {
     font-size: 11px;
     padding: 5px 8px;
@@ -92,11 +99,6 @@
 
   .code-editor{
     height: 300px;
-  }
-  
-  /* Mobile responsive for chatbot */
-  .reduced-content-container {
-    width: calc(100vw - 50px); /* Full width on mobile when chatbot is open */
   }
 }
 
