@@ -319,7 +319,7 @@ export const portfolioConfig = {
       institution: "San Francisco State University",
       logo: "https://upload.wikimedia.org/wikipedia/en/1/15/San_Francisco_State_University_seal.svg",
       gpa: "3.9",
-      graduation: "August 2025"
+      graduation: "December 2025"
     },
     {
       degree: "B.Tech in Computer Engineering",
