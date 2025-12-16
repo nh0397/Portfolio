@@ -90,14 +90,14 @@ function Experience() {
   const renderTimelineItem = (item, index) => {
     if (item.type === "work") {
       const job = item.data;
-      return (
+  return (
         <div key={index} className="timeline-item timeline-item-work">
           <div className="timeline-marker timeline-marker-work"></div>
           <div className="timeline-content">
             <div className="timeline-header">
               <div className="timeline-icon-wrapper timeline-icon-work">
                 <FiBriefcase className="timeline-icon" />
-              </div>
+                    </div>
               <div className="timeline-title-section">
                 <h4 className="timeline-title">{job.role}</h4>
                 <h5 className="timeline-subtitle">{job.company}</h5>
@@ -113,10 +113,10 @@ function Experience() {
               </span>
             </div>
             <p className="timeline-description">{job.description}</p>
-            
-            {job.projects && (
+              
+              {job.projects && (
               <div className="timeline-projects">
-                {job.projects.map((project, pIndex) => (
+                  {job.projects.map((project, pIndex) => (
                   <div key={pIndex} className="timeline-project">
                     <div className="project-header">
                       <span className="project-title">{project.title}</span>
@@ -138,21 +138,21 @@ function Experience() {
                         ))}
                       </div>
                     )}
-                  </div>
-                ))}
-              </div>
-            )}
-            
-            {job.contributions && (
-              <div className="timeline-contributions">
-                <ul>
-                  {job.contributions.map((contribution, cIndex) => (
-                    <li key={cIndex}>{contribution}</li>
+                    </div>
                   ))}
-                </ul>
-              </div>
-            )}
-          </div>
+                </div>
+              )}
+              
+              {job.contributions && (
+              <div className="timeline-contributions">
+                  <ul>
+                    {job.contributions.map((contribution, cIndex) => (
+                      <li key={cIndex}>{contribution}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
         </div>
       );
     }
@@ -205,36 +205,36 @@ function Experience() {
             <div className="timeline-header">
               <div className="timeline-icon-wrapper timeline-icon-achievement">
                 <FiAward className="timeline-icon" />
-              </div>
+      </div>
               <div className="timeline-title-section">
                 <h4 className="timeline-title">{achievement.title}</h4>
               </div>
               <div className="timeline-date">{item.date}</div>
             </div>
             <p className="timeline-description">{achievement.description}</p>
-            {achievement.project && (
+              {achievement.project && (
               <p className="timeline-detail"><strong>Project:</strong> {achievement.project}</p>
-            )}
-            {achievement.period && (
+              )}
+              {achievement.period && (
               <p className="timeline-detail"><strong>Period:</strong> {achievement.period}</p>
-            )}
-            {achievement.projects && (
+              )}
+              {achievement.projects && (
               <div className="timeline-contributions">
-                <ul>
-                  {achievement.projects.map((project, pIndex) => (
-                    <li key={pIndex}>{project}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {achievement.stack && (
+                  <ul>
+                    {achievement.projects.map((project, pIndex) => (
+                      <li key={pIndex}>{project}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {achievement.stack && (
               <div className="project-stack">
-                {achievement.stack.map((tech, tIndex) => (
-                  <span key={tIndex} className="tech-tag">{tech}</span>
-                ))}
-              </div>
-            )}
-          </div>
+                  {achievement.stack.map((tech, tIndex) => (
+                    <span key={tIndex} className="tech-tag">{tech}</span>
+                  ))}
+                </div>
+              )}
+            </div>
         </div>
       );
     }
@@ -248,7 +248,7 @@ function Experience() {
             <div className="timeline-header">
               <div className="timeline-icon-wrapper timeline-icon-education">
                 <FiBook className="timeline-icon" />
-              </div>
+                  </div>
               <div className="timeline-title-section">
                 <h4 className="timeline-title">{edu.degree}</h4>
                 <h5 className="timeline-subtitle">{edu.institution}</h5>

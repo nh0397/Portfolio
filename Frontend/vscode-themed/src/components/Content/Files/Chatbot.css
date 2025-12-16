@@ -113,6 +113,8 @@
     flex: 1;
     display: flex;
     overflow: hidden;
+    min-height: 0;
+    max-height: 100%;
   }
   
   .line-numbers {
@@ -132,7 +134,10 @@
     flex: 1;
     padding: 16px 16px;
     overflow-y: auto;
+    overflow-x: hidden;
     line-height: 32px;
+    min-height: 0;
+    max-height: 100%;
   }
   
   .message-line {
@@ -327,10 +332,52 @@
   @media (max-width: 768px) {
     .chatbot-sidebar {
       width: 100vw;
+      height: 100vh;
+      top: 0;
+      max-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .chatbot-header {
+      flex-shrink: 0;
+    }
+    
+    .chatbot-tabs {
+      flex-shrink: 0;
+    }
+    
+    .chatbot-editor {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+    }
+    
+    .messages-container {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    
+    .chatbot-input-area {
+      flex-shrink: 0;
+    }
+    
+    .chatbot-status-bar {
+      flex-shrink: 0;
     }
   }
   
   @media (max-width: 480px) {
+    .chatbot-sidebar {
+      height: 100vh;
+      max-height: 100vh;
+      top: 0;
+    }
+    
     .line-numbers, .input-line-number {
       min-width: 35px;
       padding-left: 8px;
@@ -340,6 +387,29 @@
     .input-container, .messages-container {
       padding-left: 12px;
       padding-right: 12px;
+    }
+    
+    .chatbot-input-area {
+      min-height: 50px;
+      max-height: 100px;
+    }
+    
+    .chatbot-status-bar {
+      height: 20px;
+      font-size: 10px;
+      padding: 0 8px;
+    }
+    
+    .messages-container {
+      padding: 12px;
+    }
+    
+    .chatbot-header {
+      height: 40px;
+    }
+    
+    .chatbot-tabs {
+      height: 30px;
     }
   }
   

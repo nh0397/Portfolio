@@ -33,7 +33,7 @@
   width: 2px;
   background: #3e3e42;
   z-index: 0;
-}
+  }
 
 /* Timeline Item */
 .timeline-item {
@@ -63,7 +63,7 @@
 .timeline-marker-achievement {
   background: #ffea00;
   box-shadow: 0 0 0 3px rgba(255, 234, 0, 0.2);
-}
+  }
 
 .timeline-marker-education {
   background: #4ec9b0;
@@ -96,7 +96,7 @@
 
 .timeline-item-work .timeline-content {
   border-left-color: #007acc;
-}
+  }
 
 .timeline-item-achievement .timeline-content {
   border-left-color: #ffea00;
@@ -364,43 +364,43 @@
   .experience-container {
     padding: 2rem 1rem;
   }
-
+  
   .unified-timeline {
     padding-left: 2rem;
   }
-
+  
   .unified-timeline::before {
     left: 1rem;
   }
-
+  
   .timeline-marker {
     left: -1.5rem;
     width: 12px;
     height: 12px;
   }
-
+  
   .timeline-header {
     flex-wrap: wrap;
   }
-
+  
   .timeline-date {
     width: 100%;
     margin-top: 0.5rem;
   }
-
+  
   .timeline-icon-wrapper {
     width: 32px;
     height: 32px;
   }
-
+  
   .timeline-icon {
     font-size: 1rem;
   }
-
+  
   .timeline-title {
     font-size: 1.1rem;
   }
-
+  
   .timeline-subtitle {
     font-size: 0.9rem;
   }

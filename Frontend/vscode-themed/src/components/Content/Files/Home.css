@@ -20,6 +20,7 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   /* Remove opacity:0 here to prevent content from disappearing */
   transform: translateY(0);
+  box-sizing: border-box;
 }
 
 .hero-content.fade-in {
@@ -46,6 +47,11 @@
   padding: 2rem;
   background-color: #1e1e1e;
   position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .profile-container {
@@ -101,6 +107,11 @@
 .hero-text {
   text-align: center;
   max-width: 400px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
   /* Remove opacity:0 here */
 }
 
@@ -169,6 +180,12 @@
   color: #ccc;
   line-height: 1.6;
   margin-bottom: 1.5rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .cta {
@@ -312,14 +329,113 @@
   background: linear-gradient(90deg, #ffcc00, #e9b949);
 }
 
+/* When chatbot is open, scale down hero content */
+.reduced-content-container .hero-container {
+  padding: 0.5rem;
+}
+
+.reduced-content-container .hero-content {
+  max-width: 100%;
+  min-height: auto;
+  width: 100%;
+}
+
+.reduced-content-container .hero-left {
+  padding: 1.5rem 1rem;
+}
+
+.reduced-content-container .profile-photo {
+  width: 120px;
+  height: 120px;
+}
+
+.reduced-content-container .profile-container::before {
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+}
+
+.reduced-content-container .gradient-text {
+  font-size: 2rem;
+}
+
+.reduced-content-container .hero-text h2 {
+  font-size: 1rem;
+}
+
+.reduced-content-container .hero-text p {
+  font-size: 0.9rem;
+}
+
+.reduced-content-container .hero-text {
+  max-width: 100%;
+}
+
+.reduced-content-container .cta-button {
+  padding: 0.7rem 1.2rem;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 1024px) {
+  .hero-content {
+    max-width: 100%;
+    width: 100%;
+    min-height: auto;
+    overflow: hidden;
+  }
+  
+  .hero-left {
+    padding: 1.5rem 1rem;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 50%;
+    min-width: 0;
+    flex-shrink: 1;
+  }
+  
+  .code-editor {
+    width: 50%;
+    min-width: 0;
+    flex-shrink: 1;
+  }
+  
+  .hero-text {
+    max-width: 100%;
+    padding: 0 0.5rem;
+    width: 100%;
+  }
+  
+  .gradient-text {
+    font-size: 2rem;
+  }
+  
+  .hero-text h2 {
+    font-size: 1rem;
+  }
+  
+  .hero-text p {
+    font-size: 0.9rem;
+  }
+  
+  .profile-photo {
+    width: 120px;
+    height: 120px;
+  }
+}
+
 @media (max-width: 600px) {
   .hero-container {
     overflow: auto;
     height: calc(100% - 55px);
+    padding: 0.5rem;
   }
 
   .hero-content {
     flex-direction: column;
+    min-height: auto;
+    max-height: 100%;
   }
 
   .hero-left,
@@ -328,16 +444,33 @@
   }
 
   .hero-left {
-    padding: 2rem 1rem;
+    padding: 1.5rem 1rem;
+    max-height: none;
+    overflow-y: visible;
+    overflow-x: hidden;
   }
 
   .profile-photo {
-    margin-top: 40px;
-    width: 110px;
-    height: 110px;
+    margin-top: 20px;
+    width: 100px;
+    height: 100px;
   }
 
   .gradient-text {
-    font-size: 2rem;
+    font-size: 1.75rem;
+  }
+  
+  .hero-text h2 {
+    font-size: 0.95rem;
+  }
+  
+  .hero-text p {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+  
+  .cta-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
   }
 }

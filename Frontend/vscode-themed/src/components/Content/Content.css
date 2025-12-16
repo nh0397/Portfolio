@@ -78,11 +78,19 @@
     left: 50px;
     width: calc(100vw - 50px); 
     overflow: hidden;
+    overflow-x: hidden;
   }
   
-  /* Mobile responsive for chatbot */
+  /* Tablet responsive for chatbot */
   .reduced-content-container {
-    width: calc(100vw - 50px); /* Full width when chatbot is open */
+    width: calc(100vw - 550px); /* Account for chatbot width (500px + 50px sidebar) */
+    min-width: 300px;
+  }
+  
+  .content-display {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - 85px);
   }
 }
 
