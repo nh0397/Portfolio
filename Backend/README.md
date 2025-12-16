@@ -11,6 +11,7 @@ Create a `.env` file in your project root:
 ```env
 # Google Gemini API
 GOOGLE_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-1.5-flash  # Options: gemini-1.5-flash (recommended for students), gemini-1.5-pro, gemini-2.0-flash-exp
 
 # MongoDB Atlas Configuration
 MONGO_USERNAME=your_mongodb_username

@@ -135,8 +135,11 @@ except Exception as e:
 
 # Configure Gemini API
 GEMINI_API_KEY = os.getenv('GOOGLE_API_KEY')
+GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-1.5-flash')  # Default to 1.5-flash for better rate limits
+
 if GEMINI_API_KEY:
-    print("✅ Gemini API configured")
+    print(f"✅ Gemini API configured")
+    print(f"📦 Using model: {GEMINI_MODEL}")
 else:
     print("❌ Gemini API key not found")
 
@@ -394,7 +397,7 @@ Answer: """
         try:
             gemini_client = genai.Client(api_key=GEMINI_API_KEY)
             classification_response = gemini_client.models.generate_content(
-                model="gemini-2.5-flash",
+                model=GEMINI_MODEL,
                 contents=initial_prompt
             )
             classification = classification_response.text.strip().lower()
@@ -511,7 +514,7 @@ DON'T:
         # Generate response
         try:
             response = gemini_client.models.generate_content(
-                model="gemini-2.5-flash",
+                model=GEMINI_MODEL,
                 contents=prompt
             )
             response_text = format_text(response.text)
