@@ -133,15 +133,86 @@ except Exception as e:
     db = None
     collection = None
 
-# Configure Gemini API
+# Configure LLM Provider
+LLM_PROVIDER = os.getenv('LLM_PROVIDER', 'groq')  # Options: 'groq', 'gemini', 'openai'
 GEMINI_API_KEY = os.getenv('GOOGLE_API_KEY')
-GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-1.5-flash')  # Default to 1.5-flash for better rate limits
+GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-1.5-flash')
+GROQ_API_KEY = os.getenv('GROQ_API_KEY')
+GROQ_MODEL = os.getenv('GROQ_MODEL', 'mixtral-8x7b-32768')  # Fast and free, alternatives: 'llama3-70b-8192', 'llama3-8b-8192'
 
-if GEMINI_API_KEY:
-    print(f"✅ Gemini API configured")
-    print(f"📦 Using model: {GEMINI_MODEL}")
+# Initialize provider
+if LLM_PROVIDER == 'groq':
+    if GROQ_API_KEY:
+        print(f"✅ Groq API configured")
+        print(f"📦 Using model: {GROQ_MODEL}")
+        print(f"🚀 Groq offers 1,000 free requests/day with ultra-fast responses!")
+    else:
+        print("❌ Groq API key not found. Get one at: https://console.groq.com/")
+        LLM_PROVIDER = None
+elif LLM_PROVIDER == 'gemini':
+    if GEMINI_API_KEY:
+        print(f"✅ Gemini API configured")
+        print(f"📦 Using model: {GEMINI_MODEL}")
+    else:
+        print("❌ Gemini API key not found")
+        LLM_PROVIDER = None
 else:
-    print("❌ Gemini API key not found")
+    print(f"⚠️  Unknown provider: {LLM_PROVIDER}")
+    LLM_PROVIDER = None
+
+class LLMProvider:
+    """Abstraction layer for different LLM providers"""
+    
+    def __init__(self, provider: str):
+        self.provider = provider
+        if provider == 'groq':
+            if not GROQ_API_KEY:
+                raise ValueError("GROQ_API_KEY not set")
+            # Groq uses OpenAI-compatible API
+            self.client = openai.OpenAI(
+                api_key=GROQ_API_KEY,
+                base_url="https://api.groq.com/openai/v1"
+            )
+            self.model = GROQ_MODEL
+        elif provider == 'gemini':
+            if not GEMINI_API_KEY:
+                raise ValueError("GOOGLE_API_KEY not set")
+            self.client = genai.Client(api_key=GEMINI_API_KEY)
+            self.model = GEMINI_MODEL
+        else:
+            raise ValueError(f"Unsupported provider: {provider}")
+    
+    def generate_content(self, prompt: str) -> str:
+        """Generate content using the configured provider"""
+        try:
+            if self.provider == 'groq':
+                response = self.client.chat.completions.create(
+                    model=self.model,
+                    messages=[{"role": "user", "content": prompt}],
+                    temperature=0.7,
+                    max_tokens=2048
+                )
+                return response.choices[0].message.content.strip()
+            
+            elif self.provider == 'gemini':
+                response = self.client.models.generate_content(
+                    model=self.model,
+                    contents=prompt
+                )
+                return response.text.strip()
+        except Exception as e:
+            print(f"❌ {self.provider.upper()} API error: {e}")
+            raise
+
+# Initialize LLM provider instance
+llm_provider = None
+if LLM_PROVIDER:
+    try:
+        llm_provider = LLMProvider(LLM_PROVIDER)
+        print(f"✅ LLM Provider '{LLM_PROVIDER}' initialized successfully")
+    except Exception as e:
+        print(f"❌ Failed to initialize LLM provider: {e}")
+        llm_provider = None
 
 class FireworksEmbeddings:
     def __init__(self) -> None:
@@ -394,13 +465,12 @@ Classify as:
 
 Answer: """
         
+        # Classify the message
         try:
-            gemini_client = genai.Client(api_key=GEMINI_API_KEY)
-            classification_response = gemini_client.models.generate_content(
-                model=GEMINI_MODEL,
-                contents=initial_prompt
-            )
-            classification = classification_response.text.strip().lower()
+            if not llm_provider:
+                raise ValueError("LLM provider not initialized")
+            classification_response = llm_provider.generate_content(initial_prompt)
+            classification = classification_response.lower()
             print(f'🤖 Classification: {classification}')
         except Exception as e:
             print(f"❌ Classification failed: {e}")
@@ -513,13 +583,12 @@ DON'T:
 
         # Generate response
         try:
-            response = gemini_client.models.generate_content(
-                model=GEMINI_MODEL,
-                contents=prompt
-            )
-            response_text = format_text(response.text)
+            if not llm_provider:
+                raise ValueError("LLM provider not initialized")
+            response = llm_provider.generate_content(prompt)
+            response_text = format_text(response)
         except Exception as e:
-            print(f"❌ Gemini API failed: {e}")
+            print(f"❌ {LLM_PROVIDER.upper()} API failed: {e}")
             return jsonify({'response': 'Sorry, I encountered an issue generating a response. Please try again.'}), 500
 
         print(f"✅ Response generated successfully")

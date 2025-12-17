@@ -27,9 +27,17 @@ vercel
 Go to your Vercel dashboard → Project Settings → Environment Variables and add:
 
 ```env
-# Google Gemini API
+# LLM Provider Configuration (Choose one)
+LLM_PROVIDER=groq  # Options: 'groq' (recommended - free & fast), 'gemini'
+
+# Groq API (Recommended - 1,000 free requests/day, ultra-fast)
+# Get your API key at: https://console.groq.com/
+GROQ_API_KEY=your_groq_api_key_here
+GROQ_MODEL=mixtral-8x7b-32768  # Options: mixtral-8x7b-32768, llama3-70b-8192, llama3-8b-8192
+
+# Google Gemini API (Alternative)
 GOOGLE_API_KEY=your_gemini_api_key_here
-GEMINI_MODEL=gemini-1.5-flash  # Options: gemini-1.5-flash (recommended for students), gemini-1.5-pro, gemini-2.0-flash-exp
+GEMINI_MODEL=gemini-1.5-flash  # Options: gemini-1.5-flash, gemini-1.5-pro
 
 # MongoDB Atlas Configuration
 MONGO_USERNAME=your_mongodb_username
