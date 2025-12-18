@@ -332,20 +332,23 @@
   @media (max-width: 768px) {
     .chatbot-sidebar {
       width: 100vw;
-      height: 100vh;
+      height: 100dvh; /* Use dynamic viewport height for mobile */
       top: 0;
-      max-height: 100vh;
+      max-height: 100dvh;
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      position: fixed;
     }
     
     .chatbot-header {
       flex-shrink: 0;
+      height: 40px;
     }
     
     .chatbot-tabs {
       flex-shrink: 0;
+      height: 35px;
     }
     
     .chatbot-editor {
@@ -353,6 +356,7 @@
       min-height: 0;
       overflow: hidden;
       display: flex;
+      flex-direction: row;
     }
     
     .messages-container {
@@ -360,38 +364,59 @@
       min-height: 0;
       overflow-y: auto;
       overflow-x: hidden;
+      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     }
     
     .chatbot-input-area {
       flex-shrink: 0;
+      min-height: 60px;
+      max-height: 120px;
     }
     
     .chatbot-status-bar {
       flex-shrink: 0;
+      height: 22px;
     }
   }
   
   @media (max-width: 480px) {
     .chatbot-sidebar {
-      height: 100vh;
-      max-height: 100vh;
+      height: 100dvh; /* Dynamic viewport height for mobile browsers */
+      max-height: 100dvh;
       top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
     }
     
     .line-numbers, .input-line-number {
-      min-width: 35px;
-      padding-left: 8px;
-      padding-right: 6px;
+      min-width: 30px;
+      padding-left: 6px;
+      padding-right: 4px;
+      font-size: 12px;
     }
     
-    .input-container, .messages-container {
-      padding-left: 12px;
-      padding-right: 12px;
+    .input-container {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    
+    .messages-container {
+      padding: 10px 12px;
+      /* Ensure it doesn't push input off screen */
+      max-height: calc(100dvh - 180px);
     }
     
     .chatbot-input-area {
-      min-height: 50px;
+      min-height: 60px;
       max-height: 100px;
+      background: #1e1e1e;
+      border-top: 1px solid #3e3e42;
+    }
+    
+    .message-input {
+      font-size: 14px;
+      max-height: 60px;
     }
     
     .chatbot-status-bar {
@@ -400,16 +425,17 @@
       padding: 0 8px;
     }
     
-    .messages-container {
-      padding: 12px;
-    }
-    
     .chatbot-header {
       height: 40px;
     }
     
     .chatbot-tabs {
-      height: 30px;
+      height: 32px;
+    }
+    
+    .send-button {
+      padding: 4px 10px;
+      font-size: 14px;
     }
   }
   

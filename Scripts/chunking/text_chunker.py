@@ -41,9 +41,23 @@ class SlidingWindowChunker:
         Split text into sentences while preserving structure.
         This helps maintain semantic boundaries in chunks.
         """
-        # Simple sentence splitting - can be improved with more sophisticated NLP
-        sentences = re.split(r'(?<=[.!?])\s+', text)
-        return [s.strip() for s in sentences if s.strip()]
+        # First split on newlines to separate logical sections
+        lines = text.split('\n')
+        
+        sentences = []
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+            
+            # Further split each line on sentence boundaries (. ! ?)
+            line_sentences = re.split(r'(?<=[.!?])\s+', line)
+            for sent in line_sentences:
+                sent = sent.strip()
+                if sent:
+                    sentences.append(sent)
+        
+        return sentences
     
     def chunk_text(self, text: str, source_type: str, metadata: Dict = None) -> List[Dict]:
         """

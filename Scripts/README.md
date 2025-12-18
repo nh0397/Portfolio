@@ -1,13 +1,13 @@
 # Portfolio RAG System - Data Processing Script
 
-A simple data processing script that reads latest data from GitHub, LinkedIn, and Resume, chunks it, creates embeddings, and writes to MongoDB vector database.
+A simple data processing script that reads latest data from GitHub, LinkedIn, and Resume, chunks it intelligently, creates embeddings, and writes to MongoDB vector database.
 
 ## 🎯 **Single Purpose**
 
 This Scripts folder has **ONE JOB**:
 1. **Read** latest data from GitHub, LinkedIn, and Resume
-2. **Chunk** the data with sliding window strategy  
-3. **Create** embeddings using Google Gemini
+2. **Chunk** the data by semantic units (one chunk per item)
+3. **Create** embeddings using Fireworks AI
 4. **Write** everything to MongoDB vector database
 
 That's it. No server, no API, just data processing.
@@ -28,9 +28,10 @@ Scripts/
 │   └── github_scraper.py
 ├── resume/                    # Resume parsing
 │   └── resume_parser.py
-└── chunking/                  # Text chunking
-    ├── text_chunker.py
-    └── chunking_config.py
+└── chunking/                  # Structured chunking
+    ├── structured_chunker.py
+    ├── text_chunker.py        # (legacy)
+    └── chunking_config.py     # (legacy)
 ```
 
 ## 🚀 **How to Use**
@@ -110,14 +111,13 @@ Job: Read data → Chunk → Embed → Store in vector DB
    🔗 Formatting LinkedIn data...
    📂 Formatting GitHub data...
 
-🔪 Step 4: Setting up chunking system...
-   📏 Chunk size: 512 tokens
-   🔄 Overlap size: 50 tokens
+🔪 Step 4: Setting up structured chunking system...
+   ✅ Using structured JSON chunking (one chunk per item)
 
-✂️ Step 5: Chunking data with sliding window...
-   📄 Created X resume chunks
-   🔗 Created Y LinkedIn chunks
-   📂 Created Z GitHub chunks
+✂️ Step 5: Chunking data by semantic units...
+   📄 Created 6 resume chunks (1 basic info + 2 work exp + 2 projects + 1 skills)
+   🔗 Created 16 LinkedIn chunks (1 basic info + 3 work exp + 2 education + 1 skills + 4 certs + 5 awards)
+   📂 Created 15 GitHub chunks (1 per repository)
 
 🔮 Step 6: Creating embeddings for chunks...
    📝 Creating embedding for resume chunk 1/X...
@@ -149,22 +149,25 @@ Job: Read data → Chunk → Embed → Store in vector DB
 
 ### **🔪 chunking/**
 - **Files**: 
-  - `text_chunker.py` - SlidingWindowChunker class
-  - `chunking_config.py` - Configuration settings
-- **Purpose**: Chunk text with overlapping windows and metadata
+  - `structured_chunker.py` - StructuredChunker class (one chunk per semantic unit)
+  - `text_chunker.py` - Legacy sliding window chunker (deprecated)
+  - `chunking_config.py` - Legacy configuration (deprecated)
+- **Purpose**: Create focused, structured JSON chunks preserving data hierarchy
 
-## 🔧 **Configuration**
+## 🔧 **Structured Chunking Strategy**
 
-### **Chunking Parameters**
-```python
-# In chunking/chunking_config.py
-CHUNKING_CONFIG = {
-    "chunk_size": 512,           # Maximum tokens per chunk
-    "overlap_size": 50,          # Tokens to overlap between chunks
-    "max_chunks_per_query": 5,   # Maximum chunks to retrieve per query
-    "embedding_delay": 1,        # API rate limiting (seconds)
-}
-```
+### **Why Structured Chunks?**
+Instead of arbitrary text splitting, we create **one chunk per semantic unit**:
+
+- **Resume**: One chunk for each work experience, project, skills group
+- **LinkedIn**: One chunk for each job, education entry, certification, award
+- **GitHub**: One chunk per repository
+
+**Benefits**:
+- ✅ **Precise Retrieval**: Get exactly the relevant item, not mixed content
+- ✅ **Preserved Structure**: JSON structure maintained for better querying
+- ✅ **Better Context**: Each chunk is a complete, meaningful unit
+- ✅ **More Granular**: 37 focused chunks instead of 6 mixed ones
 
 ## 🎯 **When to Run**
 
@@ -177,17 +180,17 @@ Run this script whenever you want to update your vector database with:
 
 ## 📈 **Performance Features**
 
-### **Sliding Window Chunking**
-- **Context Preservation**: Overlapping chunks maintain context
-- **Precise Retrieval**: Specific sections instead of entire documents
-- **Token Efficiency**: Optimized chunk sizes for LLM processing
-- **Metadata Enhancement**: Section-aware retrieval
+### **Structured JSON Chunking**
+- **Semantic Coherence**: Each chunk is a complete logical unit
+- **Precise Retrieval**: Query for specific work experience, project, or repo
+- **Structure Preservation**: JSON format maintained for rich queries
+- **Metadata Enhancement**: Typed chunks with section awareness
 
 ### **Vector Search Ready**
-- **Semantic Similarity**: Google Gemini embeddings
+- **Semantic Similarity**: Fireworks AI embeddings (nomic-embed-text-v1.5)
 - **MongoDB Atlas**: Vector search index
 - **Multi-source**: Resume, LinkedIn, GitHub data
-- **Real-time Ready**: Fast retrieval for chatbot responses
+- **Real-time Ready**: Fast, granular retrieval for chatbot responses
 
 ## 🔒 **Security**
 
@@ -203,8 +206,9 @@ Run this script whenever you want to update your vector database with:
 3. Import and use in `main.py`
 
 ### **Modifying Chunking**
-1. Edit `chunking/chunking_config.py`
-2. Adjust parameters as needed
+1. Edit `chunking/structured_chunker.py`
+2. Customize formatting methods for your needs
+3. Add new chunk types for additional data sources
 
 ## 📊 **Output**
 

@@ -8,6 +8,7 @@ const Chatbot = ({ isOpen, onClose }) => {
   const [userInput, setUserInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -102,6 +103,10 @@ const Chatbot = ({ isOpen, onClose }) => {
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
+      // Refocus the input after sending
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
     }
   };
 
@@ -219,6 +224,7 @@ const Chatbot = ({ isOpen, onClose }) => {
           <label htmlFor="chatbot-textarea" className="sr-only">Type your message</label>
           <span className="input-syntax" aria-hidden="true">user.ask(</span>
           <textarea
+            ref={inputRef}
             id="chatbot-textarea"
             value={userInput}
             onChange={handleInputChange}

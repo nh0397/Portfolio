@@ -24,8 +24,7 @@ import openai
 from linkedin.linkedin_scraper import scrape_linkedin_profile
 from github.github_scraper import fetch_github_repositories
 from resume.resume_parser import extract_resume_data
-from chunking.text_chunker import SlidingWindowChunker
-from chunking.chunking_config import get_chunking_config
+from chunking.structured_chunker import StructuredChunker
 
 # Load environment variables
 load_dotenv()
@@ -44,20 +43,34 @@ class FireworksEmbeddings:
         )
 
     def generate_embeddings(self, inp: str) -> list:
-        """Generate embeddings for input text using Fireworks.ai."""
+        """Generate embeddings for input text using Fireworks.ai with unlimited retry logic."""
         if not os.getenv('FIREWORKS_API_KEY'):
             print("Please set correct Fireworks API key")
             return []
 
-        try:
-            response = self.client.embeddings.create(
-                model="nomic-ai/nomic-embed-text-v1.5",
-                input=inp
-            )
-            return response.data[0].embedding
-        except Exception as e:
-            print(f"Embeddings not found: {e}")
-            return []
+        attempt = 0
+        while True:  # Keep trying until successful
+            try:
+                response = self.client.embeddings.create(
+                    model="nomic-ai/nomic-embed-text-v1.5",
+                    input=inp
+                )
+                return response.data[0].embedding
+            except Exception as e:
+                if "429" in str(e) or "rate limit" in str(e).lower():
+                    # Rate limit hit - wait and retry (exponential backoff)
+                    attempt += 1
+                    wait_time = min(30, 10 + (attempt * 5))  # 15s, 20s, 25s, 30s max
+                    print(f"      ⏳ Rate limit hit (attempt {attempt}). Waiting {wait_time}s before retry...")
+                    time.sleep(wait_time)
+                    # Continue to next iteration - never give up!
+                else:
+                    # Non-rate-limit error - this is more serious
+                    print(f"      ❌ Embedding error: {e}")
+                    print(f"      🔄 Retrying in 10 seconds...")
+                    time.sleep(10)
+                    attempt += 1
+                    # Still don't give up - keep trying
 
 
 def format_resume_with_gemini(resume_data):
@@ -308,25 +321,18 @@ def main():
     }
     
     # Step 4: Setup chunking system
-    print("\n🔪 Step 4: Setting up chunking system...")
+    print("\n🔪 Step 4: Setting up structured chunking system...")
     fireworks_embeddings = FireworksEmbeddings()
-    config = get_chunking_config()
+    chunker = StructuredChunker()
     
-    chunker = SlidingWindowChunker(
-        chunk_size=config["chunk_size"],
-        overlap_size=config["overlap_size"],
-        model_name=config["model_name"]
-    )
-    
-    print(f"   📏 Chunk size: {config['chunk_size']} tokens")
-    print(f"   🔄 Overlap size: {config['overlap_size']} tokens")
+    print("   ✅ Using structured JSON chunking (one chunk per item)")
     
     # Step 5: Chunk the data
-    print("\n✂️ Step 5: Chunking data with sliding window...")
+    print("\n✂️ Step 5: Chunking data by semantic units...")
     
-    resume_chunks = chunker.chunk_json_data(final_data["resume"], "resume")
-    linkedin_chunks = chunker.chunk_json_data(final_data["linkedin"], "linkedin")
-    github_chunks = chunker.chunk_json_data(final_data["github"], "github")
+    resume_chunks = chunker.chunk_resume(final_data["resume"])
+    linkedin_chunks = chunker.chunk_linkedin(final_data["linkedin"])
+    github_chunks = chunker.chunk_github(final_data["github"])
     
     print(f"   📄 Created {len(resume_chunks)} resume chunks")
     print(f"   🔗 Created {len(linkedin_chunks)} LinkedIn chunks")
@@ -339,33 +345,44 @@ def main():
     
     # Process resume chunks
     for i, chunk in enumerate(resume_chunks):
-        print(f"   📝 Creating embedding for resume chunk {i+1}/{len(resume_chunks)}")
+        chunk_type = chunk.get("chunk_type", "unknown")
+        print(f"   📝 Creating embedding for {chunk_type} ({i+1}/{len(resume_chunks)})")
         chunk_embedding = fireworks_embeddings.generate_embeddings(chunk["chunk_text"])
         chunk["embedding"] = chunk_embedding
-        chunk["source_type"] = "resume"
         all_chunks.append(chunk)
-        time.sleep(config["embedding_delay"])
+        time.sleep(5)  # 5 second rate limiting as requested
     
     # Process LinkedIn chunks
     for i, chunk in enumerate(linkedin_chunks):
-        print(f"   🔗 Creating embedding for LinkedIn chunk {i+1}/{len(linkedin_chunks)}")
+        chunk_type = chunk.get("chunk_type", "unknown")
+        print(f"   🔗 Creating embedding for {chunk_type} ({i+1}/{len(linkedin_chunks)})")
         chunk_embedding = fireworks_embeddings.generate_embeddings(chunk["chunk_text"])
         chunk["embedding"] = chunk_embedding
-        chunk["source_type"] = "linkedin"
         all_chunks.append(chunk)
-        time.sleep(config["embedding_delay"])
+        time.sleep(5)  # 5 second rate limiting as requested
     
     # Process GitHub chunks
     for i, chunk in enumerate(github_chunks):
-        print(f"   📂 Creating embedding for GitHub chunk {i+1}/{len(github_chunks)}")
+        chunk_type = chunk.get("chunk_type", "unknown")
+        print(f"   📂 Creating embedding for {chunk_type} ({i+1}/{len(github_chunks)})")
         chunk_embedding = fireworks_embeddings.generate_embeddings(chunk["chunk_text"])
         chunk["embedding"] = chunk_embedding
-        chunk["source_type"] = "github"
         all_chunks.append(chunk)
-        time.sleep(config["embedding_delay"])
+        time.sleep(5)  # 5 second rate limiting as requested
     
     # Step 7: Write to MongoDB vector database
     print("\n💾 Step 7: Writing chunks to MongoDB vector database...")
+    
+    if not all_chunks:
+        print("   ❌ No chunks to store!")
+        return
+    
+    # Validate all chunks have embeddings (they should all have them now)
+    valid_chunks = [c for c in all_chunks if c.get("embedding") and len(c.get("embedding", [])) > 0]
+    
+    if len(valid_chunks) != len(all_chunks):
+        print(f"   ⚠️  ERROR: Some chunks don't have embeddings! This shouldn't happen.")
+        print(f"   Valid: {len(valid_chunks)}, Total: {len(all_chunks)}")
     
     from urllib.parse import quote_plus
     user_name = quote_plus(os.getenv('MONGO_USERNAME'))
@@ -377,11 +394,19 @@ def main():
     
     # Clear existing data and insert new chunks
     db.drop()
-    db.insert_many(all_chunks)
+    db.insert_many(valid_chunks)
     
-    print(f"   ✅ Written {len(all_chunks)} chunks to MongoDB vector database")
+    print(f"   ✅ Written {len(valid_chunks)} chunks to MongoDB vector database")
     print(f"   📊 Database: {os.getenv('MONGO_DB_NAME')}")
     print(f"   📁 Collection: {os.getenv('MONGO_CL_NAME')}")
+    
+    # Verify embeddings
+    sample = db.find_one()
+    if sample and 'embedding' in sample:
+        embedding_dim = len(sample['embedding'])
+        print(f"   ✅ Vector embeddings confirmed (dimension: {embedding_dim})")
+    else:
+        print(f"   ⚠️  Warning: Could not verify embeddings in MongoDB")
     
     # Step 8: Save final data as backup
     print("\n💾 Step 8: Saving final data as backup...")
@@ -397,8 +422,9 @@ def main():
     print(f"   - Resume chunks: {len(resume_chunks)}")
     print(f"   - LinkedIn chunks: {len(linkedin_chunks)}")
     print(f"   - GitHub chunks: {len(github_chunks)}")
-    print(f"   - Total chunks: {len(all_chunks)}")
-    print(f"   - MongoDB vector database: Updated!")
+    print(f"   - Total chunks: {len(resume_chunks) + len(linkedin_chunks) + len(github_chunks)}")
+    print(f"   - Successfully stored in MongoDB: {len(valid_chunks)}")
+    print(f"   - MongoDB vector database: Updated with ALL embeddings!")
     
     print("\n✅ Script completed - Vector database is ready for your chatbot!")
 

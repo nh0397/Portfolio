@@ -182,19 +182,76 @@ class LLMProvider:
         else:
             raise ValueError(f"Unsupported provider: {provider}")
     
-    def generate_content(self, prompt: str) -> str:
+    def parse_conversation_history(self, conversation_history: str) -> list:
+        """Parse conversation history string into messages array for OpenAI-compatible APIs"""
+        messages = []
+        if not conversation_history:
+            return messages
+        
+        lines = conversation_history.strip().split('\n')
+        for line in lines:
+            line = line.strip()
+            if line.startswith('User: '):
+                messages.append({
+                    "role": "user",
+                    "content": line[6:]  # Remove 'User: ' prefix
+                })
+            elif line.startswith('Assistant: '):
+                messages.append({
+                    "role": "assistant",
+                    "content": line[11:]  # Remove 'Assistant: ' prefix
+                })
+        
+        return messages
+    
+    def generate_content(self, prompt: str, conversation_history: str = "") -> str:
         """Generate content using the configured provider"""
         try:
             if self.provider == 'groq':
+                # Build messages array with conversation history
+                messages = []
+                
+                # Add system message for context
+                messages.append({
+                    "role": "system",
+                    "content": """You are Naisarg's AI assistant. Answer questions naturally and concisely like you're having a conversation.
+
+Key facts:
+- GitHub: https://github.com/nh0397
+- LinkedIn: https://www.linkedin.com/in/naisarg-h/
+- Email: naisarghalvadiya@gmail.com
+- Location: San Francisco, CA
+
+Important:
+- Answer directly without phrases like "Based on the information provided" or "I can tell you that"
+- Don't mention where the information came from (LinkedIn, resume, etc.)
+- Be brief and natural
+- Example: Instead of "Based on his LinkedIn profile, he resides in San Francisco, California, United States" just say "He's in San Francisco, CA" or "San Francisco, California"
+"""
+                })
+                
+                # Add conversation history as messages (only last few to keep context manageable)
+                if conversation_history:
+                    history_messages = self.parse_conversation_history(conversation_history)
+                    # Keep only last 10 messages to avoid context overflow
+                    messages.extend(history_messages[-10:])
+                
+                # Add current prompt as user message
+                messages.append({
+                    "role": "user",
+                    "content": prompt
+                })
+                
                 response = self.client.chat.completions.create(
                     model=self.model,
-                    messages=[{"role": "user", "content": prompt}],
-                    temperature=0.7,
-                    max_tokens=2048
+                    messages=messages,
+                    temperature=0.5,  # Lower temperature for more consistent, factual responses
+                    max_tokens=500  # Removed restrictions on answer length
                 )
                 return response.choices[0].message.content.strip()
             
             elif self.provider == 'gemini':
+                # Gemini expects a single prompt with history embedded
                 response = self.client.models.generate_content(
                     model=self.model,
                     contents=prompt
@@ -282,7 +339,7 @@ def find_similar_documents(
                     "index": index_name,
                     "path": col_name,
                     "queryVector": inp_document_embedding,
-                    "numCandidates": 49,
+                    "numCandidates": 100,  # Increased to consider more candidates
                     "limit": no_of_docs,
                 }
             },
@@ -424,19 +481,8 @@ def chat():
         if client is None or db is None or collection is None:
             return jsonify({'response': 'Sorry, database connection is not available. Please try again later.'}), 500
             
-        # Get data from request - try JSON first, then parse manually
-        try:
-            data = request.get_json(force=True, silent=True)
-            if not data or not isinstance(data, dict):
-                raise ValueError("Not valid JSON")
-        except:
-            # Parse the weird format manually
-            data = {}
-            body_str = request.data.decode('utf-8')
-            for line in body_str.split('\n'):
-                if ':' in line:
-                    key, value = line.split(':', 1)
-                    data[key.strip()] = value.strip().strip('"')
+        # Get data from request
+        data = request.get_json()
         
         message = data.get('message', '')
         conversation_history = data.get('conversation_history', '')
@@ -447,8 +493,12 @@ def chat():
         
         print(f"💬 Received message: {message}")
         print(f"📝 Session ID: {session_id}")
-
-        print(f"💬 Received message: {message}")
+        print(f"📜 Conversation history length: {len(conversation_history)} chars")
+        if conversation_history:
+            # Show first 200 chars of conversation history for debugging
+            print(f"📜 Conversation preview: {conversation_history[:200]}...")
+        else:
+            print(f"⚠️  No conversation history provided!")
 
         # Better classification that considers casual conversation
         initial_prompt = f"""Classify this message:
@@ -459,17 +509,16 @@ Previous conversation:
 Current message: {message}
 
 Classify as:
-- 'context-specific' if asking about Naisarg, his work, skills, projects, or using pronouns referring to him
-- 'casual' if it's casual conversation (greetings, "what's up", small talk, reactions like "lol")
-- 'generic' if it's unrelated questions about other topics
+- 'context-specific' if asking about Naisarg, his work, skills, projects, experience, or using pronouns referring to him
+- 'casual' if it's greetings, small talk, thank you, or initial conversation starters
 
-Answer: """
+Answer with just one word: """
         
         # Classify the message
         try:
             if not llm_provider:
                 raise ValueError("LLM provider not initialized")
-            classification_response = llm_provider.generate_content(initial_prompt)
+            classification_response = llm_provider.generate_content(initial_prompt, conversation_history)
             classification = classification_response.lower()
             print(f'🤖 Classification: {classification}')
         except Exception as e:
@@ -478,8 +527,38 @@ Answer: """
         
         if 'context-specific' in classification:
             print("🔍 Performing vector search...")
+            
+            # Rewrite query with conversation context for better retrieval
+            standalone_query = message
+            if conversation_history and len(conversation_history) > 50:
+                try:
+                    # First summarize the conversation to save tokens
+                    summary_prompt = f"""Summarize this conversation in 1-2 sentences, focusing on what was discussed about Naisarg:
+
+{conversation_history}
+
+Summary:"""
+                    
+                    conversation_summary = llm_provider.generate_content(summary_prompt, "")
+                    print(f"📋 Conversation summary: {conversation_summary}")
+                    
+                    # Now rewrite the query with the summary
+                    rewrite_prompt = f"""Context: {conversation_summary}
+
+User's question: "{message}"
+
+Rewrite this as a standalone search query about Naisarg that includes necessary context. Be specific.
+
+Standalone query:"""
+                    
+                    standalone_query = llm_provider.generate_content(rewrite_prompt, "")
+                    print(f"🔄 Query rewritten: '{message}' → '{standalone_query}'")
+                except Exception as e:
+                    print(f"⚠️  Query rewrite failed, using original: {e}")
+                    standalone_query = message
+            
             fireworks_embeddings = FireworksEmbeddings()
-            message_embedding = fireworks_embeddings.generate_embeddings(message)
+            message_embedding = fireworks_embeddings.generate_embeddings(standalone_query)
 
             if not message_embedding:
                 print("❌ Failed to generate embeddings")
@@ -490,7 +569,7 @@ Answer: """
                 inp_document_embedding=message_embedding,
                 index_name=os.getenv('MONGO_INDEX_NAME'),
                 col_name=os.getenv('MONGO_EMBEDDING_FIELD_NAME'),
-                no_of_docs=3
+                no_of_docs=5  # Increased from 3 to get more context from small chunks
             )
 
             if not similar_docs:
@@ -500,7 +579,7 @@ Answer: """
 
 Question: {message}
 
-You are Naisarg's AI assistant. Answer the question about Naisarg directly and naturally. Be conversational but informative. Don't use repetitive greetings."""
+Answer naturally and briefly. Don't mention sources or say "based on". If you don't have the info, say: "Unfortunately, I don't have information about this - you can reach out to Naisarg directly at naisarghalvadiya@gmail.com and he'll be happy to help you." """
 
             else:
                 # Extract chunk content
@@ -527,16 +606,26 @@ You are Naisarg's AI assistant. Answer the question about Naisarg directly and n
 
                 print(f"📄 Retrieved {len(similar_docs)} relevant chunks")
                 print(f"📊 Chunk sources: {[meta['source_type'] for meta in chunk_metadata]}")
+                
+                # Print actual chunk content for debugging
+                print(f"\n📝 CHUNK CONTENT BEING SENT TO LLM:")
+                print(f"{'='*80}")
+                for i, (text, meta) in enumerate(zip(similar_texts, chunk_metadata), 1):
+                    print(f"\n--- Chunk {i} [{meta['source_type']}] (Score: {meta['score']:.4f}) ---")
+                    print(text[:300] + ("..." if len(text) > 300 else ""))  # Print first 300 chars
+                print(f"{'='*80}\n")
 
                 prompt = f"""Information about Naisarg:
-{combined_texts}
 
-Previous conversation:
-{conversation_history}
+{combined_texts}
 
 Question: {message}
 
-You are Naisarg's AI assistant. Answer naturally about Naisarg using the information provided. Be conversational and helpful. Don't repeat greetings or summarize previous conversation unless asked."""
+Answer this question naturally and concisely:
+- Don't say "Based on the information" or "According to his profile"
+- Don't mention the source (LinkedIn, resume, GitHub)
+- Just answer the question directly
+- Be conversational and brief"""
 
         elif 'casual' in classification:
             # Handle casual conversation naturally
@@ -546,19 +635,7 @@ You are Naisarg's AI assistant. Answer naturally about Naisarg using the informa
 
 User message: {message}
 
-You are Naisarg's AI assistant. The user is making casual conversation. Respond naturally and friendly, then gently guide them to ask about Naisarg if appropriate. 
-
-DO:
-- Be warm and conversational
-- Acknowledge their casual message naturally
-- Suggest they can ask about Naisarg
-- Match their energy level
-
-DON'T:
-- Be robotic or rude
-- Just say "Only Naisarg-related questions"
-- Ignore their casual message
-- Be overly formal"""
+Respond casually and naturally. Keep it brief and friendly. Mention you can answer questions about Naisarg."""
 
         else:
             # Generic/unrelated questions
@@ -568,24 +645,13 @@ DON'T:
 
 User message: {message}
 
-You are Naisarg's AI assistant. The user asked about something unrelated to Naisarg. Respond politely that you specialize in questions about Naisarg, but do it in a friendly way.
-
-DO:
-- Be polite and understanding
-- Acknowledge their question
-- Explain your role nicely
-- Invite them to ask about Naisarg
-
-DON'T:
-- Be rude or dismissive
-- Just say "No" or "Only Naisarg-related questions"
-- Ignore their question completely"""
+Let them know politely you focus on questions about Naisarg. Be brief and natural."""
 
         # Generate response
         try:
             if not llm_provider:
                 raise ValueError("LLM provider not initialized")
-            response = llm_provider.generate_content(prompt)
+            response = llm_provider.generate_content(prompt, conversation_history)
             response_text = format_text(response)
         except Exception as e:
             print(f"❌ {LLM_PROVIDER.upper()} API failed: {e}")
