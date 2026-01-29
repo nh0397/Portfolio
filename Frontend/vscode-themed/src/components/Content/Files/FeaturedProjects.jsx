@@ -24,16 +24,20 @@ function FeaturedProjects() {
         );
       case "youtube":
         if (!media.url) return null;
+        // Use privacy-enhanced mode and add proper parameters to avoid blocking
+        const embedUrl = `https://www.youtube-nocookie.com/embed/${media.url}?modestbranding=1&rel=0&enablejsapi=1`;
         return (
           <div className="project-media">
             <iframe
               width="100%"
               height="315"
-              src={`https://www.youtube.com/embed/${media.url}`}
+              src={embedUrl}
               title={media.alt}
               frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
               className="project-video"
             ></iframe>
           </div>
