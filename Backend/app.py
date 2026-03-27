@@ -49,6 +49,15 @@ try:
 except Exception as e:
     print(f"❌ MongoDB connection failed: {e}")
 
+# Initialize Graph
+graph = GraphRAG()
+try:
+    # Test connection with a simple query
+    res = graph.query("MATCH (n) RETURN count(n) as count")
+    print(f"✅ Connected to Neo4j (Nodes: {res[0]['count'] if res else 0})")
+except Exception as e:
+    print(f"❌ Neo4j connection failed: {e}")
+
 # Helper: Format text for UI
 def format_text(text: str) -> str:
     text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', text)
