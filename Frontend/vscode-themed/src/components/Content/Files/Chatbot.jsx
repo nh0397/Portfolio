@@ -18,6 +18,14 @@ const Chatbot = ({ isOpen, onClose }) => {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 300); // Wait for sidebar transition
+    }
+  }, [isOpen]);
+
   // Load conversation from sessionStorage on component mount
   useEffect(() => {
     const savedMessages = ChatbotService.loadConversationFromSession();
@@ -59,6 +67,15 @@ const Chatbot = ({ isOpen, onClose }) => {
   const handleInputChange = (e) => {
     setUserInput(e.target.value);
   };
+
+  // Auto-expand textarea height
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto';
+      const newHeight = Math.min(inputRef.current.scrollHeight, 150);
+      inputRef.current.style.height = `${newHeight}px`;
+    }
+  }, [userInput]);
 
   const handleSendMessage = async () => {
     if (userInput.trim() === '') return;
@@ -103,12 +120,15 @@ const Chatbot = ({ isOpen, onClose }) => {
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
-      // Refocus the input after sending
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
     }
   };
+
+  // Ensure focus is kept/restored
+  useEffect(() => {
+    if (!isLoading) {
+      inputRef.current?.focus();
+    }
+  }, [isLoading]);
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {

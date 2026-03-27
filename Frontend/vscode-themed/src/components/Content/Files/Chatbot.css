@@ -159,6 +159,10 @@
     color: #569cd6;
     flex-shrink: 0;
   }
+
+  .message-code .message-syntax:last-of-type {
+    align-self: flex-end;
+  }
   
   .message-content {
     color: #ce9178;
@@ -241,6 +245,11 @@
     flex-shrink: 0;
   }
   
+  .input-syntax:last-of-type {
+    align-self: flex-end;
+    margin-bottom: 2px;
+  }
+  
   .message-input {
     flex: 1;
     background: transparent;
@@ -252,7 +261,9 @@
     resize: none;
     outline: none;
     margin: 0 4px;
-    max-height: 80px;
+    max-height: 150px; /* Increased max-height */
+    overflow-y: auto;
+    transition: height 0.1s ease;
   }
   
   .message-input::placeholder {
@@ -271,6 +282,8 @@
     margin-top: 2px;
     transition: background-color 0.2s;
     flex-shrink: 0;
+    align-self: flex-end; /* Align with bottom */
+    margin-bottom: 2px;
   }
   
   .send-button:hover:not(:disabled) {
