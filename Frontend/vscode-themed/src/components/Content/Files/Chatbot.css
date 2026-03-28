@@ -220,6 +220,9 @@
   
   .message-input {
     flex: 1;
+    width: 100%;         /* Explicit width required for Safari flexbox textareas */
+    min-width: 50px;     /* Prevent full collapse */
+    min-height: 20px;    /* Ensure clickable hit area */
     background: transparent;
     border: none;
     color: #ce9178;
@@ -231,6 +234,9 @@
     margin: 0 4px;
     max-height: 150px;
     overflow-y: auto;
+    cursor: text;        /* Force text cursor visually */
+    -webkit-appearance: none;
+    appearance: none;
   }
   
   .send-button {
