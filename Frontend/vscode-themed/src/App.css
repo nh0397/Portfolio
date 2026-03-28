@@ -48,14 +48,6 @@
     height: 100%;
   }
 
-  /* Hide scrollbars globally on mobile */
-  * {
-    scrollbar-width: none !important;
-  }
-  *::-webkit-scrollbar {
-    display: none !important;
-  }
-
   .footer-main {
     flex-shrink: 0 !important;
     height: 22px !important;
