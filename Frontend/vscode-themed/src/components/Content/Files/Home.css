@@ -15,6 +15,7 @@
   display: flex;
   width: 100%;
   max-width: 1200px;
+  height: 100%;
   max-height: 800px;
   border-radius: 8px;
   overflow: hidden;
@@ -104,9 +105,6 @@
   background-color: #252526; 
   padding: 0.5rem; 
   border-bottom: 1px solid #333; 
-  display: flex;
-  align-items: center;
-  gap: 1rem;
 }
 
 .editor-tabs { display: flex; align-items: center; }
@@ -159,23 +157,17 @@
 
 @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-/* MOBILE REFACTOR (The Art of Responsiveness) */
+/* MOBILE REFACTOR (TRUE APP SHELL) */
 @media (max-width: 768px) {
   .hero-container {
-    height: auto !important;
-    padding: 2rem 1.5rem !important;
+    height: 100% !important; /* Fill the flex container exactly */
+    padding: 0 !important;
     display: block;
-    overflow-y: visible !important;
+    overflow: hidden !important; /* Frame Lock */
     width: 100vw !important;
-    box-sizing: border-box;
   }
 
-  /* Specific Home Page 60/40 Split (Mathematical Scroll-Lock) */
   .hero-container.home-page {
-    /* MATH: 100dvh - 35px(TopBar) - 35px(TabBar) - 22px(Footer) = 92px */
-    height: calc(100dvh - 92px) !important; 
-    overflow: hidden !important; 
-    padding: 0 !important;
     display: flex;
     flex-direction: column;
   }
@@ -184,13 +176,15 @@
     flex-direction: column !important;
     height: 100% !important;
     width: 100% !important;
-    display: flex;
+    max-height: none !important;
+    box-shadow: none;
+    border-radius: 0;
   }
 
   .hero-container.home-page .hero-left {
     height: 60% !important;
     width: 100% !important;
-    padding: 1rem !important;
+    padding: 1.2rem !important;
     justify-content: center;
     overflow-y: hidden !important; 
   }
@@ -198,32 +192,31 @@
   .hero-container.home-page .code-editor {
     height: 40% !important;
     width: 100% !important;
-    margin-top: 0;
-    padding-bottom: 0;
-    overflow-y: auto !important;
-    border-top: 1px solid #333;
     border-left: none !important;
+    border-top: 1px solid #333;
+    overflow-y: auto !important;
   }
 
-  /* Stabilize Bio Typography to avoid "dancing" */
+  /* Stabilize Typography */
   .hero-container.home-page .hero-text p {
-    font-size: clamp(0.75rem, 3.5vw, 0.9rem) !important;
-    line-height: 1.3 !important;
-    margin-bottom: 0.5rem !important;
+    font-size: clamp(0.75rem, 3.5vw, 0.85rem) !important;
+    line-height: 1.35 !important;
+    margin-bottom: 0.8rem !important;
   }
 
   .hero-container.home-page .profile-photo {
     width: clamp(70px, 15vw, 90px);
     height: clamp(70px, 15vw, 90px);
+    margin-bottom: 1rem;
   }
 
   .hero-container.home-page .gradient-text {
-    font-size: clamp(1.6rem, 8vw, 2.1rem) !important;
+    font-size: clamp(1.6rem, 8vw, 2rem) !important;
     margin-bottom: 0.2rem;
   }
 
   .hero-container.home-page .hero-text h2 {
-     font-size: clamp(0.9rem, 4vw, 1rem) !important;
-     margin-bottom: 0.5rem;
+    font-size: clamp(0.9rem, 4vw, 1rem) !important;
+    margin-bottom: 0.5rem;
   }
 }

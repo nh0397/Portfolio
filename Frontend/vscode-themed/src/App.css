@@ -3,24 +3,39 @@
   width: 100vw;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Professional VS Code behavior for desktop */
+  overflow: hidden; /* VS Code behavior: Lock the frame */
   background-color: #1e1e1e;
 }
 
 .main-container {
   display: flex;
-  flex: 1;
+  flex: 1; /* Take all remaining space between TopBar and Footer */
   width: 100%;
   position: relative;
-  overflow: hidden; /* Professional VS Code behavior for desktop */
+  overflow: hidden;
 }
 
+/* GLOBAL MOBILE UI RESTORATION */
 @media (max-width: 768px) {
-  .App, .main-container {
-    overflow-y: auto; /* Allow scroll ONLY on mobile */
-    overflow-x: hidden !important;
-    height: auto !important;
-    min-height: 100dvh;
-    width: 100vw !important; /* Force 100vw */
+  .App {
+    height: 100dvh !important;
+    overflow: hidden !important;
+  }
+
+  /* Hide all scrollbars on mobile for clean look */
+  * {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  
+  *::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .main-container {
+    flex: 1 !important;
+    height: auto; /* Allow flex-grow to work */
+    overflow: hidden !important;
+    width: 100vw !important;
   }
 }
