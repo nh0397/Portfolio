@@ -163,11 +163,13 @@
     display: block;
     overflow-y: visible !important;
     width: 100vw !important;
+    box-sizing: border-box;
   }
 
-  /* Specific Home Page 60/40 Split (Fit to screen) */
+  /* Specific Home Page 60/40 Split (Mathematical Scroll-Lock) */
   .hero-container.home-page {
-    height: calc(100dvh - 35px) !important; /* Subtract tab height */
+    /* MATH: 100dvh - 35px(TopBar) - 35px(TabBar) = 70px */
+    height: calc(100dvh - 70px) !important; 
     overflow: hidden !important; 
     padding: 0 !important;
     display: flex;
@@ -183,9 +185,9 @@
   .hero-container.home-page .hero-left {
     height: 60% !important;
     width: 100% !important;
-    padding: 1.5rem 1rem !important;
+    padding: 1rem !important; /* Slightly reduced for tight fit */
     justify-content: center;
-    overflow-y: hidden !important; /* No scroll as requested */
+    overflow-y: hidden !important; 
   }
 
   .hero-container.home-page .code-editor {
@@ -193,53 +195,23 @@
     width: 100% !important;
     margin-top: 0;
     padding-bottom: 0;
-    overflow-y: auto !important; /* Allow internal scroll only for code */
+    overflow-y: auto !important; 
+  }
+
+  /* Stabilize Bio Typography */
+  .hero-container.home-page .hero-text p {
+    font-size: clamp(0.85rem, 3vw, 0.95rem) !important;
+    line-height: 1.4 !important;
+    margin-bottom: 1rem !important;
   }
 
   .hero-container.home-page .profile-photo {
-    width: clamp(100px, 20vw, 120px);
-    height: clamp(100px, 20vw, 120px);
+    width: clamp(80px, 18vw, 110px);
+    height: clamp(80px, 18vw, 110px);
   }
 
   .hero-container.home-page .gradient-text {
-    font-size: clamp(1.8rem, 8.5vw, 2.4rem) !important;
-  }
-
-  /* General hero-content for other pages stays stacked/scrollable */
-  .hero-content {
-    flex-direction: column !important;
-    height: auto !important;
-    max-height: none !important;
-    box-shadow: none;
-    border-radius: 0;
-  }
-
-  .hero-left {
-    width: 100% !important;
-    padding: 2rem 0 !important;
-    text-align: center;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .hero-text {
-    max-width: 100% !important;
-    padding: 0 !important;
-  }
-
-  .code-editor {
-    width: 100% !important;
-    height: auto !important;
-    border-left: none !important;
-    border-top: 1px solid #333;
-    margin-top: 2rem;
-    padding-bottom: 3rem;
-  }
-
-  .cta-button {
-    width: 100%;
-    text-align: center;
-    max-width: 300px;
+    font-size: clamp(1.8rem, 8vw, 2.22rem) !important;
+    margin-bottom: 0.5rem;
   }
 }
