@@ -49,7 +49,6 @@ const TopBar = () => {
             aria-label="Expand window"
             title="Expand window"
           >
-            <img src={expand} alt="" className="expand-icon" aria-hidden="true" />
           </button>
         </div>
       </div>
