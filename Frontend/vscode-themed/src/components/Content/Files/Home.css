@@ -155,27 +155,63 @@
   background: linear-gradient(90deg, #ffcc00, #e9b949);
 }
 
-/* MOBILE REFACTOR: Absolute 100vw experience */
+/* MOBILE REFACTOR (The Art of Responsiveness) */
 @media (max-width: 768px) {
   .hero-container {
     height: auto !important;
-    min-height: 100dvh;
-    width: 100vw !important; /* Take full screen since sidebar is hidden */
-    overflow-y: visible !important;
-    overflow-x: hidden !important;
-    padding: 2.5rem 1rem !important;
+    padding: 2rem 1.5rem !important;
     display: block;
-    box-sizing: border-box;
+    overflow-y: visible !important;
+    width: 100vw !important;
   }
 
+  /* Specific Home Page 60/40 Split (Fit to screen) */
+  .hero-container.home-page {
+    height: calc(100dvh - 35px) !important; /* Subtract tab height */
+    overflow: hidden !important; 
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-container.home-page .hero-content {
+    flex-direction: column !important;
+    height: 100% !important;
+    width: 100% !important;
+  }
+
+  .hero-container.home-page .hero-left {
+    height: 60% !important;
+    width: 100% !important;
+    padding: 1.5rem 1rem !important;
+    justify-content: center;
+    overflow-y: hidden !important; /* No scroll as requested */
+  }
+
+  .hero-container.home-page .code-editor {
+    height: 40% !important;
+    width: 100% !important;
+    margin-top: 0;
+    padding-bottom: 0;
+    overflow-y: auto !important; /* Allow internal scroll only for code */
+  }
+
+  .hero-container.home-page .profile-photo {
+    width: clamp(100px, 20vw, 120px);
+    height: clamp(100px, 20vw, 120px);
+  }
+
+  .hero-container.home-page .gradient-text {
+    font-size: clamp(1.8rem, 8.5vw, 2.4rem) !important;
+  }
+
+  /* General hero-content for other pages stays stacked/scrollable */
   .hero-content {
     flex-direction: column !important;
     height: auto !important;
     max-height: none !important;
-    width: 100% !important;
     box-shadow: none;
     border-radius: 0;
-    overflow: visible !important;
   }
 
   .hero-left {
@@ -199,12 +235,6 @@
     border-top: 1px solid #333;
     margin-top: 2rem;
     padding-bottom: 3rem;
-    overflow: visible !important;
-  }
-
-  .gradient-text {
-    font-size: clamp(2rem, 10vw, 2.8rem) !important;
-    margin-bottom: 1rem;
   }
 
   .cta-button {

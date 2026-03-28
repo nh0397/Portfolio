@@ -79,7 +79,7 @@ function Home() {
   }, [homeVisited, codeString, setHomeVisited]);
 
   return (
-    <main className="hero-container">
+    <main className="hero-container home-page">
       <div className={`hero-content ${!animationsComplete ? "fade-in" : ""}`}>
         <div className="hero-left">
           <div className="profile-container">
