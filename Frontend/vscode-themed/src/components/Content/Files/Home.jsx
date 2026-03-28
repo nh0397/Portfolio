@@ -114,28 +114,28 @@ function Home() {
           <SyntaxHighlighter
             language="jsx"
             style={vscDarkPlus}
-            wrapLongLines={true}
+            wrapLongLines={false}
             codeTagProps={{
               style: {
-                whiteSpace: "pre-wrap",
-                overflowWrap: "break-word",
-                wordBreak: "normal"
+                fontSize: "clamp(10px, 2.5vw, 12px)",
+                lineHeight: "1.4",
+                fontFamily: "'Fira Code', monospace"
               }
             }}
             customStyle={{
               margin: 0,
-              borderRadius: "0 0 4px 4px",
-              padding: "1rem",
+              padding: "0.5rem",
               height: "100%",
-              fontSize: "14px",
-              backgroundColor: "#1e1e1e"
+              backgroundColor: "#1e1e1e",
+              overflow: "auto"
             }}
             showLineNumbers={true}
             lineNumberStyle={{
               minWidth: "2.5em",
               paddingRight: "1em",
               color: "#858585",
-              textAlign: "right"
+              textAlign: "right",
+              fontSize: "10px"
             }}
           >
             {typedCode}

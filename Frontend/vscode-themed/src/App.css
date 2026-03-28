@@ -3,39 +3,49 @@
   width: 100vw;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* VS Code behavior: Lock the frame */
+  overflow: hidden;
   background-color: #1e1e1e;
 }
 
 .main-container {
   display: flex;
-  flex: 1; /* Take all remaining space between TopBar and Footer */
+  flex: 1;
   width: 100%;
   position: relative;
   overflow: hidden;
 }
 
-/* GLOBAL MOBILE UI RESTORATION */
+/* MOBILE UX: Restore Scrolling Capability */
 @media (max-width: 768px) {
   .App {
     height: 100dvh !important;
-    overflow: hidden !important;
+    overflow: hidden !important; /* Frame stays locked */
   }
 
-  /* Hide all scrollbars on mobile for clean look */
+  /* Hide scrollbars but RETAIN functionality */
   * {
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
   }
-  
   *::-webkit-scrollbar {
     display: none !important;
   }
 
   .main-container {
     flex: 1 !important;
-    height: auto; /* Allow flex-grow to work */
-    overflow: hidden !important;
+    height: auto;
+    overflow: visible !important; /* Allow children to scroll the main column */
     width: 100vw !important;
+  }
+
+  /* Force individual page containers to be scrollable */
+  .about-container, 
+  .projects-container, 
+  .experience-container, 
+  .contact-container {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
+    padding-bottom: 50px !important; /* Extra breathing room at bottom */
   }
 }
