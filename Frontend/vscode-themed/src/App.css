@@ -52,35 +52,34 @@
     flex-shrink: 0 !important;
     height: 22px !important;
   }
+}
 
-  /* Custom Sleek Scrollbars for Mobile */
-  * {
-    scrollbar-width: thin !important;
-    scrollbar-color: rgba(255, 234, 0, 0.4) transparent !important;
-  }
-  
-  *::-webkit-scrollbar {
-    width: 3px !important;
-    height: 3px !important;
-    display: block !important;
-  }
+/* Custom Sleek Scrollbars Globally (Auto-Hiding) */
+* {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(255, 234, 0, 0.4) transparent !important;
+}
 
-  *::-webkit-scrollbar-track {
-    background: transparent !important;
-  }
+*::-webkit-scrollbar {
+  width: 2px !important;
+  height: 2px !important;
+  display: block !important;
+}
 
-  *::-webkit-scrollbar-thumb {
-    background: transparent !important; /* Hide by default */
-    border-radius: 10px;
-    /* transition: background 0.3s ease; - Not supported on pseudo-elements, but visibility toggle works */
-  }
+*::-webkit-scrollbar-track {
+  background: transparent !important;
+}
 
-  /* Only show scrollbar thumb when actively scrolling */
-  body.is-scrolling *::-webkit-scrollbar-thumb {
-    background: rgba(255, 234, 0, 0.3) !important; /* Theme Yellow, semi-transparent */
-  }
+*::-webkit-scrollbar-thumb {
+  background: transparent !important; /* Hide by default */
+  border-radius: 10px;
+}
 
-  body.is-scrolling *::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 234, 0, 0.6) !important;
-  }
+/* Only show scrollbar thumb when actively scrolling */
+body.is-scrolling *::-webkit-scrollbar-thumb {
+  background: rgba(255, 234, 0, 0.3) !important; /* Theme Yellow, semi-transparent */
+}
+
+body.is-scrolling *::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 234, 0, 0.6) !important;
 }
