@@ -19,6 +19,7 @@
   max-height: 800px;
   border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   box-sizing: border-box;
 }
 
@@ -53,10 +54,104 @@
   min-width: 0;
 }
 
-/* MOBILE REFACTOR: 50/50 SPLIT */
+/* Animations (RESTORED) */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes buttonGlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+.hero-content.fade-in { animation: fadeIn 0.8s ease-out forwards; }
+.hero-text.slideUp { animation: slideUp 0.8s ease-out forwards; animation-delay: 0.3s; }
+.buttonGlow { animation: buttonGlow 4s ease infinite; }
+
+.profile-container { position: relative; margin-bottom: 2rem; display: flex; justify-content: center; }
+.profile-container::before {
+  content: "";
+  position: absolute;
+  top: -8px; left: -8px; right: -8px; bottom: -8px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #ffcc00, #e9b949, #ffd700);
+  z-index: 1;
+  animation: rotate 4s linear infinite;
+}
+
+.profile-photo {
+  width: clamp(120px, 20vw, 150px);
+  height: clamp(120px, 20vw, 150px);
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #1e1e1e;
+  position: relative;
+  z-index: 2;
+  animation: pulse 3s infinite ease-in-out;
+}
+
+/* Typography */
+.gradient-text {
+  font-size: clamp(1.8rem, 8vw, 2.5rem);
+  font-weight: 700;
+  color: #ffcc00;
+  margin: 0.5rem 0;
+  line-height: 1.1;
+  width: 100%;
+}
+
+.hero-text h2 {
+  color: #fff;
+  font-size: clamp(1rem, 4vw, 1.2rem);
+  font-weight: 500;
+  margin: 0 0 1rem 0;
+}
+
+.hero-text p {
+  color: #ccc;
+  line-height: 1.6;
+  font-size: clamp(0.9rem, 3.5vw, 1rem);
+  margin-bottom: 1.5rem;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 0.8rem 1.8rem;
+  background: linear-gradient(135deg, #fffacd, #ffcc00, #e9b949, #1e1e1e);
+  color: #111;
+  font-weight: 600;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background-size: 200% 200%;
+}
+
+.editor-header { 
+  background-color: #252526; 
+  padding: 0.5rem; 
+  border-bottom: 1px solid #333; 
+}
+
+.editor-tabs { display: flex; align-items: center; }
+.editor-tab {
+  padding: 0.4rem 1rem;
+  background-color: #2d2d2d;
+  color: #ccc;
+  font-size: 0.8rem;
+  border-radius: 4px 4px 0 0;
+  margin-right: 2px;
+}
+.editor-tab.active { background-color: #1e1e1e; color: #fff; position: relative; }
+.editor-tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px; left: 0; width: 100%; height: 2px;
+  background: linear-gradient(90deg, #ffcc00, #e9b949);
+}
+
+/* MOBILE REFACTOR: 50/50 SPLIT + SPACE FOR FOOTER */
 @media (max-width: 768px) {
   .hero-container.home-page {
-    height: 100% !important;
+    height: calc(100% - 20px) !important; /* DELIBERATE GAP FOR FOOTER */
+    margin-bottom: 20px !important;
     display: flex;
     flex-direction: column;
     padding: 0 !important;
@@ -67,9 +162,10 @@
     flex-direction: column !important;
     height: 100% !important;
     max-height: none !important;
+    box-shadow: none;
+    border-radius: 0;
   }
 
-  /* 50/50 Split as requested */
   .hero-container.home-page .hero-left {
     height: 50% !important; 
     width: 100% !important;
@@ -86,11 +182,21 @@
     background-color: #1e1e1e;
   }
 
-  /* Stabilize Typography & Profile */
+  /* TRANSPARENT SCROLLBAR FOR CODE EDITOR */
+  .hero-container.home-page .code-editor::-webkit-scrollbar,
+  .hero-container.home-page .code-editor *::-webkit-scrollbar {
+    background: transparent !important;
+    width: 0px !important;
+  }
+
   .hero-container.home-page .profile-photo {
-    width: clamp(60px, 12vw, 80px);
-    height: clamp(60px, 12vw, 80px);
-    margin-bottom: 0.5rem;
+    width: clamp(70px, 15vw, 95px);
+    height: clamp(70px, 15vw, 95px);
+    margin-bottom: 0.8rem;
+  }
+  
+  .hero-container.home-page .profile-container::before {
+    top: -6px; left: -6px; right: -6px; bottom: -6px;
   }
 
   .hero-container.home-page .gradient-text {
@@ -102,16 +208,9 @@
     font-size: 0.8rem !important;
     line-height: 1.3 !important;
     margin-bottom: 0.5rem !important;
-    padding: 0 10px;
-  }
-
-  .cta-button {
-    padding: 0.5rem 1rem !important;
-    font-size: 0.85rem !important;
   }
 }
 
-/* Syntax Highlighter Fix for the "Sucks" issue */
 .code-editor .prism-code {
   font-size: 12px !important;
   line-height: 1.4 !important;
