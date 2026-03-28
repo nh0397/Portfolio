@@ -49,6 +49,18 @@ function Home() {
     homeVisited ? codeString : ""
   );
 
+  // JS Scroll Lock for Home Page on Mobile
+  useEffect(() => {
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = originalStyle;
+      };
+    }
+  }, []);
+
   // Typewriter effect on first visit only
   useEffect(() => {
     if (!homeVisited) {
@@ -107,6 +119,11 @@ function Home() {
 
         <div className="code-editor">
           <div className="editor-header">
+            <div className="editor-buttons">
+              <div className="close-button"></div>
+              <div className="minimize-button"></div>
+              <div className="expand-button"></div>
+            </div>
             <div className="editor-tabs">
               <div className="editor-tab active">Home.jsx</div>
             </div>

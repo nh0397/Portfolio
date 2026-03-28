@@ -17,7 +17,7 @@
 
 @media (max-width: 768px) {
   .App, .main-container {
-    overflow-y: auto !important; /* Allow scroll ONLY on mobile */
+    overflow-y: auto; /* Allow scroll ONLY on mobile */
     overflow-x: hidden !important;
     height: auto !important;
     min-height: 100dvh;

@@ -88,6 +88,63 @@
   text-align: center;
 }
 
+.cta-button {
+  display: inline-block;
+  padding: 0.8rem 1.8rem;
+  background: linear-gradient(135deg, #fffacd, #ffcc00, #e9b949, #1e1e1e);
+  color: #111;
+  font-weight: 600;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background-size: 200% 200%;
+}
+
+.editor-header { 
+  background-color: #252526; 
+  padding: 0.5rem; 
+  border-bottom: 1px solid #333; 
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.editor-buttons {
+  display: flex;
+  gap: 6px;
+  padding-left: 5px;
+}
+
+.editor-buttons .close-button,
+.editor-buttons .minimize-button,
+.editor-buttons .expand-button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.editor-buttons .close-button { background-color: #ff605c; }
+.editor-buttons .minimize-button { background-color: #ffbd44; }
+.editor-buttons .expand-button { background-color: #00ca4e; }
+
+.editor-tabs { display: flex; align-items: center; }
+.editor-tab {
+  padding: 0.4rem 1rem;
+  background-color: #2d2d2d;
+  color: #ccc;
+  font-size: 0.8rem;
+  border-radius: 4px 4px 0 0;
+  margin-right: 2px;
+}
+.editor-tab.active { background-color: #1e1e1e; color: #fff; position: relative; }
+.editor-tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px; left: 0; width: 100%; height: 2px;
+  background: linear-gradient(90deg, #ffcc00, #e9b949);
+}
+
 /* Animations */
 .hero-content.fade-in { animation: fadeIn 0.8s ease-out forwards; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -121,40 +178,6 @@
 
 @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-.cta-button {
-  display: inline-block;
-  padding: 0.8rem 1.8rem;
-  background: linear-gradient(135deg, #fffacd, #ffcc00, #e9b949, #1e1e1e);
-  color: #111;
-  font-weight: 600;
-  border-radius: 4px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  background-size: 200% 200%;
-}
-
-.buttonGlow { animation: buttonGlow 4s ease infinite; }
-@keyframes buttonGlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-.editor-header { background-color: #252526; padding: 0.5rem; border-bottom: 1px solid #333; }
-.editor-tabs { display: flex; align-items: center; }
-.editor-tab {
-  padding: 0.4rem 1rem;
-  background-color: #2d2d2d;
-  color: #ccc;
-  font-size: 0.8rem;
-  border-radius: 4px 4px 0 0;
-  margin-right: 2px;
-}
-.editor-tab.active { background-color: #1e1e1e; color: #fff; position: relative; }
-.editor-tab.active::after {
-  content: "";
-  position: absolute;
-  bottom: -1px; left: 0; width: 100%; height: 2px;
-  background: linear-gradient(90deg, #ffcc00, #e9b949);
-}
-
 /* MOBILE REFACTOR (The Art of Responsiveness) */
 @media (max-width: 768px) {
   .hero-container {
@@ -185,7 +208,7 @@
   .hero-container.home-page .hero-left {
     height: 60% !important;
     width: 100% !important;
-    padding: 1rem !important; /* Slightly reduced for tight fit */
+    padding: 1.5rem !important;
     justify-content: center;
     overflow-y: hidden !important; 
   }
@@ -198,20 +221,24 @@
     overflow-y: auto !important; 
   }
 
-  /* Stabilize Bio Typography */
   .hero-container.home-page .hero-text p {
     font-size: clamp(0.85rem, 3vw, 0.95rem) !important;
     line-height: 1.4 !important;
-    margin-bottom: 1rem !important;
+    margin-bottom: 0.8rem !important;
   }
 
   .hero-container.home-page .profile-photo {
-    width: clamp(80px, 18vw, 110px);
-    height: clamp(80px, 18vw, 110px);
+    width: clamp(70px, 15vw, 100px);
+    height: clamp(70px, 15vw, 100px);
   }
 
   .hero-container.home-page .gradient-text {
-    font-size: clamp(1.8rem, 8vw, 2.22rem) !important;
+    font-size: clamp(1.8rem, 8vw, 2.2rem) !important;
     margin-bottom: 0.5rem;
+  }
+
+  /* Hide mockup buttons on small mobile to save space if needed */
+  .hero-container.home-page .editor-buttons {
+    display: none;
   }
 }
