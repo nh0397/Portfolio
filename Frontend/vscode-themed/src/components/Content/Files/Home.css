@@ -54,7 +54,6 @@
   min-width: 0;
 }
 
-/* Animations (RESTORED) */
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
@@ -87,14 +86,12 @@
   animation: pulse 3s infinite ease-in-out;
 }
 
-/* Typography */
 .gradient-text {
   font-size: clamp(1.8rem, 8vw, 2.5rem);
   font-weight: 700;
   color: #ffcc00;
   margin: 0.5rem 0;
   line-height: 1.1;
-  width: 100%;
 }
 
 .hero-text h2 {
@@ -147,15 +144,16 @@
   background: linear-gradient(90deg, #ffcc00, #e9b949);
 }
 
-/* MOBILE REFACTOR: 50/50 SPLIT + SPACE FOR FOOTER */
+/* MOBILE REFACTOR: STABLE 50/50 + DEFINITIVE FOOTER GAP */
 @media (max-width: 768px) {
   .hero-container.home-page {
-    height: calc(100% - 20px) !important; /* DELIBERATE GAP FOR FOOTER */
-    margin-bottom: 20px !important;
+    height: 100% !important;
     display: flex;
     flex-direction: column;
-    padding: 0 !important;
+    padding: 0 0 30px 0 !important; /* MASSIVE GAP ABOVE FOOTER */
     overflow: hidden !important;
+    width: 100vw !important;
+    box-sizing: border-box;
   }
 
   .hero-container.home-page .hero-content {
@@ -166,11 +164,13 @@
     border-radius: 0;
   }
 
+  /* Split the REMAINING space (after 30px gap) into 50/50 */
   .hero-container.home-page .hero-left {
-    height: 50% !important; 
+    height: 50% !important;
     width: 100% !important;
     padding: 1rem !important;
     overflow-y: hidden !important;
+    justify-content: center;
   }
 
   .hero-container.home-page .code-editor {
@@ -182,17 +182,18 @@
     background-color: #1e1e1e;
   }
 
-  /* TRANSPARENT SCROLLBAR FOR CODE EDITOR */
-  .hero-container.home-page .code-editor::-webkit-scrollbar,
-  .hero-container.home-page .code-editor *::-webkit-scrollbar {
+  /* INVISIBLE/TRANSPARENT SCROLLBARS FOR CODE EDITOR */
+  .hero-container.home-page .code-editor::-webkit-scrollbar {
     background: transparent !important;
-    width: 0px !important;
+    width: 0 !important;
+    display: none !important;
   }
 
+  /* Stabilize typography for 50/50 fit */
   .hero-container.home-page .profile-photo {
-    width: clamp(70px, 15vw, 95px);
-    height: clamp(70px, 15vw, 95px);
-    margin-bottom: 0.8rem;
+    width: clamp(70px, 15vw, 90px);
+    height: clamp(70px, 15vw, 90px);
+    margin-bottom: 0.5rem;
   }
   
   .hero-container.home-page .profile-container::before {
@@ -200,25 +201,18 @@
   }
 
   .hero-container.home-page .gradient-text {
-    font-size: clamp(1.4rem, 7vw, 1.8rem) !important;
-    margin-bottom: 0.2rem;
+    font-size: clamp(1.4rem, 7vw, 1.7rem) !important;
+    margin-bottom: 0.1rem;
   }
 
   .hero-container.home-page .hero-text p {
-    font-size: 0.8rem !important;
-    line-height: 1.3 !important;
+    font-size: 0.75rem !important;
+    line-height: 1.25 !important;
     margin-bottom: 0.5rem !important;
   }
 }
 
 .code-editor .prism-code {
-  font-size: 12px !important;
-  line-height: 1.4 !important;
-}
-
-@media (max-width: 768px) {
-  .code-editor .prism-code {
-    font-size: 11px !important;
-    padding: 0.5rem !important;
-  }
+  font-size: 11px !important;
+  line-height: 1.3 !important;
 }

@@ -10,42 +10,54 @@
 .main-container {
   display: flex;
   flex: 1;
+  min-height: 0; /* CRITICAL: Allow flex child to shrink below its content height */
   width: 100%;
   position: relative;
   overflow: hidden;
 }
 
-/* MOBILE UX: Restore Scrolling Capability */
+/* GLOBAL MOBILE ARCHITECTURE (STRICT APP SHELL) */
 @media (max-width: 768px) {
   .App {
     height: 100dvh !important;
-    overflow: hidden !important; /* Frame stays locked */
+    overflow: hidden !important;
   }
 
-  /* Hide scrollbars but RETAIN functionality */
+  .main-container {
+    flex: 1 !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+
+  /* Force content area to fill space but allow scrolling for internal pages */
+  .content-container {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .content-display {
+    flex: 1 !important;
+    overflow-y: auto !important; /* Projects/Experience will scroll naturally here */
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+  }
+
+  /* Hide scrollbars globally on mobile */
   * {
     scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
   }
   *::-webkit-scrollbar {
     display: none !important;
   }
 
-  .main-container {
-    flex: 1 !important;
-    height: auto;
-    overflow: visible !important; /* Allow children to scroll the main column */
-    width: 100vw !important;
-  }
-
-  /* Force individual page containers to be scrollable */
-  .about-container, 
-  .projects-container, 
-  .experience-container, 
-  .contact-container {
-    height: auto !important;
-    min-height: 100% !important;
-    overflow-y: auto !important;
-    padding-bottom: 50px !important; /* Extra breathing room at bottom */
+  .footer-main {
+    flex-shrink: 0 !important;
+    height: 22px !important;
   }
 }
