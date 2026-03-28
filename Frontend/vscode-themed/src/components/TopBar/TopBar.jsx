@@ -7,7 +7,27 @@ import logo from "../../assets/icons/Logo.png";
 
 const TopBar = () => {
   const { copilotClicked, setCopilotClicked } = useContext(AppContext);
+  const [showToast, setShowToast] = React.useState(false);
 
+  React.useEffect(() => {
+    const hasSeenToast = localStorage.getItem("hasSeenChatbotToast");
+    if (!hasSeenToast) {
+      const timer = setTimeout(() => setShowToast(true), 2000); // Show after 2s
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleChatbotClick = () => {
+    setCopilotClicked(!copilotClicked);
+    setShowToast(false);
+    localStorage.setItem("hasSeenChatbotToast", "true");
+  };
+
+  const closeToast = (e) => {
+    e.stopPropagation();
+    setShowToast(false);
+    localStorage.setItem("hasSeenChatbotToast", "true");
+  };
   return (
     <div className="topbar">
       <div className="topbar-left">
@@ -59,15 +79,27 @@ const TopBar = () => {
           aria-label="Portfolio title"
           readOnly
         />
-        <button
-          title="Talk to my AI Buddy!"
-          onClick={() => setCopilotClicked(!copilotClicked)}
-          className={`copilot-icon ${!copilotClicked ? "blink" : ""}`}
-          aria-label={copilotClicked ? "Close AI chatbot" : "Open AI chatbot"}
-          aria-expanded={copilotClicked}
-        >
-          <img src={chatbot} alt="" className="chatbot-icon" aria-hidden="true" />
-        </button>
+        <div className="chatbot-wrapper">
+          <button
+            title="Talk to my AI Buddy!"
+            onClick={handleChatbotClick}
+            className={`copilot-icon ${!copilotClicked && !showToast ? "blink" : ""}`}
+            aria-label={copilotClicked ? "Close AI chatbot" : "Open AI chatbot"}
+            aria-expanded={copilotClicked}
+          >
+            <img src={chatbot} alt="" className="chatbot-icon" aria-hidden="true" />
+          </button>
+          
+          {showToast && (
+            <div className="chatbot-toast">
+              <div className="toast-content">
+                <p>The resume is just the README. I'm the actual source code. Ask me anything about Naisarg.</p>
+                <button className="toast-close" onClick={closeToast}>×</button>
+              </div>
+              <div className="toast-arrow"></div>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="topbar-right">

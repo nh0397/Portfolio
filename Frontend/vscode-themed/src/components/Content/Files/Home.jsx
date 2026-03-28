@@ -21,7 +21,12 @@ function Home() {
   const developerInfo = {
     name: '${portfolioConfig.personal.name}',
     role: '${portfolioConfig.personal.title}',
-    bio: '${portfolioConfig.personal.brief}'
+    bio: \`As a software engineer adept at harnessing data, 
+    I specialize in transforming intricate data insights 
+    into impactful, real-world solutions. My expertise 
+    spans full-stack development and data science, 
+    allowing me to innovate and drive forward-thinking 
+    projects. With a proven track record...\`
   };
 
   useEffect(() => {
@@ -34,7 +39,7 @@ function Home() {
       <h1>{developerInfo.name}</h1>
       <p>{developerInfo.role}</p>
       <div className="cta">
-        <Link href="/about">Know More About Me</Link>
+        <button>Know More About Me</button>
       </div>
     </main>
   );
@@ -109,6 +114,14 @@ function Home() {
           <SyntaxHighlighter
             language="jsx"
             style={vscDarkPlus}
+            wrapLongLines={true}
+            codeTagProps={{
+              style: {
+                whiteSpace: "pre-wrap",
+                overflowWrap: "break-word",
+                wordBreak: "normal"
+              }
+            }}
             customStyle={{
               margin: 0,
               borderRadius: "0 0 4px 4px",

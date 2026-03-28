@@ -1,6 +1,26 @@
 .App {
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Professional VS Code behavior for desktop */
+  background-color: #1e1e1e;
 }
 
+.main-container {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  position: relative;
+  overflow: hidden; /* Professional VS Code behavior for desktop */
+}
 
+@media (max-width: 768px) {
+  .App, .main-container {
+    overflow-y: auto !important; /* Allow scroll ONLY on mobile */
+    overflow-x: hidden !important;
+    height: auto !important;
+    min-height: 100dvh;
+    width: 100vw !important; /* Force 100vw */
+  }
+}
