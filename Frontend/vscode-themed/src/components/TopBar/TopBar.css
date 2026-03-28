@@ -84,16 +84,30 @@
 }
 
 .chatbot-toast {
-  position: fixed;
-  top: 50px;
-  right: 15px;
-  left: 15px;
+  position: absolute;
+  top: 40px; /* Drop below the icon */
+  left: 50%; /* Center relative to the chatbot icon */
+  transform: translateX(-50%);
+  width: 280px; /* Readable width without stretching */
   background-color: #007acc;
   color: white;
   padding: 10px 15px;
   border-radius: 6px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   z-index: 4000;
+  cursor: default;
+}
+
+.toast-arrow {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #007acc;
 }
 
 .copilot-icon {
