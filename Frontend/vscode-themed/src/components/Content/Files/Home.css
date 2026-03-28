@@ -15,7 +15,6 @@
   display: flex;
   width: 100%;
   max-width: 1200px;
-  height: 100%;
   max-height: 800px;
   border-radius: 8px;
   overflow: hidden;
@@ -110,24 +109,6 @@
   gap: 1rem;
 }
 
-.editor-buttons {
-  display: flex;
-  gap: 6px;
-  padding-left: 5px;
-}
-
-.editor-buttons .close-button,
-.editor-buttons .minimize-button,
-.editor-buttons .expand-button {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.editor-buttons .close-button { background-color: #ff605c; }
-.editor-buttons .minimize-button { background-color: #ffbd44; }
-.editor-buttons .expand-button { background-color: #00ca4e; }
-
 .editor-tabs { display: flex; align-items: center; }
 .editor-tab {
   padding: 0.4rem 1rem;
@@ -191,8 +172,8 @@
 
   /* Specific Home Page 60/40 Split (Mathematical Scroll-Lock) */
   .hero-container.home-page {
-    /* MATH: 100dvh - 35px(TopBar) - 35px(TabBar) = 70px */
-    height: calc(100dvh - 70px) !important; 
+    /* MATH: 100dvh - 35px(TopBar) - 35px(TabBar) - 22px(Footer) = 92px */
+    height: calc(100dvh - 92px) !important; 
     overflow: hidden !important; 
     padding: 0 !important;
     display: flex;
@@ -203,12 +184,13 @@
     flex-direction: column !important;
     height: 100% !important;
     width: 100% !important;
+    display: flex;
   }
 
   .hero-container.home-page .hero-left {
     height: 60% !important;
     width: 100% !important;
-    padding: 1.5rem !important;
+    padding: 1rem !important;
     justify-content: center;
     overflow-y: hidden !important; 
   }
@@ -218,27 +200,30 @@
     width: 100% !important;
     margin-top: 0;
     padding-bottom: 0;
-    overflow-y: auto !important; 
+    overflow-y: auto !important;
+    border-top: 1px solid #333;
+    border-left: none !important;
   }
 
+  /* Stabilize Bio Typography to avoid "dancing" */
   .hero-container.home-page .hero-text p {
-    font-size: clamp(0.85rem, 3vw, 0.95rem) !important;
-    line-height: 1.4 !important;
-    margin-bottom: 0.8rem !important;
+    font-size: clamp(0.75rem, 3.5vw, 0.9rem) !important;
+    line-height: 1.3 !important;
+    margin-bottom: 0.5rem !important;
   }
 
   .hero-container.home-page .profile-photo {
-    width: clamp(70px, 15vw, 100px);
-    height: clamp(70px, 15vw, 100px);
+    width: clamp(70px, 15vw, 90px);
+    height: clamp(70px, 15vw, 90px);
   }
 
   .hero-container.home-page .gradient-text {
-    font-size: clamp(1.8rem, 8vw, 2.2rem) !important;
-    margin-bottom: 0.5rem;
+    font-size: clamp(1.6rem, 8vw, 2.1rem) !important;
+    margin-bottom: 0.2rem;
   }
 
-  /* Hide mockup buttons on small mobile to save space if needed */
-  .hero-container.home-page .editor-buttons {
-    display: none;
+  .hero-container.home-page .hero-text h2 {
+     font-size: clamp(0.9rem, 4vw, 1rem) !important;
+     margin-bottom: 0.5rem;
   }
 }

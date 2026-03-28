@@ -37,14 +37,12 @@ const TopBar = () => {
             aria-label="Close window"
             title="Close window"
           >
-            <span className="window-icon" aria-hidden="true">×</span>
           </button>
           <button 
             className="minimize-button"
             aria-label="Minimize window"
             title="Minimize window"
           >
-            <span className="window-icon" aria-hidden="true">–</span>
           </button>
           <button 
             className="expand-button"
