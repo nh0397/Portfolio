@@ -56,6 +56,11 @@ def ingest_into_graph(final_data):
         driver = GraphDatabase.driver(uri, auth=(user, password))
         driver.verify_connectivity()
         
+        def _safe_str(value) -> str:
+            if isinstance(value, list):
+                return ". ".join(str(item) for item in value)
+            return str(value) if value else ""
+
         # Pre-calculate all known skills for extraction context
         all_skills = set(final_data["resume"].get("skills", [])) | set(final_data["linkedin"].get("skills", []))
 
@@ -69,6 +74,10 @@ def ingest_into_graph(final_data):
             # 2. EXPERIENCE & SKILL EXTRACTION
             for key in ["resume", "linkedin"]:
                 for exp in final_data[key].get("work_experience", []):
+                    # Safely convert desc to string (Gemini may return a list of bullets)
+                    raw_desc = exp.get("description", "")
+                    desc_str = ". ".join(raw_desc) if isinstance(raw_desc, list) else (raw_desc or "")
+
                     # Create job/role nodes
                     session.run("""
                         MERGE (c:Company {name: $company})
@@ -84,11 +93,11 @@ def ingest_into_graph(final_data):
                         name=final_data["Name"],
                         start=exp.get("start_date"),
                         end=exp.get("end_date"),
-                        desc=exp.get("description")
+                        desc=desc_str
                     )
                     
                     # Extract skills from description and link them to the Role
-                    desc_skills = extract_skills_from_text(exp.get("description"), all_skills)
+                    desc_skills = extract_skills_from_text(desc_str, all_skills)
                     for s_name in desc_skills:
                         session.run("""
                             MERGE (s:Skill {name: $skill})
@@ -103,6 +112,15 @@ def ingest_into_graph(final_data):
 
             # 3. EDUCATION
             for edu in final_data["linkedin"].get("education", []):
+                if isinstance(edu, str):
+                    session.run("""
+                        MERGE (i:Institution {name: $inst})
+                        WITH i
+                        MATCH (p:Person {name: $name})
+                        MERGE (p)-[:STUDIED_AT]->(i)
+                        """, inst=edu, name=final_data["Name"])
+                    continue
+                    
                 session.run("""
                     MERGE (i:Institution {name: $inst})
                     MERGE (d:Degree {name: $degree, field: $field})
@@ -113,12 +131,21 @@ def ingest_into_graph(final_data):
                     MERGE (i)-[:AWARDED]->(d)
                     MERGE (p)-[:HAS_DEGREE]->(d)
                     """,
-                    inst=edu["institution_name"], degree=edu["degree"], field=edu["field_of_study"],
+                    inst=edu.get("institution_name", "Unknown"), degree=edu.get("degree", "Unknown"), field=edu.get("field_of_study", ""),
                     name=final_data["Name"], start=edu.get("start_date"), end=edu.get("end_date")
                 )
 
             # 4. CERTIFICATIONS
             for cert in final_data["linkedin"].get("certifications", []):
+                if isinstance(cert, str):
+                    session.run("""
+                        MERGE (cert:Certification {name: $cert_name})
+                        WITH cert
+                        MATCH (p:Person {name: $name})
+                        MERGE (p)-[:CERTIFIED_IN]->(cert)
+                        """, cert_name=cert, name=final_data["Name"])
+                    continue
+
                 session.run("""
                     MERGE (cert:Certification {name: $cert_name})
                     MERGE (org:Company {name: $org_name})
@@ -128,12 +155,21 @@ def ingest_into_graph(final_data):
                     SET rel.date = $date
                     MERGE (cert)-[:ISSUED_BY]->(org)
                     """,
-                    cert_name=cert["certification_name"], org_name=cert["issuing_organization"],
+                    cert_name=cert.get("certification_name", "Unknown"), org_name=cert.get("issuing_organization", "Unknown"),
                     name=final_data["Name"], date=cert.get("issue_date")
                 )
 
             # 5. AWARDS
             for award in final_data["linkedin"].get("honors_and_awards", []):
+                if isinstance(award, str):
+                    session.run("""
+                        MERGE (awd:Award {name: $award_name})
+                        WITH awd
+                        MATCH (p:Person {name: $name})
+                        MERGE (p)-[:RECEIVED_AWARD]->(awd)
+                        """, award_name=award, name=final_data["Name"])
+                    continue
+
                 session.run("""
                     MERGE (awd:Award {name: $award_name})
                     MERGE (org:Company {name: $org_name})
@@ -143,7 +179,7 @@ def ingest_into_graph(final_data):
                     SET rel.date = $date
                     MERGE (awd)-[:GIVEN_BY]->(org)
                     """,
-                    award_name=award["award_name"], org_name=award["issuing_organization"],
+                    award_name=award.get("award_name", "Unknown"), org_name=award.get("issuing_organization", "Unknown"),
                     name=final_data["Name"], date=award.get("issue_date")
                 )
 
@@ -161,6 +197,25 @@ def ingest_into_graph(final_data):
             # 7. PROJECTS (Merged: Resume + GitHub)
             # From Resume
             for prj in final_data["resume"].get("projects", []):
+                if isinstance(prj, str):
+                    # Try to extract a name if it's formatted like "Name: Description"
+                    if ":" in prj:
+                        p_name, p_desc = prj.split(":", 1)
+                        p_name = p_name.strip()
+                        p_desc = p_desc.strip()
+                    else:
+                        p_name = prj[:50] + "..."
+                        p_desc = prj
+                        
+                    session.run("""
+                        MERGE (p:Project {name: $name})
+                        SET p.description = $desc
+                        WITH p
+                        MATCH (user:Person {name: $owner})
+                        MERGE (user)-[:CREATED]->(p)
+                        """, name=p_name, desc=p_desc, owner=final_data["Name"])
+                    continue
+
                 session.run("""
                     MERGE (p:Project {name: $name})
                     SET p.description = $desc
@@ -168,11 +223,23 @@ def ingest_into_graph(final_data):
                     MATCH (user:Person {name: $owner})
                     MERGE (user)-[:CREATED]->(p)
                     """,
-                    name=prj["project_name"], desc=prj["description"], owner=final_data["Name"]
+                    name=prj.get("project_name") or prj.get("name") or "Unknown Project", 
+                    desc=_safe_str(prj.get("description", "")), 
+                    owner=final_data["Name"]
                 )
             
             # From GitHub
             for repo in final_data["github"].get("repositories", []):
+                if isinstance(repo, str):
+                    session.run("""
+                        MERGE (prj:Project {name: $name})
+                        WITH prj
+                        MATCH (p:Person {name: $owner})
+                        MERGE (p)-[:CREATED]->(prj)
+                        """, name=repo, owner=final_data["Name"])
+                    continue
+
+                repo_name = repo.get("name") or repo.get("project_name") or "Unknown Repo"
                 session.run("""
                     MERGE (prj:Project {name: $name})
                     SET prj.description = $desc, prj.github_url = $url
@@ -180,17 +247,19 @@ def ingest_into_graph(final_data):
                     MATCH (p:Person {name: $owner})
                     MERGE (p)-[:CREATED]->(prj)
                     """, 
-                    name=repo["name"], desc=repo["description"], url=repo.get("html_url"),
+                    name=repo_name, 
+                    desc=_safe_str(repo.get("description", "")), 
+                    url=repo.get("html_url", repo.get("url", "")),
                     owner=final_data["Name"]
                 )
-                for lang in repo.get("languages_used", []):
+                for lang in repo.get("languages_used", []) or repo.get("primary_technologies", []):
                     session.run("""
                         MERGE (s:Skill {name: $lang})
                         WITH s
                         MATCH (prj:Project {name: $name})
                         MERGE (prj)-[:USES_TECH]->(s)
                         """, 
-                        lang=lang, name=repo["name"]
+                        lang=lang, name=repo_name
                     )
             logger.info("Full knowledge graph ingestion synchronized.")
 

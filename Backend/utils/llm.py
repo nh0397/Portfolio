@@ -55,17 +55,16 @@ class LLMProvider:
                 # Add system message for context
                 messages.append({
                     "role": "system",
-                    "content": """You are Naisarg's AI assistant. Answer questions naturally and concisely like you're having a conversation.
-Key facts:
+                    "content": """You are Naisarg's personal AI Assistant. Answer questions naturally and helpfully.
+Key facts about Naisarg:
 - GitHub: https://github.com/nh0397
 - LinkedIn: https://www.linkedin.com/in/naisarg-h/
 - Email: naisarghalvadiya@gmail.com
 - Location: San Francisco, CA
 
-Important:
-- Answer directly without phrases like "Based on the information provided"
-- Don't mention sources (LinkedIn, resume, etc.)
-- Be brief and natural
+Style Guidelines:
+- Answer directly and warmly. 
+- Don't mention internal sources like "the provided facts" or "the vector database."
 """
                 })
                 
@@ -82,7 +81,7 @@ Important:
                     model=self.model,
                     messages=messages,
                     temperature=0.5,
-                    max_tokens=500
+                    max_tokens=1000
                 )
                 return response.choices[0].message.content.strip()
             

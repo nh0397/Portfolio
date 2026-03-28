@@ -57,8 +57,9 @@ function Explorer() {
   const handleMouseMove = useCallback(
     (e) => {
       if (!isResizing) return;
-      const newWidth = e.clientX;
-      if (newWidth > 100 && newWidth < 300) {
+      // Account for the 50px left sidebar offset
+      const newWidth = e.clientX - 50;
+      if (newWidth > 150 && newWidth < 450) {
         setWidth(newWidth);
       }
     },
@@ -85,9 +86,6 @@ function Explorer() {
     <div className="explorer-container" style={{ width: `${width}px` }}>
       <div className="explorer-header">
         <span className="explorer-title">EXPLORER</span>
-        <div className="explorer-actions">
-          <span>...</span>
-        </div>
       </div>
 
       <div className="explorer-content">

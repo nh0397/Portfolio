@@ -329,6 +329,15 @@ class StructuredChunker:
             parts.append(f"Location: {data['location']}")
         return ". ".join(parts) + "."
     
+    @staticmethod
+    def _safe_str(value) -> str:
+        """Safely convert any value to a string for .join() operations."""
+        if isinstance(value, list):
+            return ". ".join(str(item) for item in value)
+        if isinstance(value, dict):
+            return str(value)
+        return str(value) if value else ""
+
     def _format_work_experience(self, exp: Dict) -> str:
         """Format work experience as readable text."""
         parts = []
@@ -345,14 +354,17 @@ class StructuredChunker:
             title += f" ({start} - {end})"
         parts.append(title)
         
-        # Description
+        # Description — safely handle list or string
         if desc:
-            parts.append(desc)
+            parts.append(self._safe_str(desc))
         
         return ". ".join(parts) + "."
     
-    def _format_project(self, project: Dict) -> str:
+    def _format_project(self, project: Any) -> str:
         """Format project as readable text."""
+        if isinstance(project, str):
+            return project
+            
         parts = []
         
         name = project.get('project_name', '')
@@ -361,20 +373,25 @@ class StructuredChunker:
         if name:
             parts.append(f"Project: {name}")
         if desc:
-            parts.append(desc)
+            parts.append(self._safe_str(desc))
         
         return ". ".join(parts) + "."
     
-    def _format_skills(self, skills: List[str]) -> str:
+    def _format_skills(self, skills) -> str:
         """Format skills list as readable text."""
-        return f"Technical Skills: {', '.join(skills)}."
+        safe_skills = [str(s) for s in skills] if isinstance(skills, list) else [str(skills)]
+        return f"Technical Skills: {', '.join(safe_skills)}."
     
-    def _format_certifications(self, certifications: List[str]) -> str:
+    def _format_certifications(self, certifications) -> str:
         """Format certifications as readable text."""
-        return f"Certifications: {', '.join(certifications)}."
+        safe_certs = [str(c) if isinstance(c, str) else c.get('certification_name', str(c)) if isinstance(c, dict) else str(c) for c in certifications]
+        return f"Certifications: {', '.join(safe_certs)}."
     
-    def _format_education(self, edu: Dict) -> str:
+    def _format_education(self, edu: Any) -> str:
         """Format education as readable text."""
+        if isinstance(edu, str):
+            return edu
+            
         parts = []
         
         degree = edu.get('degree', '')
@@ -393,8 +410,11 @@ class StructuredChunker:
         parts.append(edu_str)
         return ". ".join(parts) + "."
     
-    def _format_certification(self, cert: Dict) -> str:
+    def _format_certification(self, cert: Any) -> str:
         """Format certification as readable text."""
+        if isinstance(cert, str):
+            return cert
+            
         parts = []
         
         name = cert.get('certification_name', '')
@@ -410,8 +430,11 @@ class StructuredChunker:
         parts.append(f"Certification: {cert_str}")
         return ". ".join(parts) + "."
     
-    def _format_award(self, award: Dict) -> str:
+    def _format_award(self, award: Any) -> str:
         """Format honor/award as readable text."""
+        if isinstance(award, str):
+            return award
+            
         parts = []
         
         name = award.get('award_name', '')
@@ -427,11 +450,14 @@ class StructuredChunker:
         parts.append(f"Award: {award_str}")
         return ". ".join(parts) + "."
     
-    def _format_repository(self, repo: Dict) -> str:
+    def _format_repository(self, repo: Any) -> str:
         """Format GitHub repository as readable text."""
+        if isinstance(repo, str):
+            return repo
+            
         parts = []
         
-        name = repo.get('name', '')
+        name = repo.get('name', '') or repo.get('project_name', '')
         desc = repo.get('description', '')
         languages = repo.get('languages_used', [])
         created = repo.get('creation_date', '')
@@ -459,11 +485,15 @@ class StructuredChunker:
     # SUMMARY FORMATTING METHODS (for hybrid chunking)
     # ====================================================================
     
-    def _format_work_experience_summary(self, experiences: List[Dict]) -> str:
+    def _format_work_experience_summary(self, experiences: List[Any]) -> str:
         """Format all work experiences as a comprehensive summary."""
         parts = [f"Professional Work Experience Summary ({len(experiences)} positions):"]
         
         for i, exp in enumerate(experiences, 1):
+            if isinstance(exp, str):
+                parts.append(f"{i}. {exp}")
+                continue
+                
             designation = exp.get('designation', '')
             company = exp.get('company_name', '')
             start = exp.get('start_date', '')
@@ -474,23 +504,27 @@ class StructuredChunker:
             if start and end:
                 exp_str += f" ({start} - {end})"
             if desc:
-                exp_str += f": {desc}"
+                exp_str += f": {self._safe_str(desc)}"
             
             parts.append(exp_str)
         
         return " ".join(parts)
     
-    def _format_projects_summary(self, projects: List[Dict]) -> str:
+    def _format_projects_summary(self, projects: List[Any]) -> str:
         """Format all projects as a comprehensive summary."""
         parts = [f"Projects Portfolio ({len(projects)} projects):"]
         
         for i, project in enumerate(projects, 1):
-            name = project.get('project_name', '')
+            if isinstance(project, str):
+                parts.append(f"{i}. {project}")
+                continue
+                
+            name = project.get('project_name', '') or project.get('name', '')
             desc = project.get('description', '')
             
             proj_str = f"{i}. {name}"
             if desc:
-                proj_str += f": {desc}"
+                proj_str += f": {self._safe_str(desc)}"
             
             parts.append(proj_str)
         
@@ -498,11 +532,15 @@ class StructuredChunker:
         
         return " ".join(parts)
     
-    def _format_education_summary(self, education: List[Dict]) -> str:
+    def _format_education_summary(self, education: List[Any]) -> str:
         """Format all education as a comprehensive summary."""
         parts = [f"Educational Background ({len(education)} degrees):"]
         
         for i, edu in enumerate(education, 1):
+            if isinstance(edu, str):
+                parts.append(f"{i}. {edu}")
+                continue
+                
             degree = edu.get('degree', '')
             field = edu.get('field_of_study', '')
             institution = edu.get('institution_name', '')
@@ -521,11 +559,15 @@ class StructuredChunker:
         
         return " ".join(parts)
     
-    def _format_certifications_summary(self, certifications: List[Dict]) -> str:
+    def _format_certifications_summary(self, certifications: List[Any]) -> str:
         """Format all certifications as a comprehensive summary."""
         parts = [f"Professional Certifications ({len(certifications)} certifications):"]
         
         for i, cert in enumerate(certifications, 1):
+            if isinstance(cert, str):
+                parts.append(f"{i}. {cert}")
+                continue
+                
             name = cert.get('certification_name', '')
             org = cert.get('issuing_organization', '')
             date = cert.get('issue_date', '')
@@ -540,11 +582,15 @@ class StructuredChunker:
         
         return " ".join(parts)
     
-    def _format_awards_summary(self, awards: List[Dict]) -> str:
+    def _format_awards_summary(self, awards: List[Any]) -> str:
         """Format all honors and awards as a comprehensive summary."""
         parts = [f"Honors and Awards ({len(awards)} awards):"]
         
         for i, award in enumerate(awards, 1):
+            if isinstance(award, str):
+                parts.append(f"{i}. {award}")
+                continue
+                
             name = award.get('award_name', '')
             org = award.get('issuing_organization', '')
             date = award.get('issue_date', '')
@@ -559,24 +605,31 @@ class StructuredChunker:
         
         return " ".join(parts)
     
-    def _format_repositories_summary(self, repositories: List[Dict]) -> str:
+    def _format_repositories_summary(self, repositories: List[Any]) -> str:
         """Format all GitHub repositories as a comprehensive portfolio overview."""
         parts = [f"GitHub Portfolio Overview ({len(repositories)} repositories):"]
         
         # Collect all unique languages
         all_languages = set()
         for repo in repositories:
-            langs = repo.get('languages_used', [])
-            all_languages.update(langs)
+            if isinstance(repo, dict):
+                langs = repo.get('languages_used', [])
+                all_languages.update(langs)
         
         # Highlight key projects (non-empty descriptions)
-        key_projects = [r for r in repositories if r.get('description')]
+        key_projects = []
+        for r in repositories:
+            if isinstance(r, str):
+                key_projects.append({"name": r, "description": ""})
+            elif isinstance(r, dict):
+                name = r.get('name', '') or r.get('project_name', '')
+                desc = r.get('description', '')
+                if desc:
+                    key_projects.append({"name": name, "description": desc})
         
         parts.append("Key Projects:")
-        for repo in key_projects[:10]:  # Top 10 projects with descriptions
-            name = repo.get('name', '')
-            desc = repo.get('description', '')
-            parts.append(f"• {name}: {desc}")
+        for proj in key_projects[:10]:  # Top 10 projects with descriptions
+            parts.append(f"• {proj['name']}: {proj['description']}")
         
         if all_languages:
             parts.append(f"Technologies used across portfolio: {', '.join(sorted(all_languages))}.")
