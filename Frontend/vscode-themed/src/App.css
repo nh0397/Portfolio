@@ -53,15 +53,28 @@
     height: 22px !important;
   }
 
-  /* Make scrollbars transparent/invisible globally on mobile for a clean look */
+  /* Custom Sleek Scrollbars for Mobile */
   * {
-    scrollbar-width: none !important; /* Firefox */
-    -ms-overflow-style: none !important; /* IE/Edge */
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(255, 234, 0, 0.4) transparent !important;
   }
   
   *::-webkit-scrollbar {
-    width: 0px !important;
+    width: 3px !important;
+    height: 3px !important;
+    display: block !important;
+  }
+
+  *::-webkit-scrollbar-track {
     background: transparent !important;
-    display: none !important; /* Safari and Chrome */
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: rgba(255, 234, 0, 0.3) !important; /* Theme Yellow, semi-transparent */
+    border-radius: 10px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 234, 0, 0.6) !important;
   }
 }

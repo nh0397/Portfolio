@@ -279,7 +279,7 @@
 
   /* Status Bar */
   .chatbot-status-bar {
-    background: #007acc;
+    background: #68217a; /* VS Code Purple to distinguish from main footer */
     height: 22px;
     display: flex;
     justify-content: space-between;
