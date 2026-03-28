@@ -90,7 +90,7 @@ const TopBar = () => {
           {showToast && (
             <div className="chatbot-toast">
               <div className="toast-content">
-                <p>The resume is just the README. I'm the actual source code. Ask me anything about Naisarg.</p>
+                <p>This is a portfolio. But if you don't want to scroll, ask me questions about him.</p>
                 <button className="toast-close" onClick={closeToast}>×</button>
               </div>
               <div className="toast-arrow"></div>
