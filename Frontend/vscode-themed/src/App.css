@@ -52,4 +52,16 @@
     flex-shrink: 0 !important;
     height: 22px !important;
   }
+
+  /* Make scrollbars transparent/invisible globally on mobile for a clean look */
+  * {
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE/Edge */
+  }
+  
+  *::-webkit-scrollbar {
+    width: 0px !important;
+    background: transparent !important;
+    display: none !important; /* Safari and Chrome */
+  }
 }
