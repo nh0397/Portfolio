@@ -70,11 +70,17 @@
   }
 
   *::-webkit-scrollbar-thumb {
-    background: rgba(255, 234, 0, 0.3) !important; /* Theme Yellow, semi-transparent */
+    background: transparent !important; /* Hide by default */
     border-radius: 10px;
+    /* transition: background 0.3s ease; - Not supported on pseudo-elements, but visibility toggle works */
   }
 
-  *::-webkit-scrollbar-thumb:hover {
+  /* Only show scrollbar thumb when actively scrolling */
+  body.is-scrolling *::-webkit-scrollbar-thumb {
+    background: rgba(255, 234, 0, 0.3) !important; /* Theme Yellow, semi-transparent */
+  }
+
+  body.is-scrolling *::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 234, 0, 0.6) !important;
   }
 }
