@@ -26,15 +26,14 @@ from pathlib import Path
 from urllib.parse import quote_plus
 
 import certifi
+from openai import OpenAI as OpenAIClient
 from dotenv import load_dotenv
-from google import genai
-from google.genai import types
 from pymongo import MongoClient
 from pymongo.operations import SearchIndexModel
 
 load_dotenv()
 
-EMBEDDING_MODEL = "gemini-embedding-2"
+EMBEDDING_MODEL = "nomic-ai/nomic-embed-text-v1.5"
 EMBEDDING_DIMS = 768
 CHUNKS_COLLECTION = os.getenv("MONGO_CHUNKS_CL_NAME", "portfolio-chunks")
 CHUNKS_INDEX = os.getenv("MONGO_CHUNKS_INDEX_NAME", "chunks_vector_index")
@@ -202,19 +201,21 @@ def load_from_local_files() -> list[dict]:
 # ---------------------------------------------------------------------------
 
 def embed_chunks(chunks: list[dict]) -> list[dict]:
-    client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+    client = OpenAIClient(
+        api_key=os.getenv("FIREWORKS_API_KEY"),
+        base_url="https://api.fireworks.ai/inference/v1"
+    )
     batch_size = 100
     for start in range(0, len(chunks), batch_size):
         batch = chunks[start : start + batch_size]
-        result = client.models.embed_content(
+        texts = [f"Naisarg's {c['source']} — {c['section']}\n{c['text']}" for c in batch]
+        result = client.embeddings.create(
             model=EMBEDDING_MODEL,
-            contents=[f"Naisarg's {c['source']} — {c['section']}\n{c['text']}" for c in batch],
-            config=types.EmbedContentConfig(task_type="RETRIEVAL_DOCUMENT", output_dimensionality=EMBEDDING_DIMS),
+            input=texts
         )
-        for chunk, emb in zip(batch, result.embeddings):
-            chunk["embedding"] = emb.values
+        for chunk, emb in zip(batch, result.data):
+            chunk["embedding"] = emb.embedding
         print(f"🧮 Embedded {min(start + batch_size, len(chunks))}/{len(chunks)}")
-        time.sleep(0.5)  # stay under the free-tier rate limit
     return chunks
 
 

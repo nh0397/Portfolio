@@ -4,19 +4,18 @@ from datetime import date
 from urllib.parse import quote_plus
 
 import certifi
+from openai import OpenAI as OpenAIClient
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from google import genai
-from google.genai import types
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 
 load_dotenv()
 
-EMBEDDING_MODEL = "gemini-embedding-2"
+EMBEDDING_MODEL = "nomic-ai/nomic-embed-text-v1.5"
 EMBEDDING_DIMS = 768
-CHAT_MODEL = "gemini-3.5-flash"
+CHAT_MODEL = "llama-3.3-70b-versatile"
 CHUNKS_COLLECTION = os.getenv("MONGO_CHUNKS_CL_NAME", "portfolio-chunks")
 CHUNKS_INDEX = os.getenv("MONGO_CHUNKS_INDEX_NAME", "chunks_vector_index")
 
@@ -54,20 +53,30 @@ except Exception as e:
     print(f"❌ MongoDB setup failed: {e}")
     mongo = db = collection = None
 
-# ── Gemini ─────────────────────────────────────────────────────────────────
-genai_client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY")) if os.getenv("GOOGLE_API_KEY") else None
-if not genai_client:
-    print("❌ GOOGLE_API_KEY not set")
+# ── Fireworks (embeddings) ────────────────────────────────────────────────
+fw_embed = OpenAIClient(
+    api_key=os.getenv("FIREWORKS_API_KEY"),
+    base_url="https://api.fireworks.ai/inference/v1"
+) if os.getenv("FIREWORKS_API_KEY") else None
+if not fw_embed:
+    print("❌ FIREWORKS_API_KEY not set")
+
+# ── Groq (chat) ───────────────────────────────────────────────────────────
+groq_client = OpenAIClient(
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1"
+) if os.getenv("GROQ_API_KEY") else None
+if not groq_client:
+    print("❌ GROQ_API_KEY not set")
 
 
 def retrieve_chunks(query: str, k: int = 8) -> list[dict]:
     """Embed the query and return the k most relevant portfolio chunks."""
-    result = genai_client.models.embed_content(
+    result = fw_embed.embeddings.create(
         model=EMBEDDING_MODEL,
-        contents=query,
-        config=types.EmbedContentConfig(task_type="RETRIEVAL_QUERY", output_dimensionality=EMBEDDING_DIMS),
+        input=query
     )
-    query_vector = result.embeddings[0].values
+    query_vector = result.data[0].embedding
 
     pipeline = [
         {
@@ -145,7 +154,7 @@ def chat():
         return "", 200
 
     try:
-        if genai_client is None:
+        if groq_client is None or fw_embed is None:
             return jsonify({"response": "Sorry, the assistant is not available right now. Please try again later."}), 500
 
         data = request.get_json() or {}
@@ -167,22 +176,24 @@ def chat():
             f"[{c['source']} — {c['section']}]\n{c['text']}" for c in chunks
         ) or "(no portfolio data retrieved)"
 
-        prompt = f"""Context about Naisarg:
+        messages = [
+            {"role": "system", "content": f"Today's date is {date.today():%B %d, %Y}.\n\n{SYSTEM_PROMPT}"},
+            {"role": "user", "content": f"""Context about Naisarg:
 {context}
 
 Previous conversation:
 {conversation_history or "(none)"}
 
-Visitor's message: {message}"""
+Visitor's message: {message}"""}
+        ]
 
-        response = genai_client.models.generate_content(
+        response = groq_client.chat.completions.create(
             model=CHAT_MODEL,
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                system_instruction=f"Today's date is {date.today():%B %d, %Y}.\n\n{SYSTEM_PROMPT}"
-            ),
+            messages=messages,
+            temperature=0.7,
+            max_tokens=500
         )
-        return jsonify({"response": format_text(response.text)})
+        return jsonify({"response": format_text(response.choices[0].message.content)})
 
     except Exception as e:
         print(f"❌ Error in chat route: {e}")
