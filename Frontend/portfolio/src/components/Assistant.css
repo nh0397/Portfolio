@@ -106,6 +106,40 @@
   color: #fca5a5;
 }
 
+/* ---- Mode switch ---- */
+
+.as-modes {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.6rem 1.15rem 0;
+  flex-shrink: 0;
+}
+
+.as-modes button {
+  flex: 1;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--bg-1);
+  font-size: 0.79rem;
+  font-weight: 600;
+  color: var(--fg-3);
+  transition: color 0.18s var(--ease), background 0.18s var(--ease),
+    border-color 0.18s var(--ease);
+}
+
+.as-modes button:hover { color: var(--fg); }
+
+.as-modes button.on {
+  color: var(--gold);
+  background: var(--gold-soft);
+  border-color: var(--gold-line);
+}
+
+/* `hidden` must beat the flex display these panels otherwise carry. */
+.as-thread[hidden],
+.as-composer[hidden] { display: none; }
+
 /* ---- Thread ---- */
 
 .as-thread {

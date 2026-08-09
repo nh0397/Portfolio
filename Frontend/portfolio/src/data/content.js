@@ -151,12 +151,12 @@ export const skillDomains = [
     skills: [
       { name: "LangGraph / LangChain", match: ["langgraph", "langchain"] },
       { name: "Multi-agent orchestration", match: ["multi-agent", "agentic", "supervisor"] },
-      { name: "RAG pipelines", match: ["rag", "retrieval-augmented", "retrieval"] },
+      { name: "RAG pipelines", match: ["rag", "retrieval augmented", "retrieval"] },
       { name: "Local LLMs (Ollama)", match: ["ollama", "local llm", "mistral"] },
-      { name: "Vector search", match: ["vector", "pinecone", "embedding", "faiss"] },
+      { name: "Vector search", match: ["vector", "pinecone", "embedding*", "faiss"] },
       { name: "PyTorch", match: ["pytorch"] },
       { name: "NLP", match: ["nlp", "sentiment", "natural language"] },
-      { name: "Predictive modeling", match: ["regression", "churn", "predictive", "classif"] },
+      { name: "Predictive modeling", match: ["regression", "churn", "predictive", "classif*"] },
     ],
   },
   {
@@ -165,13 +165,13 @@ export const skillDomains = [
     blurb: "APIs and data paths that hold up when traffic and datasets grow.",
     skills: [
       { name: "Python", match: ["python", "flask", "fastapi"] },
-      { name: "Go / Gin", match: ["go/gin", "go ", "gin"] },
+      { name: "Go / Gin", match: ["go", "gin", "golang"] },
       { name: "Node.js", match: ["node.js", "node"] },
       { name: "FastAPI", match: ["fastapi"] },
       { name: "Flask", match: ["flask"] },
       { name: "REST / WebSockets", match: ["rest", "websocket", "api"] },
       { name: "Distributed systems", match: ["kafka", "flink", "distributed", "simulation"] },
-      { name: "Performance tuning", match: ["latency", "optimiz", "performance", "cache", "index"] },
+      { name: "Performance tuning", match: ["latency", "optimiz*", "performance", "cach*", "index*"] },
     ],
   },
   {
@@ -184,8 +184,8 @@ export const skillDomains = [
       { name: "Next.js", match: ["next.js", "nextjs"] },
       { name: "Vue 3", match: ["vue"] },
       { name: "Angular", match: ["angular"] },
-      { name: "Web Workers", match: ["web worker", "worker"] },
-      { name: "Accessibility", match: ["accessib", "wcag", "aria"] },
+      { name: "Web Workers", match: ["web worker*", "worker*"] },
+      { name: "Accessibility", match: ["accessib*", "wcag", "aria"] },
     ],
   },
   {
@@ -195,12 +195,12 @@ export const skillDomains = [
     skills: [
       { name: "PostgreSQL", match: ["postgres", "postgresql", "sql"] },
       { name: "MongoDB", match: ["mongo", "mongodb"] },
-      { name: "Redis", match: ["redis", "cach"] },
+      { name: "Redis", match: ["redis", "cach*"] },
       { name: "Kafka", match: ["kafka"] },
       { name: "AWS", match: ["aws", "ec2"] },
       { name: "Docker / Kubernetes", match: ["docker", "kubernetes", "k8s"] },
-      { name: "CI/CD", match: ["ci/cd", "gitlab", "github actions", "pipeline"] },
-      { name: "Testing (Cypress / Jest)", match: ["cypress", "jest", "test"] },
+      { name: "CI/CD", match: ["ci cd", "gitlab", "github actions", "pipeline*"] },
+      { name: "Testing (Cypress / Jest)", match: ["cypress", "jest", "test*"] },
     ],
   },
 ];

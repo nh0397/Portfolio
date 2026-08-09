@@ -2,7 +2,12 @@ import { useMemo, useState } from "react";
 import { computeSkillEvidence, totalEvidence } from "../lib/skillEvidence";
 import "./Skills.css";
 
-const KIND_LABEL = { role: "Role", project: "Project", repo: "Repo" };
+const KIND_LABEL = {
+  role: "Role",
+  project: "Project",
+  repo: "Repo",
+  profile: "Listed",
+};
 
 export default function Skills() {
   const domains = useMemo(() => computeSkillEvidence(), []);

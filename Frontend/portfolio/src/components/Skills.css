@@ -220,6 +220,8 @@
 .ev-role    { background: rgba(255, 200, 61, 0.16); color: var(--gold); }
 .ev-project { background: rgba(74, 222, 128, 0.14); color: #86efac; }
 .ev-repo    { background: rgba(255, 255, 255, 0.07); color: var(--fg-2); }
+/* Self-reported, so it reads quieter than shipped work. */
+.ev-profile { background: rgba(255, 255, 255, 0.04); color: var(--fg-3); }
 
 .ev-label {
   min-width: 0;

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { askAssistant, loadThread, saveThread, clearThread } from "../lib/chatApi";
 import voice from "../lib/voice";
 import { scrollToSection } from "../lib/scrollToSection";
+import FitCheck from "./FitCheck";
 import { SparkIcon, MicIcon, ArrowIcon } from "./Icons";
 import "./Assistant.css";
 
@@ -40,6 +41,7 @@ export default function Assistant({ open, onClose }) {
   const [speaking, setSpeaking] = useState(false);
   const [handsFree, setHandsFree] = useState(false);
   const [notice, setNotice] = useState("");
+  const [mode, setMode] = useState("chat");
 
   const inputRef = useRef(null);
   const threadRef = useRef(null);
@@ -114,7 +116,10 @@ export default function Assistant({ open, onClose }) {
             sectionId: section,
           },
         ]);
-        if (viaVoice) voice.speak(reply);
+        // Speak when the question was spoken, and also whenever hands-free is
+        // on — in that mode the reply should come back aloud even if the
+        // visitor typed it or tapped a suggestion.
+        if (viaVoice || handsFreeRef.current) voice.speak(reply);
       } catch {
         setMessages((prev) => [
           ...prev,
@@ -238,7 +243,36 @@ export default function Assistant({ open, onClose }) {
 
       {notice && <p className="as-notice">{notice}</p>}
 
-      <div className="as-thread" ref={threadRef}>
+      <div className="as-modes" role="tablist" aria-label="Assistant mode">
+        <button
+          role="tab"
+          aria-selected={mode === "chat"}
+          className={mode === "chat" ? "on" : ""}
+          onClick={() => setMode("chat")}
+        >
+          Chat
+        </button>
+        <button
+          role="tab"
+          aria-selected={mode === "fit"}
+          className={mode === "fit" ? "on" : ""}
+          onClick={() => setMode("fit")}
+        >
+          Role fit
+        </button>
+      </div>
+
+      {mode === "fit" && (
+        <FitCheck
+          busy={busy}
+          onAskForWriteup={(prompt) => {
+            setMode("chat");
+            send(prompt);
+          }}
+        />
+      )}
+
+      <div className="as-thread" ref={threadRef} hidden={mode !== "chat"}>
         {messages.map((m) => (
           <div key={m.id} className={`as-row ${m.isBot ? "bot" : "user"}`}>
             <div className={`as-bubble ${m.isError ? "err" : ""}`}>
@@ -276,7 +310,7 @@ export default function Assistant({ open, onClose }) {
 
       </div>
 
-      {showOpeners && (
+      {mode === "chat" && showOpeners && (
         <div className="as-openers">
           {OPENERS.map((o) => (
             <button key={o} onClick={() => send(o)}>{o}</button>
@@ -284,7 +318,7 @@ export default function Assistant({ open, onClose }) {
         </div>
       )}
 
-      <div className="as-composer">
+      <div className="as-composer" hidden={mode !== "chat"}>
         <textarea
           ref={inputRef}
           className="as-input"
