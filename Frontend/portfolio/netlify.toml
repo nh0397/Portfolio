@@ -1,0 +1,26 @@
+# Build settings for the site.
+#
+# Netlify reads this from the project's base directory, and values here take
+# precedence over the dashboard — so the only thing that must be set in the UI
+# is the base directory itself (./Frontend/portfolio/).
+#
+# Note for anyone migrating from the old CRA build: the output directory
+# changed from `build` to `dist`, and Vite 8 needs Node >= 20.19.
+
+[build]
+  command = "npm run build"
+  publish = "dist"          # relative to the base directory
+
+[build.environment]
+  NODE_VERSION = "22"       # Vite 8 requires ^20.19.0 || >=22.12.0
+
+# Static assets are content-hashed by Vite, so they can be cached forever.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
