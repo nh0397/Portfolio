@@ -1,0 +1,127 @@
+.topbar {
+  display: flex;
+  height: 35px;
+  background-color: #323233;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  border-bottom: 1px solid #2b2b2b;
+  width: 100%;
+  flex-shrink: 0;
+  z-index: 3000;
+  box-sizing: border-box;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.topbar-button-group {
+  display: flex;
+  gap: 8px;
+  padding-left: 5px;
+}
+
+.close-button, .minimize-button, .expand-button {
+  height: 15px !important;
+  width: 15px !important;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.close-button { background-color: #ff605c; }
+.minimize-button { background-color: #ffbd44; }
+.expand-button { background-color: #00ca4e; }
+
+.topbar-center {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+  min-width: 0;
+}
+
+.search-input {
+  background-color: #2b2b2b;
+  border: 1px solid #444;
+  border-radius: 5px;
+  padding: 2px 8px;
+  color: white;
+  font-size: 11px;
+  width: 35vw;
+  max-width: 300px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 15px; /* Extra protection for NH icon */
+}
+
+.logo-icon {
+  height: 25px;
+  width: 25px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .search-input {
+    width: 20vw;
+    min-width: 70px;
+  }
+}
+
+.chatbot-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.chatbot-toast {
+  position: absolute;
+  top: 40px; /* Drop below the icon */
+  left: 50%; /* Center relative to the chatbot icon */
+  transform: translateX(-50%);
+  width: 280px; /* Readable width without stretching */
+  background-color: #007acc;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 4000;
+  cursor: default;
+}
+
+.toast-arrow {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #007acc;
+}
+
+.copilot-icon {
+  cursor: pointer;
+  display: inline-block;
+  height: 24px;
+  width: 24px;
+}
+
+.blink {
+  animation: zoom-blink 2s infinite ease-in-out;
+}
+
+@keyframes zoom-blink {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.15); opacity: 0.8; }
+}

@@ -310,7 +310,7 @@ def split_oversized(chunks: list[dict]) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 FRONTEND_DATA_FILE = Path(
-    "../Frontend/vscode-themed/src/data/portfolioData.json"
+    "../Frontend/portfolio/src/data/portfolioData.json"
 ).resolve()
 
 

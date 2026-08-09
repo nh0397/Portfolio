@@ -21,18 +21,20 @@ CHUNKS_INDEX = os.getenv("MONGO_CHUNKS_INDEX_NAME", "chunks_vector_index")
 
 app = Flask(__name__)
 
+# Any localhost port is allowed so a dev server can move (CRA 3000, Vite 5173)
+# without a backend edit; deployed origins stay an explicit list.
+LOCALHOST_ORIGIN = re.compile(r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$")
+
+ALLOWED_ORIGINS = [
+    LOCALHOST_ORIGIN,
+    os.getenv("PRODUCTION_URL", "https://naisarghalvadiya.tech"),
+    "https://naisarghalvadiya.tech",
+    "https://www.naisarghalvadiya.tech",
+]
+
 CORS(app, resources={
     r"/*": {
-        "origins": [
-            os.getenv("DEVELOPMENT_URL", "http://localhost:3000"),
-            os.getenv("PRODUCTION_URL", "https://naisarghalvadiya.tech"),
-            "http://localhost:3000",
-            "http://localhost:3001",
-            "http://127.0.0.1:3000",
-            "http://127.0.0.1:3001",
-            "http://localhost:5000",
-            "http://localhost:5001",
-        ],
+        "origins": ALLOWED_ORIGINS,
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True,

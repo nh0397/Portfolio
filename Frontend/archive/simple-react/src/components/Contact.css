@@ -1,0 +1,226 @@
+.contact-section {
+  padding: 40px 20px; /* Reduced padding */
+  text-align: center;
+  position: relative;
+}
+
+.contact-title {
+  font-size: 3vh; /* Reduced font size */
+  margin-bottom: 15px; /* Reduced bottom margin */
+  letter-spacing: 2px;
+}
+
+.contact-table {
+  height: auto; /* Removed fixed height */
+  width: 80%; /* Adjusted width for better responsiveness */
+  max-width: 600px; /* Max width for larger screens */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin: 0 auto;
+}
+
+.contact-row {
+  display: flex;
+  flex-direction: column; /* Column direction for better responsiveness */
+  align-items: flex-start; /* Align items to start */
+  justify-content: center;
+  margin-bottom: 1.5rem; /* Reduced vertical spacing */
+}
+
+.label-cell {
+  width: 100%; /* Full width for better responsiveness */
+  font-size: 2vh; /* Reduced font size */
+  text-align: start; /* Align text to start */
+  margin-bottom: 0.5rem; /* Spacing below label */
+}
+
+.input-cell {
+  width: 100%; /* Full width for better responsiveness */
+  text-align: center;
+}
+
+.label-cell label {
+  font-size: 2.5vh;
+  width: 100%;
+}
+
+.input-cell input,
+.input-cell textarea {
+  width: 100%; /* Full width for better responsiveness */
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.text-message {
+  width: 100%; /* Full width for better responsiveness */
+  margin-left: 0;
+}
+
+.contact-column-full {
+  display: flex;
+  justify-content: center;
+}
+
+.contact-column-full button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  opacity: 0.5; /* Initial reduced opacity */
+}
+
+.contact-column-full button.disabled {
+  background-color: #007bff;
+  cursor: not-allowed;
+}
+
+.contact-column-full button:not(.disabled) {
+  opacity: 1; /* Full opacity when enabled */
+}
+
+.submit-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px; /* Reduced top margin */
+}
+
+.contact-icons {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* Reduced gap */
+  margin-top: 15px; /* Reduced top margin */
+}
+
+.contact-icon {
+  height: 30px; /* Normal size for logos */
+}
+
+.github-icon-light {
+  color: #000; /* Black color in light mode */
+}
+
+.github-icon-dark {
+  color: #fff; /* White color in dark mode */
+}
+
+.linkedin-icon {
+  color: #0077b5; /* LinkedIn blue color */
+}
+
+.toast {
+  position: fixed;
+  top: 10vh; /* Positioned below the header */
+  right: 10px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toast.light-mode {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.toast.dark-mode {
+  background-color: #333333;
+  color: #fff;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.footer {
+  margin-top: 40px;
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+.footer a {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.contact-footer {
+  margin-top: 40px; /* Added top margin for separation */
+  text-align: center;
+  color: #aaa;
+  font-size: 0.8rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .contact-table {
+    width: 90%; /* Adjusted width for smaller screens */
+  }
+
+  .contact-title {
+    font-size: 2.5vh; /* Further reduced font size */
+    margin-bottom: 10px; /* Further reduced bottom margin */
+  }
+
+  .contact-row {
+    margin-bottom: 1rem; /* Further reduced vertical spacing */
+  }
+
+  .label-cell {
+    font-size: 1.8vh; /* Further reduced font size */
+  }
+
+  .contact-icons {
+    gap: 10px; /* Further reduced gap */
+    margin-top: 10px; /* Further reduced top margin */
+  }
+
+  .contact-icon {
+    height: 25px; /* Adjusted size for better responsiveness */
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-table {
+    width: 100%; /* Full width for smaller screens */
+  }
+
+  .contact-title {
+    font-size: 2vh; /* Further reduced font size */
+    margin-bottom: 5px; /* Further reduced bottom margin */
+  }
+
+  .contact-row {
+    margin-bottom: 0.5rem; /* Further reduced vertical spacing */
+  }
+
+  .label-cell {
+    font-size: 1.5vh; /* Further reduced font size */
+  }
+
+  .contact-icons {
+    gap: 5px; /* Further reduced gap */
+    margin-top: 5px; /* Further reduced top margin */
+  }
+
+  .contact-icon {
+    height: 20px; /* Adjusted size for better responsiveness */
+  }
+}

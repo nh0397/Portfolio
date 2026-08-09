@@ -1,0 +1,136 @@
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease),
+    backdrop-filter 0.3s var(--ease);
+  border-bottom: 1px solid transparent;
+}
+
+.nav-solid {
+  background: rgba(8, 8, 10, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom-color: var(--line);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  height: 68px;
+}
+
+/* ---- Mark ---- */
+
+.nav-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
+.mark-badge {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+  color: #1a1400;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.mark-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ---- Links ---- */
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+}
+
+.nav-links a {
+  position: relative;
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.87rem;
+  font-weight: 500;
+  color: var(--fg-3);
+  transition: color 0.2s var(--ease), background 0.2s var(--ease);
+}
+
+.nav-links a:hover {
+  color: var(--fg);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.nav-links a.active {
+  color: var(--gold);
+}
+
+.nav-links a.active::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  width: 14px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--gold);
+  transform: translateX(-50%);
+}
+
+/* ---- Ask button ---- */
+
+.nav-ask {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--gold-line);
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--gold);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.nav-ask:hover {
+  background: rgba(255, 200, 61, 0.2);
+  transform: translateY(-1px);
+}
+
+.nav-ask.on {
+  background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+  color: #1a1400;
+  border-color: transparent;
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 860px) {
+  .mark-name { display: none; }
+  .nav-links { gap: 0; }
+  .nav-links a { padding: 0.45rem 0.55rem; font-size: 0.82rem; }
+}
+
+@media (max-width: 620px) {
+  .nav-links { display: none; }
+  .nav-ask span { display: none; }
+  .nav-ask { padding: 0.5rem 0.65rem; }
+  .mark-name { display: block; }
+}

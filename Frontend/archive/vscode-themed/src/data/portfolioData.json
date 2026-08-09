@@ -1,0 +1,615 @@
+{
+  "generatedAt": "2026-08-09",
+  "personal": {
+    "name": "Naisarg Halvadiya",
+    "title": "Applied AI Engineer",
+    "email": "naisarg.halvadiya@gmail.com",
+    "phone": "+1 (628) 946-0347",
+    "location": "San Francisco, CA",
+    "linkedin": "https://www.linkedin.com/in/naisarg-h/",
+    "github": "https://github.com/nh0397",
+    "portfolio": "https://naisarghalvadiya.tech",
+    "summary": "Applied AI Engineer with 4+ years of software engineering experience and hands-on expertise in Generative AI, multi-agent orchestration, RAG pipelines, LLM evaluation, vector search and machine learning. Built production-grade AI systems using LangGraph, LangChain, Claude, Ollama, FastAPI and PyTorch, including multi-agent healthcare workflows, enterprise RAG applications and predictive analytics solutions. Strong background in backend engineering, distributed systems, cloud infrastructure and translating AI research into scalable business products."
+  },
+  "experience": [
+    {
+      "title": "Applied AI Engineer",
+      "company": "Palatys Inc. (Brewlytix)",
+      "location": "Philadelphia, PA (Remote)",
+      "startDate": "January 2026",
+      "endDate": "Present",
+      "current": true,
+      "technologies": [
+        "Vue 3",
+        "TypeScript",
+        "Go/Gin",
+        "PostgreSQL",
+        "AWS"
+      ],
+      "highlights": [
+        "Designed and developed AI-ready data architectures and backend services using Go/Gin, PostgreSQL and AWS EC2 to support scalable multi-tenant applications.",
+        "Built and maintained structured datasets from competition scoresheets, judging feedback and sensory evaluation records, enabling future LLM fine-tuning, RAG pipelines and analytics workflows.",
+        "Architected tenant-isolated APIs, authentication flows and data access controls to ensure secure multi-club data segregation and scalability.",
+        "Developed data models and ETL processes to standardize unstructured judging data into formats suitable for machine learning and AI-powered insights.",
+        "Evaluated and integrated retrieval-augmented generation (RAG), vector search and LLM-based analytics into the platform roadmap, including recommendation, knowledge-retrieval and reputation-scoring features."
+      ],
+      "date": "2026-08-09",
+      "source": "resume"
+    },
+    {
+      "title": "Graduate Teaching Assistant",
+      "company": "San Francisco State University",
+      "location": "",
+      "startDate": "Sep 2023",
+      "endDate": "Jan 2026",
+      "current": false,
+      "technologies": [],
+      "highlights": [
+        "Mentored 500+ students in full-stack development and data science fundamentals.",
+        "Guided student projects implementing industry standards for testing, deployment, and analysis.",
+        "Created automated grading systems reducing evaluation time by 50%."
+      ],
+      "date": "2026-01-01",
+      "source": "linkedin"
+    },
+    {
+      "title": "Senior Software Engineer",
+      "company": "Mu Sigma Inc.",
+      "location": "Bangalore, India",
+      "startDate": "October 2022",
+      "endDate": "July 2023",
+      "current": false,
+      "technologies": [
+        "Node.js",
+        "PostgreSQL",
+        "Redis",
+        "GitLab CI/CD",
+        "Cypress"
+      ],
+      "highlights": [
+        "Resolved critical performance and stability issues in a Node.js SaaS platform serving 5,000+ daily enterprise users by identifying event-loop blocking, database connection-pool exhaustion and inefficient SQL queries on indexed columns. Refactored data-processing workflows, optimized Redis cache invalidation and restored index-scan query execution, reducing retrieval latency by 30% and supporting renewal of a $1M enterprise contract.",
+        "Reduced production defects by 90% by designing and implementing a GitLab CI/CD pipeline with 70+ automated Cypress integration tests. Established automated quality gates, standardized Git workflows and mentored a 10-engineer team on testing and deployment best practices.",
+        "Analyzed production incidents to root cause and built monitoring and alerting systems, making preemptive system changes to prevent recurrence and improve platform reliability.",
+        "Developed RESTful APIs and backend services using Node.js, allowing easy integration with internal analytics platforms and enterprise-level client applications.",
+        "Improved PostgreSQL performance through query optimization, indexing and schema modifications, delivering faster reporting and more responsive application behavior."
+      ],
+      "date": "2023-07-01",
+      "source": "resume"
+    },
+    {
+      "title": "Software Engineer",
+      "company": "Mu Sigma Inc.",
+      "location": "Bangalore, India",
+      "startDate": "October 2019",
+      "endDate": "September 2022",
+      "current": false,
+      "technologies": [
+        "Angular",
+        "Next.js",
+        "Node.js",
+        "FastAPI",
+        "PostgreSQL"
+      ],
+      "highlights": [
+        "Led a 7-engineer team to build a centralized performance-management platform for 30+ teams, implementing RBAC to secure sensitive employee data and supporting 25+ concurrent enterprise pilot programs.",
+        "Developed a logistic-regression churn prediction model that identified at-risk pilot accounts using product-usage and engagement signals, enabling proactive customer-success interventions and contributing to a 35% pilot-to-enterprise conversion rate (~$350K in new annual recurring revenue).",
+        "Built and deployed an NLP-based sentiment analysis pipeline that processed 10,000+ employee feedback records to automatically extract themes, trends and insights, reducing performance-review cycle time by 65% and saving approximately 20 hours of manual HR reporting effort per month.",
+        "Implemented full-stack features using Angular, Next.js, Node.js, and PostgreSQL to support performance management workflows in different business units and increased user adoption in pilot teams.",
+        "Automated data ingestion and reporting using FastAPI and Python services, improving data accuracy and reducing operational overhead across business units."
+      ],
+      "date": "2022-09-01",
+      "source": "resume"
+    }
+  ],
+  "education": [
+    {
+      "degree": "M.S. in Data Science and Artificial Intelligence",
+      "school": "San Francisco State University, San Francisco, CA",
+      "field": "",
+      "startDate": "August 2023",
+      "endDate": "January 2026",
+      "honors": "Graduate Award for Distinguished Achievement",
+      "coursework": [
+        "Software Engineering",
+        "Natural Language Technologies",
+        "Data Mining",
+        "Technical Entrepreneurship"
+      ],
+      "date": "2026-01-01"
+    },
+    {
+      "degree": "Bachelor of Technology - BTech",
+      "school": "Nirma University",
+      "field": "Computer Engineering",
+      "startDate": "2015",
+      "endDate": "2019",
+      "honors": "",
+      "coursework": [],
+      "date": "2019-01-01"
+    }
+  ],
+  "projects": [
+    {
+      "name": "High-Performance Vulnerability Dashboard",
+      "description": "Rendered 236,000+ vulnerability records from a 371MB dataset in under 1 second, fully client-side: eliminated a 90-second browser freeze by offloading JSON parsing to Web Workers, virtualizing the DOM with react-window and using Zustand as an in-memory query store.",
+      "technologies": [
+        "React",
+        "TypeScript",
+        "Web Workers"
+      ],
+      "award": "",
+      "displayDate": "May 2026",
+      "date": "2026-05-01"
+    },
+    {
+      "name": "Multi-Agent Financial Analyst",
+      "description": "Architected a planner-supervisor multi-agent system that interprets natural-language financial queries, detects ambiguity before tool invocation and orchestrates specialist agents; built an LLM routing layer with automatic model fallback (Mixtral 8x7B, Llama 3 70B) on Groq for sub-second agentic responses.",
+      "technologies": [
+        "LangGraph",
+        "Groq",
+        "Chainlit"
+      ],
+      "award": "",
+      "displayDate": "January 2026",
+      "date": "2026-01-01"
+    },
+    {
+      "name": "AI Compliance Guardrail",
+      "description": "Built a DLP system in a 24-hour sprint: a Chrome extension intercepting PII in ChatGPT prompts in real time, a Flask API routing fast checks to Mistral and sensitive classifications to a locally deployed model via Ollama so PII never leaves the network, plus a React admin dashboard for policy management and violation tracking.",
+      "technologies": [],
+      "award": "Winner, Best Emerging AI Hack, SF Hacks 2025",
+      "displayDate": "April 2025",
+      "date": "2025-04-01"
+    }
+  ],
+  "repos": [
+    {
+      "name": "ipl-2026-auction-poc",
+      "description": "Private IPL-style fantasy league PoC: live auction room, scoreboards, CricAPI + ESPN sync, Supabase Auth (Google) and GitHub Actions.",
+      "language": "TypeScript",
+      "topics": [
+        "github-actions",
+        "playwright",
+        "python",
+        "typescript",
+        "web-sockets"
+      ],
+      "stars": 0,
+      "url": "https://github.com/nh0397/ipl-2026-auction-poc",
+      "homepage": "https://ipl-2026-auction-poc.vercel.app",
+      "created": "2026-03-09",
+      "lastUpdated": "2026-06-07",
+      "date": "2026-06-07"
+    },
+    {
+      "name": "Vulnerability-Dashboard",
+      "description": "A high-performance Security Vulnerability Dashboard built with React and TypeScript. Optimized for processing and visualizing large-scale (300MB+) datasets using Web Workers and List Virtualization.",
+      "language": "TypeScript",
+      "topics": [],
+      "stars": 0,
+      "url": "https://github.com/nh0397/Vulnerability-Dashboard",
+      "homepage": "",
+      "created": "2026-05-01",
+      "lastUpdated": "2026-05-05",
+      "date": "2026-05-05"
+    },
+    {
+      "name": "Title-Transfer-Agent",
+      "description": "Title Transfer Agent is an AI-powered automation tool for California manufactured home title transfers. Using Groq (Llama 3.2 Vision), it extracts data from title scans and programmatically populates HCD forms (476.6G, 480.5, 476.6). Features an interactive React dashboard with real-time logs and inline PDF review/editing.",
+      "language": "JavaScript",
+      "topics": [],
+      "stars": 0,
+      "url": "https://github.com/nh0397/Title-Transfer-Agent",
+      "homepage": "",
+      "created": "2026-04-21",
+      "lastUpdated": "2026-04-21",
+      "date": "2026-04-21"
+    },
+    {
+      "name": "nh0397",
+      "description": "",
+      "language": "",
+      "topics": [],
+      "stars": 0,
+      "url": "https://github.com/nh0397/nh0397",
+      "homepage": "",
+      "created": "2024-06-16",
+      "lastUpdated": "2026-04-19",
+      "date": "2026-04-19"
+    },
+    {
+      "name": "emotionAnalysis-realtime",
+      "description": "Real-time emotion analysis dashboard with a FastAPI backend and an AI-powered chatbot that turns natural language into SQL and charts.",
+      "language": "Python",
+      "topics": [],
+      "stars": 0,
+      "url": "https://github.com/nh0397/emotionAnalysis-realtime",
+      "homepage": "",
+      "created": "2025-08-24",
+      "lastUpdated": "2026-04-08",
+      "date": "2026-04-08"
+    },
+    {
+      "name": "Portfolio",
+      "description": "React portfolios (minimalist + VS Code themed), Flask API, and intelligent data processing tools. Features AI chatbot trained on personal data with real-time GitHub/LinkedIn integration.",
+      "language": "JavaScript",
+      "topics": [],
+      "stars": 0,
+      "url": "https://github.com/nh0397/Portfolio",
+      "homepage": "https://portfolio-iota-ruddy-22.vercel.app",
+      "created": "2025-09-06",
+      "lastUpdated": "2026-03-28",
+      "date": "2026-03-28"
+    },
+    {
+      "name": "Multi-Agent-Task-Solver",
+      "description": "An Agentic \"Operating System\" for Financial Analysis. Uses a Planner-Supervisor architecture to transform LLMs from simple chatbots into state-aware execution engines capable of deep reasoning, real-time data visualization, and automated reporting.",
+      "language": "HTML",
+      "topics": [
+        "agentic-ai",
+        "ai",
+        "ai-agents",
+        "chainlit",
+        "llm",
+        "multi-agent-systems",
+        "python"
+      ],
+      "stars": 1,
+      "url": "https://github.com/nh0397/Multi-Agent-Task-Solver",
+      "homepage": "",
+      "created": "2026-01-21",
+      "lastUpdated": "2026-01-22",
+      "date": "2026-01-22"
+    },
+    {
+      "name": "WorkFlowDoc",
+      "description": "Automated process documentation: Playwright + Gemini agent records workflows in the browser and generates step-by-step docs with screenshots. POC for onboarding and knowledge bases.",
+      "language": "Python",
+      "topics": [
+        "agentic-ai",
+        "automation",
+        "documentation-tool",
+        "gemini",
+        "playwright",
+        "python",
+        "workflow-documentation"
+      ],
+      "stars": 1,
+      "url": "https://github.com/nh0397/WorkFlowDoc",
+      "homepage": "",
+      "created": "2025-11-07",
+      "lastUpdated": "2025-12-04",
+      "date": "2025-12-04"
+    },
+    {
+      "name": "Prof-Sync",
+      "description": "AI-powered professor rating platform using RAG and vector embeddings. Built with React, Node.js, and Python. Features intelligent query processing, secure authentication, and real-time professor insights.",
+      "language": "Python",
+      "topics": [],
+      "stars": 0,
+      "url": "https://github.com/nh0397/Prof-Sync",
+      "homepage": "",
+      "created": "2025-09-06",
+      "lastUpdated": "2025-09-06",
+      "date": "2025-09-06"
+    },
+    {
+      "name": "Smart-Resume-AI",
+      "description": "AI-powered resume analysis platform that identifies skill gaps and provides personalized recommendations for job seekers using React Native frontend and Flask backend.",
+      "language": "JavaScript",
+      "topics": [],
+      "stars": 0,
+      "url": "https://github.com/nh0397/Smart-Resume-AI",
+      "homepage": "",
+      "created": "2025-09-06",
+      "lastUpdated": "2025-09-06",
+      "date": "2025-09-06"
+    },
+    {
+      "name": "SF-Hacks",
+      "description": "GenAI-aware DLP tool that detects and blocks or masks sensitive data in real-time, preventing leaks when anyone uses Gen AI tools like ChatGPT or Gemini.",
+      "language": "JavaScript",
+      "topics": [
+        "edge-computing",
+        "extension",
+        "guardrails",
+        "llms"
+      ],
+      "stars": 0,
+      "url": "https://github.com/nh0397/SF-Hacks",
+      "homepage": "",
+      "created": "2025-04-05",
+      "lastUpdated": "2025-07-14",
+      "date": "2025-07-14"
+    },
+    {
+      "name": "EduBridge",
+      "description": "A modern learning platform designed to enhance the online education experience by bridging the gap between educators and students.",
+      "language": "JavaScript",
+      "topics": [
+        "aws-ec2",
+        "full-stack-web-development",
+        "node-js",
+        "reactjs"
+      ],
+      "stars": 0,
+      "url": "https://github.com/nh0397/EduBridge",
+      "homepage": "",
+      "created": "2024-06-16",
+      "lastUpdated": "2024-12-09",
+      "date": "2024-12-09"
+    },
+    {
+      "name": "CardifyAI",
+      "description": "Application designed to generate educational flashcards based on a given topic. It leverages the power of Clerk API for user authentication and Gemini API for generating flashcard content, providing a seamless and interactive experience for users.",
+      "language": "JavaScript",
+      "topics": [
+        "clerkauth",
+        "flashcard",
+        "gemini-api",
+        "llm-tools",
+        "saas"
+      ],
+      "stars": 0,
+      "url": "https://github.com/nh0397/CardifyAI",
+      "homepage": "",
+      "created": "2024-08-24",
+      "lastUpdated": "2024-09-05",
+      "date": "2024-09-05"
+    },
+    {
+      "name": "StockBot-AI",
+      "description": "Simple pantry tracker app using Google's Vertex AI for image classification",
+      "language": "JavaScript",
+      "topics": [],
+      "stars": 0,
+      "url": "https://github.com/nh0397/StockBot-AI",
+      "homepage": "",
+      "created": "2024-08-03",
+      "lastUpdated": "2024-08-07",
+      "date": "2024-08-07"
+    },
+    {
+      "name": "Legal-GPT",
+      "description": "This platform leverages Large Language Models (LLMs) and Retrieval-Augmented Generation (RAG) to analyze and summarize archaic legal documents related to crime.",
+      "language": "Python",
+      "topics": [
+        "flask-application",
+        "llm",
+        "mongodb",
+        "rag",
+        "reactjs"
+      ],
+      "stars": 0,
+      "url": "https://github.com/nh0397/Legal-GPT",
+      "homepage": "",
+      "created": "2024-06-23",
+      "lastUpdated": "2024-07-11",
+      "date": "2024-07-11"
+    },
+    {
+      "name": "Data-Viz-SFFD",
+      "description": "FlareGraph: Exploring Fire Department Statistics in San Francisco.",
+      "language": "Python",
+      "topics": [
+        "dash",
+        "data-visualization",
+        "plotly-dash",
+        "python"
+      ],
+      "stars": 0,
+      "url": "https://github.com/nh0397/Data-Viz-SFFD",
+      "homepage": "",
+      "created": "2023-11-25",
+      "lastUpdated": "2024-07-02",
+      "date": "2024-07-02"
+    },
+    {
+      "name": "Discussion-Forum",
+      "description": "Forum where users can post content, upvote, downvote, and comment on posts. It leverages Supabase for backend services including authentication, database, and storage.",
+      "language": "JavaScript",
+      "topics": [],
+      "stars": 0,
+      "url": "https://github.com/nh0397/Discussion-Forum",
+      "homepage": "",
+      "created": "2024-06-27",
+      "lastUpdated": "2024-06-27",
+      "date": "2024-06-27"
+    },
+    {
+      "name": "Flight-Fare-Prediction",
+      "description": "Statistical Data Analysis",
+      "language": "Jupyter Notebook",
+      "topics": [],
+      "stars": 0,
+      "url": "https://github.com/nh0397/Flight-Fare-Prediction",
+      "homepage": "",
+      "created": "2024-04-22",
+      "lastUpdated": "2024-04-23",
+      "date": "2024-04-23"
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Intermediate Technical Interview Prep",
+      "issuer": "CodePath",
+      "issued": "May 2025",
+      "date": "2025-05-01"
+    },
+    {
+      "name": "Learning GitHub",
+      "issuer": "LinkedIn",
+      "issued": "Jun 2024",
+      "date": "2024-06-01"
+    },
+    {
+      "name": "Intermediate Web Development Course",
+      "issuer": "CodePath",
+      "issued": "Apr 2024",
+      "date": "2024-04-01"
+    },
+    {
+      "name": "Docker Essentials: A Developer Introduction",
+      "issuer": "IBM",
+      "issued": "Jan 2024",
+      "date": "2024-01-01"
+    }
+  ],
+  "awards": [
+    {
+      "name": "Impact Award",
+      "issuer": "Mu Sigma",
+      "issued": "Jul 2023",
+      "date": "2023-07-01"
+    },
+    {
+      "name": "Spot Award",
+      "issuer": "Mu Sigma",
+      "issued": "Apr 2023",
+      "date": "2023-04-01"
+    },
+    {
+      "name": "Impact Award",
+      "issuer": "Mu Sigma",
+      "issued": "Apr 2021",
+      "date": "2021-04-01"
+    },
+    {
+      "name": "Spot Award",
+      "issuer": "Mu Sigma",
+      "issued": "Oct 2020",
+      "date": "2020-10-01"
+    },
+    {
+      "name": "Spot Award",
+      "issuer": "Mu Sigma",
+      "issued": "Apr 2020",
+      "date": "2020-04-01"
+    }
+  ],
+  "skills": {
+    "languages": [
+      "TypeScript/JavaScript",
+      "Python",
+      "Go",
+      "SQL"
+    ],
+    "ai_ml": [
+      "LangGraph/LangChain",
+      "multi-agent orchestration",
+      "RAG",
+      "local LLM deployment (Ollama)",
+      "Pinecone",
+      "PyTorch"
+    ],
+    "backend_frontend": [
+      "Node.js",
+      "Go/Gin",
+      "FastAPI",
+      "Flask",
+      "REST",
+      "WebSockets",
+      "React",
+      "Next.js",
+      "Vue 3",
+      "Tailwind"
+    ],
+    "data_infrastructure": [
+      "PostgreSQL",
+      "Redis",
+      "MongoDB",
+      "Kafka",
+      "AWS",
+      "Docker",
+      "Kubernetes",
+      "GitLab CI/CD",
+      "GitHub Actions"
+    ]
+  },
+  "allSkills": [
+    "Agile Methodologies",
+    "AI-Powered Personal Chatbot",
+    "Angular",
+    "API Development",
+    "AWS",
+    "Back-End Web Development",
+    "Caching",
+    "Continuous Integration and Continuous Delivery (CI/CD)",
+    "Cypress",
+    "DASH",
+    "Data Analytics",
+    "Data Management",
+    "Data Science",
+    "Data Structures",
+    "Databases",
+    "Django",
+    "Distributed Systems",
+    "Docker",
+    "EduBridge",
+    "Event Driven Systems",
+    "Express",
+    "FAISS",
+    "FastAPI",
+    "Firebase",
+    "FlareGraph",
+    "Flask",
+    "Frontend",
+    "Full-Stack Development",
+    "Gemini",
+    "Generative AI Tools",
+    "GitHub Actions",
+    "GitLab CI/CD",
+    "HTML5",
+    "Integration",
+    "Intermediate Technical Interview Prep",
+    "Jest",
+    "JavaScript",
+    "JWT",
+    "Kafka",
+    "Kubernetes",
+    "LangChain",
+    "LLMs",
+    "MATLAB",
+    "Mean Stack",
+    "Microservices",
+    "Microsoft Excel",
+    "Microsoft PowerPoint",
+    "MongoDB",
+    "MySQL",
+    "Natural Language Processing (NLP)",
+    "Next.js",
+    "Nginx",
+    "Node.js",
+    "NLP",
+    "OAuth2",
+    "Ollama",
+    "OpenAI",
+    "Pinecone",
+    "Plotly",
+    "PostgreSQL",
+    "Programming",
+    "Project Management",
+    "Prompt Engineering",
+    "PyTest",
+    "Python",
+    "RAG Workflows",
+    "RabbitMQ",
+    "RBAC",
+    "React",
+    "Redis",
+    "REST",
+    "Retrieval-Augmented Generation (RAG)",
+    "Role-Based Access Control (RBAC)",
+    "Selenium",
+    "Serverless",
+    "Software Development",
+    "Software Development Life Cycle (SDLC)",
+    "SQL",
+    "Systems & Architecture",
+    "Tailwind",
+    "Testing & Security",
+    "TypeScript",
+    "University Lecturing",
+    "WebSockets"
+  ]
+}

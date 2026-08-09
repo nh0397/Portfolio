@@ -1,0 +1,125 @@
+/* Projects — black / gold */
+
+.projects-container {
+  --gold: #ffc83d;
+  --gold-deep: #f0a500;
+  --gold-dim: rgba(255, 200, 61, 0.13);
+  --ink: #0a0a0b;
+  --surface: #141416;
+  --surface-2: #1c1c20;
+  --line: rgba(255, 200, 61, 0.16);
+  --text: #f5f5f4;
+  --muted: #a1a1aa;
+
+  min-height: 100%;
+  padding: 2.5rem 2rem 4rem;
+  background:
+    radial-gradient(900px 500px at 85% -10%, rgba(255, 200, 61, 0.08), transparent 60%),
+    linear-gradient(180deg, var(--ink) 0%, #111113 100%);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-y: auto;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.1rem;
+  max-width: 1150px;
+  margin: 0 auto;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  transition: transform 0.22s, border-color 0.22s, background 0.22s;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 200, 61, 0.42);
+  background: var(--surface-2);
+}
+
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.85rem;
+}
+
+.card-top a { text-decoration: none; }
+
+.repo-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.35;
+  transition: color 0.18s;
+}
+
+.card-top a:hover .repo-name { color: var(--gold); }
+
+.language-tag {
+  flex-shrink: 0;
+  padding: 0.24rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--gold);
+  background: var(--gold-dim);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.repo-description {
+  flex: 1;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.repo-stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.78rem;
+  color: #71717a;
+}
+
+.repo-stats span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.repo-actions { display: flex; gap: 0.55rem; }
+
+.repo-actions a {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.95rem;
+  color: var(--gold);
+  background: var(--gold-dim);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  text-decoration: none;
+  transition: background 0.18s, transform 0.18s;
+}
+
+.repo-actions a:hover {
+  background: rgba(255, 200, 61, 0.26);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 720px) {
+  .projects-container { padding: 1.75rem 1rem 3rem; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .project-card:hover { transform: none; }
+}

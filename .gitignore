@@ -255,8 +255,10 @@ data/
 
 # ...but the generated portfolio data is a build input for the React app, so it
 # has to be tracked. (Backend/data/*.json stays ignored — that's the raw source.)
-!Frontend/vscode-themed/src/data/
-!Frontend/vscode-themed/src/data/**
+!Frontend/portfolio/src/data/
+!Frontend/portfolio/src/data/**
+!Frontend/archive/vscode-themed/src/data/
+!Frontend/archive/vscode-themed/src/data/**
 
 # ===========================================
 # DOCKER
@@ -438,3 +440,6 @@ docs/dist/
 # *.psd
 # *.ai
 # *.sketch
+
+# Vite build output
+Frontend/portfolio/dist/
