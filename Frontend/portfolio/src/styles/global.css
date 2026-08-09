@@ -303,13 +303,16 @@ ul {
   to   { opacity: 1; transform: none; }
 }
 
+/* Revealed via a data attribute rather than a class: React owns className on
+   these elements and rewrites it whenever they re-render, which would strip a
+   class added by the observer. */
 .reveal {
   opacity: 0;
   transform: translateY(18px);
   transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
 }
 
-.reveal.in {
+.reveal[data-in] {
   opacity: 1;
   transform: none;
 }
@@ -329,6 +332,7 @@ ul {
   }
 
   .reveal,
+  .reveal[data-in],
   .rise { opacity: 1; transform: none; }
 }
 
