@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import './Chatbot.css';
 import ChatbotService from '../../../services/ChatbotService';
 import VoiceAgentService from '../../../services/VoiceAgentService';
-import { ui } from '../../../config/portfolioConfig';
 
 const Chatbot = ({ isOpen, onClose }) => {
   const [messages, setMessages] = useState([]);
@@ -11,11 +10,12 @@ const Chatbot = ({ isOpen, onClose }) => {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [voiceSupported] = useState(VoiceAgentService.isSupported());
+  const [handsFreeMode, setHandsFreeMode] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
@@ -26,11 +26,10 @@ const Chatbot = ({ isOpen, onClose }) => {
     if (isOpen) {
       setTimeout(() => {
         inputRef.current?.focus();
-      }, 300); // Wait for sidebar transition
+      }, 300);
     }
   }, [isOpen]);
 
-  // Setup voice agent listeners
   useEffect(() => {
     VoiceAgentService.onListeningStateChange = (listening) => {
       setIsListening(listening);
@@ -42,137 +41,89 @@ const Chatbot = ({ isOpen, onClose }) => {
 
     VoiceAgentService.onError = (error) => {
       console.error('Voice error:', error);
-      alert(`Voice error: ${error}`);
     };
   }, []);
 
-  // Load conversation from sessionStorage on component mount
   useEffect(() => {
     const savedMessages = ChatbotService.loadConversationFromSession();
     if (savedMessages.length > 0) {
       setMessages(savedMessages);
-      console.log('Loaded conversation from session:', savedMessages.length, 'messages');
     } else {
-      // Set initial message if no saved conversation
-      const initialMessage = {
-        text: ui.chatbot.initialMessage,
-        isBot: true,
-        timestamp: new Date()
-      };
-      setMessages([initialMessage]);
+      setMessages([
+        {
+          id: 1,
+          text: "Hey! 👋 I'm Naisarg's AI assistant. Ask me about his projects, experience, skills, or anything else!",
+          isBot: true,
+          timestamp: new Date(),
+        },
+      ]);
     }
   }, []);
 
-  // Save conversation to sessionStorage whenever messages change
   useEffect(() => {
     if (messages.length > 0) {
       ChatbotService.saveConversationToSession(messages);
     }
   }, [messages]);
 
-  // Clear conversation on page unload (optional)
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      // Keep conversation in sessionStorage even on page unload
-      // Only clear if you want to reset on page refresh
-      // ChatbotService.clearConversationSession();
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, []);
-
-  const handleInputChange = (e) => {
-    setUserInput(e.target.value);
-  };
-
-  // Auto-expand textarea height
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.style.height = 'auto';
-      const newHeight = Math.min(inputRef.current.scrollHeight, 150);
-      inputRef.current.style.height = `${newHeight}px`;
-    }
-  }, [userInput]);
-
-  const scrollToSection = (section) => {
-    const sectionMap = {
-      projects: 'projects-file',
-      skills: 'skills-file',
-      experience: 'experience-file',
-      contact: 'contact-file',
-      about: 'about-file'
-    };
-
-    const elementId = sectionMap[section];
-    if (elementId) {
-      // Emit custom event to navigate (parent component should listen)
-      window.dispatchEvent(new CustomEvent('navigateToSection', { detail: { section } }));
-    }
-  };
-
   const handleSendMessage = async (message = userInput, isVoice = false) => {
     if (message.trim() === '') return;
 
-    const userMessage = {
+    const newMessage = {
+      id: messages.length + 1,
       text: message,
       isBot: false,
+      isVoice,
       timestamp: new Date(),
-      isVoice: isVoice
     };
 
-    const updatedMessages = [...messages, userMessage];
-    setMessages(updatedMessages);
-
+    setMessages((prev) => [...prev, newMessage]);
     setUserInput('');
     setIsLoading(true);
 
     try {
-      // Format conversation history for context
-      const conversationHistory = ChatbotService.formatConversationHistory(updatedMessages);
-
-      // Detect navigation intent
+      const conversationHistory = ChatbotService.formatConversationHistory(
+        [...messages, newMessage]
+      );
       const navigationIntent = VoiceAgentService.detectNavigationIntent(message);
 
       const response = await ChatbotService.sendMessage(message, conversationHistory, isVoice);
 
       const botMessage = {
+        id: messages.length + 2,
         text: response.response,
         isBot: true,
         timestamp: new Date(),
-        navigationIntent: navigationIntent
+        navigationIntent,
       };
 
-      setMessages(prev => [...prev, botMessage]);
+      setMessages((prev) => [...prev, botMessage]);
 
-      // If voice mode and detected navigation intent, navigate
-      if (isVoice && navigationIntent) {
-        scrollToSection(navigationIntent);
+      if (navigationIntent) {
+        setTimeout(() => {
+          scrollToSection(navigationIntent);
+        }, 300);
       }
 
-      // If voice mode, speak the response
       if (isVoice && voiceSupported) {
         setIsSpeaking(true);
         VoiceAgentService.speak(response.response);
-        // Update speaking state when done
         setTimeout(() => {
           setIsSpeaking(VoiceAgentService.getIsSpeaking());
         }, 500);
       }
-
     } catch (error) {
-      console.error('Error sending message:', error);
-
-      const errorMessage = {
-        text: `Error: ${error.message}`,
-        isBot: true,
-        timestamp: new Date(),
-        isError: true
-      };
-
-      setMessages(prev => [...prev, errorMessage]);
+      console.error('Error:', error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: prev.length + 1,
+          text: `Error: ${error.message}`,
+          isBot: true,
+          isError: true,
+          timestamp: new Date(),
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -181,7 +132,6 @@ const Chatbot = ({ isOpen, onClose }) => {
   const handleVoiceInput = () => {
     if (isListening) {
       VoiceAgentService.stopListening();
-      // Send the transcript as message
       if (userInput.trim()) {
         handleSendMessage(userInput, true);
       }
@@ -190,178 +140,138 @@ const Chatbot = ({ isOpen, onClose }) => {
     }
   };
 
-  // Ensure focus is kept/restored
-  useEffect(() => {
-    if (!isLoading) {
-      inputRef.current?.focus();
-    }
-  }, [isLoading]);
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
+  const toggleHandsFreeMode = () => {
+    if (!handsFreeMode) {
+      setHandsFreeMode(true);
+      VoiceAgentService.startListening();
+      VoiceAgentService.speak("Hands-free mode activated. I'm listening!");
+    } else {
+      setHandsFreeMode(false);
+      VoiceAgentService.stopListening();
+      VoiceAgentService.stopSpeaking();
     }
   };
 
-  // Add function to clear conversation
-  const clearConversation = () => {
+  const scrollToSection = (section) => {
+    // This would need to emit an event to the parent component
+    window.dispatchEvent(new CustomEvent('navigateToSection', { detail: { section } }));
+  };
+
+  const clearChat = () => {
+    setMessages([
+      {
+        id: 1,
+        text: "Chat cleared! Ready for a fresh conversation 🎉",
+        isBot: true,
+        timestamp: new Date(),
+      },
+    ]);
     ChatbotService.clearConversationSession();
-    const initialMessage = {
-      text: ui.chatbot.initialMessage,
-      isBot: true,
-      timestamp: new Date()
-    };
-    setMessages([initialMessage]);
   };
 
   return (
-    <div className={`chatbot-sidebar ${isOpen ? 'open' : 'closed'}`}>
-      {/* VS Code Window Header */}
+    <div className={`modern-chatbot ${isOpen ? 'open' : 'closed'}`}>
+      {/* Header */}
       <div className="chatbot-header">
-        <div className="header-left">
-          <div className="file-info">
-            <span className="file-icon">💬</span>
-            <span className="file-name">ai-buddy.js</span>
-            <span className="file-status">●</span>
-          </div>
+        <div className="header-content">
+          <h3>AI Assistant</h3>
+          <p className="status-text">
+            {isListening ? '🎤 Listening...' : isSpeaking ? '🔊 Speaking...' : '✨ Ready'}
+          </p>
         </div>
-        <div className="header-right">
-          <button 
-            className="clear-button" 
-            onClick={clearConversation}
+        <div className="header-controls">
+          <button
+            className={`voice-toggle ${handsFreeMode ? 'active' : ''}`}
+            onClick={toggleHandsFreeMode}
+            title="Toggle hands-free mode"
+            aria-label="Toggle hands-free mode"
+          >
+            🎙️
+          </button>
+          <button
+            className="clear-btn"
+            onClick={clearChat}
             title="Clear conversation"
             aria-label="Clear conversation"
           >
-            <span aria-hidden="true">🗑️</span>
+            🗑️
           </button>
-          <button 
-            className="close-button-chatbot" 
+          <button
+            className="close-btn"
             onClick={onClose}
+            title="Close chatbot"
             aria-label="Close chatbot"
           >
-            <span aria-hidden="true">×</span>
+            ✕
           </button>
         </div>
       </div>
 
-      {/* Tab Bar */}
-      <div className="chatbot-tabs">
-        <div className="tab active">
-          <span className="tab-icon">💬</span>
-          <span className="tab-name">Naisarg's AI Assistant</span>
-        </div>
-      </div>
-
-      {/* Code Editor Style Messages */}
-      <div className="chatbot-editor">
-        <div className="line-numbers" aria-hidden="true">
-          {messages.map((_, index) => (
-            <div key={index} className="line-number">{index + 1}</div>
-          ))}
-          {isLoading && <div className="line-number">{messages.length + 1}</div>}
-        </div>
-
-        <div 
-          className="messages-container"
-          role="log"
-          aria-live="polite"
-          aria-atomic="false"
-          aria-label="Chat messages"
-        >
-          {messages.map((message, index) => (
-            <div 
-              key={index} 
-              className={`message-line ${message.isBot ? 'bot-message' : 'user-message'} ${message.isError ? 'error-message' : ''}`}
-              role="listitem"
-            >
-              <div className="message-code">
-                <span className="message-syntax" aria-hidden="true">
-                  {message.isError ? 'error' : message.isBot ? 'assistant' : 'user'}.say(
-                </span>
-                <span 
-                  className="message-content"
-                  dangerouslySetInnerHTML={{ __html: `"${message.text}"` }}
-                  role="article"
-                />
-                <span className="message-syntax" aria-hidden="true">);</span>
+      {/* Messages Container */}
+      <div className="messages-container">
+        {messages.map((msg) => (
+          <div key={msg.id} className={`message ${msg.isBot ? 'bot' : 'user'}`}>
+            <div className="message-avatar">
+              {msg.isBot ? '🤖' : '👤'}
+            </div>
+            <div className="message-content">
+              <div className="message-text">{msg.text}</div>
+              {msg.isVoice && <span className="voice-indicator">🎤 Voice</span>}
+            </div>
+          </div>
+        ))}
+        {isLoading && (
+          <div className="message bot">
+            <div className="message-avatar">🤖</div>
+            <div className="message-content">
+              <div className="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
               </div>
             </div>
-          ))}
-          
-          {isLoading && (
-            <div className="message-line bot-message" role="status" aria-live="polite">
-              <div className="message-code">
-                <span className="message-syntax" aria-hidden="true">assistant.thinking(</span>
-                <span className="typing-dots" aria-label="AI is thinking">
-                  <span></span><span></span><span></span>
-                </span>
-                <span className="message-syntax" aria-hidden="true">);</span>
-              </div>
-            </div>
-          )}
-          <div ref={messagesEndRef} aria-hidden="true" />
-        </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input Area */}
       <div className="chatbot-input-area">
-        <div className="input-line-number" aria-hidden="true">{messages.length + (isLoading ? 2 : 1)}</div>
-        <div className="input-container">
-          <label htmlFor="chatbot-textarea" className="sr-only">Type your message</label>
-          <span className="input-syntax" aria-hidden="true">user.ask(</span>
-          <textarea
-            ref={inputRef}
-            id="chatbot-textarea"
-            value={userInput}
-            onChange={handleInputChange}
-            onKeyPress={handleKeyPress}
-            placeholder="your message here..."
-            disabled={isLoading}
-            className="message-input"
-            rows="1"
-            aria-label="Chat message input"
-            aria-describedby="chatbot-input-status"
-          />
-          <span id="chatbot-input-status" className="sr-only">
-            {isLoading ? "Sending message, please wait" : userInput.trim() === '' ? "Enter a message to send" : "Press Enter to send"}
-          </span>
-          <span className="input-syntax" aria-hidden="true">);</span>
-          {voiceSupported && (
-            <button
-              onClick={handleVoiceInput}
-              disabled={isLoading}
-              className={`voice-button ${isListening ? 'listening' : ''} ${isSpeaking ? 'speaking' : ''}`}
-              aria-label={isListening ? "Stop listening" : "Start voice input"}
-              title={isListening ? "Listening..." : "Voice input"}
-            >
-              <span aria-hidden="true">{isListening ? '🎤' : isSpeaking ? '🔊' : '🎙️'}</span>
-            </button>
-          )}
-          <button
-            onClick={() => handleSendMessage(userInput, false)}
-            disabled={isLoading || userInput.trim() === ''}
-            className="send-button"
-            aria-label={isLoading ? "Sending message" : "Send message"}
-          >
-            <span aria-hidden="true">▶</span>
-          </button>
-        </div>
+        <input
+          ref={inputRef}
+          type="text"
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+          placeholder="Type a message or use voice..."
+          className="message-input"
+          disabled={isLoading}
+        />
+
+        <button
+          className={`voice-btn ${isListening ? 'listening' : ''}`}
+          onClick={handleVoiceInput}
+          disabled={!voiceSupported || isLoading}
+          title="Toggle voice input"
+          aria-label="Toggle voice input"
+        >
+          🎙️
+        </button>
+
+        <button
+          className="send-btn"
+          onClick={() => handleSendMessage()}
+          disabled={isLoading || !userInput.trim()}
+          title="Send message"
+          aria-label="Send message"
+        >
+          ➤
+        </button>
       </div>
 
-      {/* Status Bar */}
-      <div className="chatbot-status-bar">
-        <div className="status-left">
-          <span className="status-item">
-            <span className="status-icon">🟢</span>
-            {ui.chatbot.statusBar.left[0]}
-          </span>
-          <span className="status-item">{ui.chatbot.statusBar.left[1]}: {messages.length}</span>
-        </div>
-        <div className="status-right">
-          <span className="status-item">{ui.chatbot.statusBar.right[0]}</span>
-          <span className="status-item">{ui.chatbot.statusBar.right[1]}</span>
-        </div>
+      {/* Footer */}
+      <div className="chatbot-footer">
+        <p className="footer-text">💡 Tip: Say "show me projects" or "tell me about experience"</p>
       </div>
     </div>
   );

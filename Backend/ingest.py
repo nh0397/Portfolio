@@ -3,8 +3,10 @@ Ingestion script: builds the chunked vector collection the chatbot searches.
 
 Reads Naisarg's portfolio data (resume / GitHub / LinkedIn), splits it into
 small semantic chunks (one per job, project, repo, section...), embeds each
-chunk with Google's text-embedding-004, and writes them to a dedicated
-MongoDB collection with an Atlas Vector Search index.
+chunk with Fireworks embeddings, and writes them to a dedicated MongoDB collection
+with an Atlas Vector Search index.
+
+Extracts and stores metadata: dates, location, contact info, URLs.
 
 Data sources (both optional, at least one required):
   1. The legacy collection (MONGO_CL_NAME) whose documents hold
@@ -21,7 +23,7 @@ import argparse
 import json
 import os
 import sys
-import time
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import quote_plus
 
@@ -50,8 +52,50 @@ def mongo_client() -> MongoClient:
 
 
 # ---------------------------------------------------------------------------
-# Chunking
+# Utility functions for metadata extraction
 # ---------------------------------------------------------------------------
+
+def parse_date(date_str) -> str:
+    """Parse various date formats and return ISO 8601 string, or None if unparseable."""
+    if not date_str or date_str in ("", None, "Present", "Current"):
+        return None
+
+    date_str = str(date_str).strip()
+
+    # Try common formats
+    formats = [
+        "%Y-%m-%d",
+        "%B %Y",
+        "%b %Y",
+        "%Y",
+    ]
+
+    for fmt in formats:
+        try:
+            dt = datetime.strptime(date_str, fmt)
+            return dt.strftime("%Y-%m-%d")
+        except ValueError:
+            continue
+
+    return None
+
+
+def extract_date_from_dict(item: dict) -> str:
+    """Extract a sortable date from an experience/project dict."""
+    for field in ["end_date", "updated_at", "pushed_at", "createdDate", "endDate", "date"]:
+        if field in item and item[field]:
+            parsed = parse_date(item[field])
+            if parsed:
+                return parsed
+
+    for field in ["start_date", "created_at", "createdAt", "startDate"]:
+        if field in item and item[field]:
+            parsed = parse_date(item[field])
+            if parsed:
+                return parsed
+
+    return None
+
 
 def render_value(value, indent: int = 0) -> str:
     """Render arbitrary JSON as compact human-readable text."""
@@ -78,6 +122,9 @@ def chunk_json(source: str, data, path: str = "") -> list[dict]:
     Lists of objects (jobs, projects, repos) become one chunk per item;
     everything else is grouped per top-level section. Oversized chunks are
     split further, undersized siblings are merged by the caller.
+
+    Extracts metadata (dates, location, URLs, etc.) and stores them
+    as separate fields for sorting and filtering.
     """
     chunks = []
 
@@ -85,7 +132,7 @@ def chunk_json(source: str, data, path: str = "") -> list[dict]:
         try:
             data = json.loads(data)
         except (json.JSONDecodeError, TypeError):
-            return [{"source": source, "section": path or source, "text": data}] if data.strip() else []
+            return [{"source": source, "section": path or source, "text": data, "date": None, "metadata": {}}] if data.strip() else []
 
     if isinstance(data, dict):
         # Group all scalar fields (name, email, summary, ...) into ONE overview chunk
@@ -95,7 +142,20 @@ def chunk_json(source: str, data, path: str = "") -> list[dict]:
             text = render_value(scalars)
             section = f"{path} > overview" if path else "overview"
             if text.strip():
-                chunks.append({"source": source, "section": section, "text": text})
+                # Extract metadata from scalars
+                metadata = {}
+                for key in ["email", "phone", "location", "linkedin", "github", "url", "website"]:
+                    if key in scalars:
+                        metadata[key] = scalars[key]
+
+                chunks.append({
+                    "source": source,
+                    "section": section,
+                    "text": text,
+                    "date": None,
+                    "metadata": metadata
+                })
+
         for key, value in data.items():
             if key in scalars:
                 continue
@@ -104,17 +164,50 @@ def chunk_json(source: str, data, path: str = "") -> list[dict]:
                 for i, item in enumerate(value):
                     text = render_value(item)
                     if text.strip():
-                        chunks.append({"source": source, "section": f"{section} [{i + 1}]", "text": text})
+                        # Extract date from this item
+                        item_date = extract_date_from_dict(item)
+
+                        # Extract metadata
+                        metadata = {}
+                        for meta_key in ["location", "company", "title", "position", "url", "link", "repository"]:
+                            if meta_key in item:
+                                metadata[meta_key] = item[meta_key]
+
+                        chunks.append({
+                            "source": source,
+                            "section": f"{section} [{i + 1}]",
+                            "text": text,
+                            "date": item_date,
+                            "metadata": metadata
+                        })
             elif isinstance(value, dict):
                 text = render_value(value)
                 if len(text) > MAX_CHUNK_CHARS:
                     chunks.extend(chunk_json(source, value, section))
                 elif text.strip():
-                    chunks.append({"source": source, "section": section, "text": text})
+                    item_date = extract_date_from_dict(value)
+                    metadata = {}
+                    for meta_key in ["location", "company", "title", "position", "url", "link"]:
+                        if meta_key in value:
+                            metadata[meta_key] = value[meta_key]
+
+                    chunks.append({
+                        "source": source,
+                        "section": section,
+                        "text": text,
+                        "date": item_date,
+                        "metadata": metadata
+                    })
             else:
                 text = render_value({key: value})
                 if text.strip():
-                    chunks.append({"source": source, "section": section, "text": text})
+                    chunks.append({
+                        "source": source,
+                        "section": section,
+                        "text": text,
+                        "date": None,
+                        "metadata": {}
+                    })
     elif isinstance(data, list):
         for i, item in enumerate(data):
             section = f"{path} [{i + 1}]" if path else f"item {i + 1}"
@@ -123,13 +216,26 @@ def chunk_json(source: str, data, path: str = "") -> list[dict]:
                 if len(text) > MAX_CHUNK_CHARS:
                     chunks.extend(chunk_json(source, item, section))
                 elif text.strip():
-                    chunks.append({"source": source, "section": section, "text": text})
+                    item_date = extract_date_from_dict(item)
+                    chunks.append({
+                        "source": source,
+                        "section": section,
+                        "text": text,
+                        "date": item_date,
+                        "metadata": {}
+                    })
             else:
                 chunks.extend(chunk_json(source, item, section))
     else:
         text = str(data)
         if text.strip():
-            chunks.append({"source": source, "section": path or source, "text": text})
+            chunks.append({
+                "source": source,
+                "section": path or source,
+                "text": text,
+                "date": None,
+                "metadata": {}
+            })
 
     return chunks
 
@@ -146,12 +252,18 @@ def merge_small_chunks(chunks: list[dict]) -> list[dict]:
         ):
             merged[-1]["section"] += f"; {chunk['section']}"
             merged[-1]["text"] += "\n" + chunk["text"]
+            # Keep the date if the merged chunk doesn't have one, or use the newer date
+            if chunk.get("date") and not merged[-1].get("date"):
+                merged[-1]["date"] = chunk["date"]
+            elif chunk.get("date") and merged[-1].get("date"):
+                merged[-1]["date"] = max(merged[-1]["date"], chunk["date"])
         else:
             merged.append(chunk)
     return merged
 
 
 def split_oversized(chunks: list[dict]) -> list[dict]:
+    """Split chunks that exceed MAX_CHUNK_CHARS while preserving metadata."""
     result = []
     for chunk in chunks:
         text = chunk["text"]
@@ -162,11 +274,23 @@ def split_oversized(chunks: list[dict]) -> list[dict]:
         part = 1
         for line in lines:
             if len(buf) + len(line) > MAX_CHUNK_CHARS and buf:
-                result.append({**chunk, "section": f"{chunk['section']} (part {part})", "text": buf})
+                result.append({
+                    **chunk,
+                    "section": f"{chunk['section']} (part {part})",
+                    "text": buf,
+                    "date": chunk.get("date"),
+                    "metadata": chunk.get("metadata", {})
+                })
                 buf, part = "", part + 1
             buf += ("\n" if buf else "") + line
         if buf.strip():
-            result.append({**chunk, "section": f"{chunk['section']} (part {part})", "text": buf})
+            result.append({
+                **chunk,
+                "section": f"{chunk['section']} (part {part})",
+                "text": buf,
+                "date": chunk.get("date"),
+                "metadata": chunk.get("metadata", {})
+            })
     return result
 
 
@@ -224,6 +348,8 @@ def ensure_vector_index(collection):
         "fields": [
             {"type": "vector", "path": "embedding", "numDimensions": EMBEDDING_DIMS, "similarity": "cosine"},
             {"type": "filter", "path": "source"},
+            {"type": "filter", "path": "date"},
+            {"type": "filter", "path": "metadata"},
         ]
     }
     try:
@@ -259,13 +385,17 @@ def main():
 
     print(f"\n✂️  {len(chunks)} chunks total")
     for c in chunks[:10]:
-        print(f"   [{c['source']}] {c['section']} ({len(c['text'])} chars)")
+        date_str = f" | date: {c.get('date', 'none')}" if c.get("date") else ""
+        meta_str = f" | meta: {c.get('metadata', {})}" if c.get("metadata") else ""
+        print(f"   [{c['source']}] {c['section']} ({len(c['text'])} chars){date_str}{meta_str}")
     if len(chunks) > 10:
         print(f"   ... and {len(chunks) - 10} more")
 
     if args.dry_run:
         for c in chunks:
-            print(f"\n===== [{c['source']}] {c['section']} =====\n{c['text']}")
+            date_str = f"\ndate: {c.get('date')}" if c.get("date") else ""
+            meta_str = f"\nmetadata: {json.dumps(c.get('metadata', {}), indent=2)}" if c.get("metadata") else ""
+            print(f"\n===== [{c['source']}] {c['section']} ====={date_str}{meta_str}\n{c['text']}")
         return
 
     if db is None:

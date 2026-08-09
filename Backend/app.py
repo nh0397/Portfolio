@@ -27,11 +27,16 @@ CORS(app, resources={
             os.getenv("DEVELOPMENT_URL", "http://localhost:3000"),
             os.getenv("PRODUCTION_URL", "https://naisarghalvadiya.tech"),
             "http://localhost:3000",
+            "http://localhost:3001",
             "http://127.0.0.1:3000",
+            "http://127.0.0.1:3001",
+            "http://localhost:5000",
+            "http://localhost:5001",
         ],
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True,
+        "max_age": 3600,
     }
 })
 
@@ -71,7 +76,7 @@ if not groq_client:
 
 
 def retrieve_chunks(query: str, k: int = 8) -> list[dict]:
-    """Embed the query and return the k most relevant portfolio chunks."""
+    """Embed the query and return the k most relevant portfolio chunks, sorted by date (newest first)."""
     result = fw_embed.embeddings.create(
         model=EMBEDDING_MODEL,
         input=query
@@ -88,7 +93,8 @@ def retrieve_chunks(query: str, k: int = 8) -> list[dict]:
                 "limit": k,
             }
         },
-        {"$project": {"_id": 0, "source": 1, "section": 1, "text": 1, "score": {"$meta": "vectorSearchScore"}}},
+        {"$project": {"_id": 0, "source": 1, "section": 1, "text": 1, "date": 1, "metadata": 1, "score": {"$meta": "vectorSearchScore"}}},
+        {"$sort": {"date": -1}},
     ]
     return list(collection.aggregate(pipeline))
 
@@ -134,6 +140,59 @@ just answer.
 - Use **bold** for emphasis and "* " bullets for lists when helpful."""
 
 
+@app.route("/api/experience", methods=["GET"])
+def get_experience():
+    """Fetch experience data from vector DB, sorted by date (descending)."""
+    try:
+        if collection is None:
+            return jsonify({"error": "Database not available"}), 500
+
+        # Find all experience chunks
+        experience_chunks = list(
+            collection.find(
+                {"source": "resume", "section": {"$regex": "experience"}},
+                {"_id": 0, "text": 1, "date": 1, "metadata": 1}
+            ).sort("date", -1)  # Descending order (most recent first)
+        )
+
+        return jsonify({
+            "success": True,
+            "count": len(experience_chunks),
+            "experiences": experience_chunks
+        })
+    except Exception as e:
+        print(f"❌ Error fetching experience: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/projects", methods=["GET"])
+def get_projects():
+    """Fetch project/portfolio data from vector DB."""
+    try:
+        if collection is None:
+            return jsonify({"error": "Database not available"}), 500
+
+        # Find all project chunks
+        projects = list(
+            collection.find(
+                {"$or": [
+                    {"source": "github"},
+                    {"section": {"$regex": "project"}}
+                ]},
+                {"_id": 0, "text": 1, "date": 1, "metadata": 1, "source": 1}
+            ).sort("date", -1)
+        )
+
+        return jsonify({
+            "success": True,
+            "count": len(projects),
+            "projects": projects
+        })
+    except Exception as e:
+        print(f"❌ Error fetching projects: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route("/health", methods=["GET"])
 def health_check():
     try:
@@ -172,9 +231,11 @@ def chat():
             print(f"⚠️  Retrieval failed, answering without context: {e}")
             chunks = []
 
-        context = "\n\n".join(
-            f"[{c['source']} — {c['section']}]\n{c['text']}" for c in chunks
-        ) or "(no portfolio data retrieved)"
+        context_parts = []
+        for c in chunks:
+            date_str = f" ({c.get('date')})" if c.get("date") else ""
+            context_parts.append(f"[{c['source']} — {c['section']}{date_str}]\n{c['text']}")
+        context = "\n\n".join(context_parts) or "(no portfolio data retrieved)"
 
         messages = [
             {"role": "system", "content": f"Today's date is {date.today():%B %d, %Y}.\n\n{SYSTEM_PROMPT}"},

@@ -2,145 +2,119 @@ import React, { useState, useEffect, useContext } from "react";
 import "./Home.css";
 import profilePic from "../../../assets/images/Photo.jpeg";
 import { AppContext } from "../../../context/AppContext";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { portfolioConfig } from "../../../config/portfolioConfig";
 
 function Home() {
   const { homeVisited, setHomeVisited } = useContext(AppContext);
+  const { setActiveFile } = useContext(AppContext);
   const [animationsComplete, setAnimationsComplete] = useState(homeVisited);
-  const {setActiveFile} = useContext(AppContext)
+
   const developerInfo = {
     name: portfolioConfig.personal.name,
     role: portfolioConfig.personal.title,
-    bio: portfolioConfig.personal.bio
+    bio: portfolioConfig.personal.bio,
+    skills: ["AI Engineer", "Full-Stack Developer", "Data Scientist"]
   };
 
-  const codeString = `const HomePage = () => {
-  const [isLoaded, setIsLoaded] = useState(true);
-  const developerInfo = {
-    name: '${portfolioConfig.personal.name}',
-    role: '${portfolioConfig.personal.title}',
-    bio: \`As a software engineer adept at harnessing data, 
-    I specialize in transforming intricate data insights 
-    into impactful, real-world solutions. My expertise 
-    spans full-stack development and data science, 
-    allowing me to innovate and drive forward-thinking 
-    projects. With a proven track record...\`
-  };
-
-  useEffect(() => {
-    document.title = \`\${developerInfo.name} | Portfolio\`;
-    setIsLoaded(true);
-  }, []);
-
-  return (
-    <main className="hero-container">
-      <h1>{developerInfo.name}</h1>
-      <p>{developerInfo.role}</p>
-      <div className="cta">
-        <button>Know More About Me</button>
-      </div>
-    </main>
-  );
-};`;
-
-  const [typedCode, setTypedCode] = useState(() =>
-    homeVisited ? codeString : ""
-  );
-
-  // Typewriter effect on first visit only
   useEffect(() => {
     if (!homeVisited) {
-      let currentIndex = 0;
-      const typeSpeed = 20;
-
-      const typeInterval = setInterval(() => {
-        if (currentIndex < codeString.length) {
-          setTypedCode((prev) => prev + codeString.charAt(currentIndex));
-          currentIndex++;
-        } else {
-          clearInterval(typeInterval);
-          setTypedCode(codeString); // ensure full code appears
-          
-          // Add delay before marking as visited to let animations complete
-          setTimeout(() => {
-            setHomeVisited(true);
-            setAnimationsComplete(true);
-          }, 1000);
-        }
-      }, typeSpeed);
-
-      return () => clearInterval(typeInterval);
+      setTimeout(() => {
+        setHomeVisited(true);
+        setAnimationsComplete(true);
+      }, 1500);
     } else {
-      setTypedCode(codeString); // skip typing on revisit
       setAnimationsComplete(true);
     }
-  }, [homeVisited, codeString, setHomeVisited]);
+  }, [homeVisited, setHomeVisited]);
 
   return (
-    <main className="hero-container home-page">
-      <div className={`hero-content ${!animationsComplete ? "fade-in" : ""}`}>
-        <div className="hero-left">
-          <div className="profile-container">
-            <img
-              src={profilePic}
-              alt={developerInfo.name}
-              className="profile-photo"
-            />
-          </div>
-          <div className={`hero-text ${!animationsComplete ? "slideUp" : ""}`}>
-            <h1 className="gradient-text">{developerInfo.name}</h1>
-            <h2>{developerInfo.role}</h2>
-            <p>{developerInfo.bio}</p>
-            <div className={`cta ${!animationsComplete ? "fadeIn" : ""}`}>
+    <main className="modern-hero">
+      {/* Animated background gradient */}
+      <div className="gradient-bg"></div>
+
+      {/* Floating shapes background */}
+      <div className="floating-shapes">
+        <div className="shape shape-1"></div>
+        <div className="shape shape-2"></div>
+        <div className="shape shape-3"></div>
+      </div>
+
+      <div className={`hero-wrapper ${animationsComplete ? "loaded" : ""}`}>
+        {/* Left side - Content */}
+        <div className="hero-left-section">
+          <div className={`content-block ${animationsComplete ? "fade-in" : ""}`}>
+            <div className="greeting">Hey there, I'm</div>
+
+            <h1 className="name-title">{developerInfo.name}</h1>
+
+            <p className="role-subtitle">{developerInfo.role}</p>
+
+            <p className="bio-text">{developerInfo.bio}</p>
+
+            <div className="skills-badges">
+              {developerInfo.skills.map((skill, idx) => (
+                <span
+                  key={idx}
+                  className="skill-badge"
+                  style={{ animationDelay: `${0.2 + idx * 0.1}s` }}
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+
+            <div className="cta-group">
               <button
-                className={`cta-button ${!animationsComplete ? "buttonGlow" : ""}`}
+                className="cta-button primary"
                 onClick={() => setActiveFile(2)}
                 aria-label="Navigate to About section"
               >
-                Know More About Me <span aria-hidden="true">→</span>
+                Explore My Work
+                <span className="arrow">→</span>
+              </button>
+              <button
+                className="cta-button secondary"
+                onClick={() => setActiveFile(5)}
+                aria-label="Navigate to Contact section"
+              >
+                Get In Touch
               </button>
             </div>
           </div>
         </div>
 
-        <div className="code-editor">
-          <div className="editor-header">
-            <div className="editor-tabs">
-              <div className="editor-tab active">Home.jsx</div>
+        {/* Right side - Profile Image with decorative elements */}
+        <div className="hero-right-section">
+          <div className={`profile-wrapper ${animationsComplete ? "scale-in" : ""}`}>
+            <div className="profile-frame">
+              <img
+                src={profilePic}
+                alt={developerInfo.name}
+                className="profile-image"
+              />
+              <div className="profile-glow"></div>
+            </div>
+
+            {/* Decorative floating elements */}
+            <div className="float-element float-1">
+              <div className="element-content">AI</div>
+            </div>
+            <div className="float-element float-2">
+              <div className="element-content">⚡</div>
+            </div>
+            <div className="float-element float-3">
+              <div className="element-content">Code</div>
             </div>
           </div>
-          <SyntaxHighlighter
-            language="jsx"
-            style={vscDarkPlus}
-            wrapLongLines={false}
-            codeTagProps={{
-              style: {
-                fontSize: "clamp(10px, 2.5vw, 12px)",
-                lineHeight: "1.4",
-                fontFamily: "'Fira Code', monospace"
-              }
-            }}
-            customStyle={{
-              margin: 0,
-              padding: "0.5rem",
-              height: "100%",
-              backgroundColor: "#1e1e1e",
-              overflow: "auto"
-            }}
-            showLineNumbers={true}
-            lineNumberStyle={{
-              minWidth: "2.5em",
-              paddingRight: "1em",
-              color: "#858585",
-              textAlign: "right",
-              fontSize: "10px"
-            }}
-          >
-            {typedCode}
-          </SyntaxHighlighter>
         </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className="scroll-indicator">
+        <div className="mouse">
+          <div className="wheel"></div>
+        </div>
+        <div className="text">Scroll to explore</div>
       </div>
     </main>
   );
