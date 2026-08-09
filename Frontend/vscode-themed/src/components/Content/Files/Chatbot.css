@@ -250,7 +250,56 @@
     align-self: flex-end;
     margin-bottom: 2px;
   }
-  
+
+  .send-button:hover:not(:disabled) {
+    background: #005fa3;
+  }
+
+  .send-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Voice Button */
+  .voice-button {
+    background: #944bb8;
+    border: none;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    align-self: flex-end;
+    margin-bottom: 2px;
+    margin-right: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .voice-button:hover:not(:disabled) {
+    background: #a458d6;
+    transform: scale(1.05);
+  }
+
+  .voice-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .voice-button.listening {
+    background: #f44747;
+    animation: pulse 0.5s ease-in-out infinite;
+  }
+
+  .voice-button.speaking {
+    background: #4ec9b0;
+    animation: pulse 0.7s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
   /* Mobile Overlay (Fixes squishing and z-index issues) */
   @media (max-width: 1024px) {
     .chatbot-sidebar {

@@ -66,22 +66,23 @@ class ChatbotService {
       return conversationHistory;
     }
   
-    async sendMessage(message, conversationHistory = '') {
+    async sendMessage(message, conversationHistory = '', voiceMode = false) {
       try {
         const response = await fetch(this.baseURL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
+          body: JSON.stringify({
             message: message.trim(),
             conversation_history: conversationHistory,
-            session_id: this.getOrCreateSessionId()
+            session_id: this.getOrCreateSessionId(),
+            voice_mode: voiceMode  // Flag for voice agent mode
           })
         });
-  
+
         if (!response.ok) {
           throw new Error("Failed to fetch response from the server.");
         }
-  
+
         return await response.json();
       } catch (error) {
         console.error('ChatbotService: Error sending message:', error);

@@ -1,12 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './Chatbot.css';
 import ChatbotService from '../../../services/ChatbotService';
+import VoiceAgentService from '../../../services/VoiceAgentService';
 import { ui } from '../../../config/portfolioConfig';
 
 const Chatbot = ({ isOpen, onClose }) => {
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [voiceSupported] = useState(VoiceAgentService.isSupported());
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -25,6 +29,22 @@ const Chatbot = ({ isOpen, onClose }) => {
       }, 300); // Wait for sidebar transition
     }
   }, [isOpen]);
+
+  // Setup voice agent listeners
+  useEffect(() => {
+    VoiceAgentService.onListeningStateChange = (listening) => {
+      setIsListening(listening);
+    };
+
+    VoiceAgentService.onTranscriptChange = (transcript) => {
+      setUserInput(transcript);
+    };
+
+    VoiceAgentService.onError = (error) => {
+      console.error('Voice error:', error);
+      alert(`Voice error: ${error}`);
+    };
+  }, []);
 
   // Load conversation from sessionStorage on component mount
   useEffect(() => {
@@ -77,49 +97,96 @@ const Chatbot = ({ isOpen, onClose }) => {
     }
   }, [userInput]);
 
-  const handleSendMessage = async () => {
-    if (userInput.trim() === '') return;
+  const scrollToSection = (section) => {
+    const sectionMap = {
+      projects: 'projects-file',
+      skills: 'skills-file',
+      experience: 'experience-file',
+      contact: 'contact-file',
+      about: 'about-file'
+    };
+
+    const elementId = sectionMap[section];
+    if (elementId) {
+      // Emit custom event to navigate (parent component should listen)
+      window.dispatchEvent(new CustomEvent('navigateToSection', { detail: { section } }));
+    }
+  };
+
+  const handleSendMessage = async (message = userInput, isVoice = false) => {
+    if (message.trim() === '') return;
 
     const userMessage = {
-      text: userInput,
+      text: message,
       isBot: false,
-      timestamp: new Date()
+      timestamp: new Date(),
+      isVoice: isVoice
     };
 
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
-    
-    const currentInput = userInput;
+
     setUserInput('');
     setIsLoading(true);
 
     try {
       // Format conversation history for context
       const conversationHistory = ChatbotService.formatConversationHistory(updatedMessages);
-      
-      const response = await ChatbotService.sendMessage(currentInput, conversationHistory);
-      
+
+      // Detect navigation intent
+      const navigationIntent = VoiceAgentService.detectNavigationIntent(message);
+
+      const response = await ChatbotService.sendMessage(message, conversationHistory, isVoice);
+
       const botMessage = {
         text: response.response,
         isBot: true,
-        timestamp: new Date()
+        timestamp: new Date(),
+        navigationIntent: navigationIntent
       };
 
       setMessages(prev => [...prev, botMessage]);
-      
+
+      // If voice mode and detected navigation intent, navigate
+      if (isVoice && navigationIntent) {
+        scrollToSection(navigationIntent);
+      }
+
+      // If voice mode, speak the response
+      if (isVoice && voiceSupported) {
+        setIsSpeaking(true);
+        VoiceAgentService.speak(response.response);
+        // Update speaking state when done
+        setTimeout(() => {
+          setIsSpeaking(VoiceAgentService.getIsSpeaking());
+        }, 500);
+      }
+
     } catch (error) {
       console.error('Error sending message:', error);
-      
+
       const errorMessage = {
         text: `Error: ${error.message}`,
         isBot: true,
         timestamp: new Date(),
         isError: true
       };
-      
+
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleVoiceInput = () => {
+    if (isListening) {
+      VoiceAgentService.stopListening();
+      // Send the transcript as message
+      if (userInput.trim()) {
+        handleSendMessage(userInput, true);
+      }
+    } else {
+      VoiceAgentService.startListening();
     }
   };
 
@@ -260,8 +327,19 @@ const Chatbot = ({ isOpen, onClose }) => {
             {isLoading ? "Sending message, please wait" : userInput.trim() === '' ? "Enter a message to send" : "Press Enter to send"}
           </span>
           <span className="input-syntax" aria-hidden="true">);</span>
-          <button 
-            onClick={handleSendMessage}
+          {voiceSupported && (
+            <button
+              onClick={handleVoiceInput}
+              disabled={isLoading}
+              className={`voice-button ${isListening ? 'listening' : ''} ${isSpeaking ? 'speaking' : ''}`}
+              aria-label={isListening ? "Stop listening" : "Start voice input"}
+              title={isListening ? "Listening..." : "Voice input"}
+            >
+              <span aria-hidden="true">{isListening ? '🎤' : isSpeaking ? '🔊' : '🎙️'}</span>
+            </button>
+          )}
+          <button
+            onClick={() => handleSendMessage(userInput, false)}
             disabled={isLoading || userInput.trim() === ''}
             className="send-button"
             aria-label={isLoading ? "Sending message" : "Send message"}
