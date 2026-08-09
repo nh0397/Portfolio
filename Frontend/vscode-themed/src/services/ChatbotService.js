@@ -19,15 +19,22 @@ class ChatbotService {
       }
     }
   
-    // Load conversation from sessionStorage
+    // Load conversation from sessionStorage.
+    // Sessions saved by older builds stored the body as `text`; normalize them
+    // to `html` so a stale tab doesn't render empty bubbles.
     loadConversationFromSession() {
       try {
         const stored = sessionStorage.getItem(this.sessionKey);
-        if (stored) {
-          const conversationData = JSON.parse(stored);
-          return conversationData.messages || [];
-        }
-        return [];
+        if (!stored) return [];
+
+        const { messages = [] } = JSON.parse(stored);
+        return messages
+          .map((msg, i) => ({
+            ...msg,
+            id: msg.id ?? `restored-${i}`,
+            html: msg.html ?? msg.text ?? '',
+          }))
+          .filter((msg) => msg.html);
       } catch (error) {
         console.warn('Failed to load conversation from sessionStorage:', error);
         return [];
@@ -52,18 +59,16 @@ class ChatbotService {
   
     // Format conversation history for backend context
     formatConversationHistory(messages) {
-      // Get last 10 exchanges to keep context manageable
-      const recentMessages = messages.slice(-20);
-      
-      const conversationHistory = recentMessages.map(msg => {
-        if (msg.isBot) {
-          return `Assistant: ${msg.text.replace(/<[^>]*>/g, '')}`;  // Strip HTML tags
-        } else {
-          return `User: ${msg.text}`;
-        }
-      }).join('\n');
-  
-      return conversationHistory;
+      // Keep the last 10 exchanges so the prompt stays manageable.
+      return messages
+        .slice(-20)
+        .map((msg) => {
+          const body = msg.html ?? msg.text ?? '';
+          return msg.isBot
+            ? `Assistant: ${body.replace(/<[^>]*>/g, '')}`  // strip our own HTML
+            : `User: ${body}`;
+        })
+        .join('\n');
     }
   
     async sendMessage(message, conversationHistory = '', voiceMode = false) {

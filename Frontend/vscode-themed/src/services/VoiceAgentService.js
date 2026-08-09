@@ -1,180 +1,217 @@
+// VoiceAgentService — speech-to-text, navigation intent, and text-to-speech.
+
+// Words that turn a mention into a request to actually go somewhere.
+const NAV_VERBS = [
+  "go to", "take me", "show me", "show", "open", "navigate", "jump to",
+  "switch to", "bring up", "pull up", "let's see", "see his", "see the",
+  "view", "visit", "head to",
+];
+
+// Longest phrase wins, so "work experience" beats a bare "work".
+const SECTION_KEYWORDS = {
+  contact: ["contact", "get in touch", "reach him", "reach out", "email him", "hire", "phone number"],
+  projects: ["projects", "project", "portfolio work", "repos", "repositories", "github", "what he built", "what has he built"],
+  experience: ["experience", "work history", "career", "resume", "cv", "employment", "jobs", "worked at", "education", "degree", "school"],
+  about: ["about", "about him", "who is he", "bio", "background", "summary", "skills", "tech stack", "technologies"],
+  home: ["home", "homepage", "landing page", "start over", "top of the page"],
+};
+
 class VoiceAgentService {
   constructor() {
     this.isListening = false;
-    this.transcript = '';
     this.isSpeaking = false;
+    this.transcript = "";
     this.currentUtterance = null;
+
+    // Callbacks — assigned by the component that owns the UI.
     this.onTranscriptChange = null;
     this.onListeningStateChange = null;
-    this.onError = null;
     this.onSpeakingStateChange = null;
-    this.speechTimeout = null;
-    this.minConfidence = 0.5;
+    this.onFinalTranscript = null;
+    this.onError = null;
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    this._finalBuffer = "";
+
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
     if (!SpeechRecognition) {
-      console.warn('Web Speech API not supported');
+      console.warn("Web Speech API not supported in this browser");
       this.recognition = null;
     } else {
       this.recognition = new SpeechRecognition();
-      this.setupRecognition();
+      this._setupRecognition();
     }
 
-    this.synth = window.speechSynthesis;
+    this.synth = window.speechSynthesis || null;
   }
 
-  setupRecognition() {
-    if (!this.recognition) return;
+  _setupRecognition() {
+    const rec = this.recognition;
+    rec.continuous = false;
+    rec.interimResults = true;
+    rec.lang = "en-US";
+    rec.maxAlternatives = 1;
 
-    this.recognition.continuous = false;
-    this.recognition.interimResults = true;
-    this.recognition.language = 'en-US';
-
-    this.recognition.onstart = () => {
+    rec.onstart = () => {
       this.isListening = true;
-      this.transcript = '';
-      if (this.onListeningStateChange) this.onListeningStateChange(true);
-      if (this.speechTimeout) clearTimeout(this.speechTimeout);
+      this.transcript = "";
+      this._finalBuffer = "";
+      this.onListeningStateChange?.(true);
     };
 
-    this.recognition.onresult = (event) => {
-      this.transcript = '';
-      let isFinal = false;
+    rec.onresult = (event) => {
+      let interim = "";
+      let final = "";
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
-        this.transcript += event.results[i][0].transcript;
-        if (event.results[i].isFinal) {
-          isFinal = true;
-        }
+        const chunk = event.results[i][0].transcript;
+        if (event.results[i].isFinal) final += chunk;
+        else interim += chunk;
       }
 
-      if (this.onTranscriptChange) this.onTranscriptChange(this.transcript);
-
-      if (isFinal) {
-        this.speechTimeout = setTimeout(() => {
-          this.recognition.stop();
-        }, 500);
-      }
+      if (final) this._finalBuffer += final;
+      this.transcript = (this._finalBuffer + interim).trim();
+      this.onTranscriptChange?.(this.transcript);
     };
 
-    this.recognition.onend = () => {
+    rec.onend = () => {
       this.isListening = false;
-      if (this.onListeningStateChange) this.onListeningStateChange(false);
-      if (this.speechTimeout) clearTimeout(this.speechTimeout);
+      this.onListeningStateChange?.(false);
+
+      // Hand the finished utterance to the owner so hands-free needs no click.
+      const finished = (this._finalBuffer || this.transcript).trim();
+      this._finalBuffer = "";
+      if (finished) this.onFinalTranscript?.(finished);
     };
 
-    this.recognition.onerror = (event) => {
-      console.error('Speech recognition error:', event.error);
-      if (this.onError) this.onError(event.error);
+    rec.onerror = (event) => {
       this.isListening = false;
-      if (this.onListeningStateChange) this.onListeningStateChange(false);
+      this.onListeningStateChange?.(false);
+      this.onError?.(event.error);
     };
   }
 
   startListening() {
     if (!this.recognition) {
-      if (this.onError) this.onError('Web Speech API not supported');
+      this.onError?.("Speech recognition is not supported in this browser");
       return;
     }
-    this.transcript = '';
-    this.recognition.start();
+    if (this.isListening) return;
+
+    // Never listen to our own voice.
+    this.stopSpeaking();
+
+    try {
+      this.recognition.start();
+    } catch {
+      // start() throws if the engine is still winding down; the hands-free
+      // loop will retry on its next tick.
+    }
   }
 
   stopListening() {
-    if (!this.recognition) return;
-    this.recognition.stop();
+    if (this.recognition && this.isListening) this.recognition.stop();
   }
 
-  getFinalTranscript() {
-    return this.transcript;
-  }
-
-  // Enhanced navigation detection with better scoring
+  /**
+   * Which section the user is asking to see, or null.
+   *
+   * Requires either an explicit navigation verb ("show me projects") or a
+   * message that is essentially just the section name ("projects"), so
+   * ordinary questions like "what did he do at Mu Sigma" don't yank the tab.
+   */
   detectNavigationIntent(text) {
-    const lowerText = text.toLowerCase();
+    const lower = (text || "").toLowerCase().trim();
+    if (!lower) return null;
 
-    const navigationMap = {
-      home: ['home', 'go home', 'homepage', 'start', 'back to start', 'main page'],
-      about: ['about', 'about you', 'who are you', 'introduce', 'bio', 'background', 'tell me about yourself'],
-      projects: ['project', 'projects', 'built', 'portfolio', 'created', 'showcase', 'work', 'what have you built', 'show me your work'],
-      experience: ['experience', 'work', 'job', 'employment', 'career', 'resume', 'background', 'history', 'worked at', 'education'],
-      contact: ['contact', 'email', 'reach', 'get in touch', 'phone', 'connect', 'hire', 'collaborate', 'message'],
-      skills: ['skill', 'technology', 'tech stack', 'tools', 'languages', 'expertise', 'proficient', 'what can you do'],
-    };
+    const hasNavVerb = NAV_VERBS.some((verb) => lower.includes(verb));
+    const isTerse = lower.split(/\s+/).length <= 3;
+    if (!hasNavVerb && !isTerse) return null;
 
-    let bestMatch = null;
-    let bestScore = 0;
+    let best = null;
+    let bestLength = 0;
 
-    for (const [section, keywords] of Object.entries(navigationMap)) {
-      let score = 0;
+    for (const [section, keywords] of Object.entries(SECTION_KEYWORDS)) {
       for (const keyword of keywords) {
-        if (lowerText.includes(keyword)) {
-          score += keyword.length;
+        if (lower.includes(keyword) && keyword.length > bestLength) {
+          best = section;
+          bestLength = keyword.length;
         }
-      }
-
-      if (score > bestScore) {
-        bestScore = score;
-        bestMatch = section;
       }
     }
 
-    return bestMatch;
+    return best;
   }
 
-  // Advanced speech synthesis with better control
+  /** Strip the backend's HTML so the synthesizer doesn't read out tags. */
+  _toSpeech(html) {
+    return (html || "")
+      .replace(/<li>/gi, " • ")
+      .replace(/<[^>]*>/g, " ")
+      .replace(/&nbsp;/g, " ")
+      .replace(/&amp;/g, "and")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
   speak(text) {
     if (!this.synth) return;
 
+    const plain = this._toSpeech(text);
+    if (!plain) return;
+
     this.synth.cancel();
-    const plainText = text.replace(/<[^>]*>/g, '').trim();
 
-    if (!plainText) return;
-
-    const utterance = new SpeechSynthesisUtterance(plainText);
-
-    // Better voice parameters
-    utterance.rate = 0.95;
+    const utterance = new SpeechSynthesisUtterance(plain);
+    utterance.rate = 1.02;
     utterance.pitch = 1;
     utterance.volume = 1;
 
-    const voices = this.synth.getVoices();
-    const preferredVoice = voices.find((v) => v.lang === 'en-US') || voices[0];
-    if (preferredVoice) {
-      utterance.voice = preferredVoice;
-    }
+    const voice = this._preferredVoice();
+    if (voice) utterance.voice = voice;
 
     utterance.onstart = () => {
       this.isSpeaking = true;
-      if (this.onSpeakingStateChange) this.onSpeakingStateChange(true);
+      this.onSpeakingStateChange?.(true);
     };
 
-    utterance.onend = () => {
+    const done = () => {
       this.isSpeaking = false;
-      if (this.onSpeakingStateChange) this.onSpeakingStateChange(false);
+      this.onSpeakingStateChange?.(false);
     };
-
-    utterance.onerror = (event) => {
-      console.error('Speech synthesis error:', event.error);
-      this.isSpeaking = false;
-      if (this.onSpeakingStateChange) this.onSpeakingStateChange(false);
-    };
+    utterance.onend = done;
+    utterance.onerror = done;
 
     this.currentUtterance = utterance;
     this.synth.speak(utterance);
   }
 
+  /** Prefer a natural-sounding en-US voice when the platform offers one. */
+  _preferredVoice() {
+    if (!this.synth) return null;
+    const voices = this.synth.getVoices();
+    if (!voices.length) return null;
+
+    const preferred = ["Samantha", "Google US English", "Alex", "Daniel"];
+    for (const name of preferred) {
+      const match = voices.find((v) => v.name.includes(name));
+      if (match) return match;
+    }
+    return voices.find((v) => v.lang === "en-US") || voices[0];
+  }
+
   stopSpeaking() {
-    if (this.synth) {
-      this.synth.cancel();
+    if (!this.synth) return;
+    this.synth.cancel();
+    if (this.isSpeaking) {
       this.isSpeaking = false;
-      if (this.onSpeakingStateChange) this.onSpeakingStateChange(false);
+      this.onSpeakingStateChange?.(false);
     }
   }
 
-  // Check if supported
   isSupported() {
-    return !!this.recognition && !!this.synth;
+    return Boolean(this.recognition && this.synth);
   }
 
   getIsSpeaking() {
@@ -183,41 +220,6 @@ class VoiceAgentService {
 
   getIsListening() {
     return this.isListening;
-  }
-
-  // Get available voices
-  getAvailableVoices() {
-    if (!this.synth) return [];
-    return this.synth.getVoices();
-  }
-
-  // Set voice preference
-  setVoicePreference(voiceIndex) {
-    if (!this.synth) return;
-    const voices = this.synth.getVoices();
-    if (voiceIndex >= 0 && voiceIndex < voices.length) {
-      this.preferredVoice = voices[voiceIndex];
-    }
-  }
-
-  // Natural language intent for multiple intents
-  extractMultipleIntents(text) {
-    const intents = [];
-    const navigationIntent = this.detectNavigationIntent(text);
-
-    if (navigationIntent) {
-      intents.push({ type: 'navigation', value: navigationIntent });
-    }
-
-    if (text.toLowerCase().includes('email') || text.toLowerCase().includes('send')) {
-      intents.push({ type: 'action', value: 'email' });
-    }
-
-    if (text.toLowerCase().includes('thank') || text.toLowerCase().includes('thanks')) {
-      intents.push({ type: 'sentiment', value: 'positive' });
-    }
-
-    return intents;
   }
 }
 

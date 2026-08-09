@@ -78,7 +78,7 @@ function FeaturedProjects() {
             <p><strong>📈 Impact:</strong></p>
             <ul>
               {proj.impact.map((point, idx) => (
-                <li key={idx}>• {point}</li>
+                <li key={idx}>{point}</li>
               ))}
             </ul>
             <p><strong>🔮 Future:</strong> {proj.future}</p>

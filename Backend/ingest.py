@@ -22,8 +22,9 @@ Usage:
 import argparse
 import json
 import os
+import re
 import sys
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 from urllib.parse import quote_plus
 
@@ -55,45 +56,52 @@ def mongo_client() -> MongoClient:
 # Utility functions for metadata extraction
 # ---------------------------------------------------------------------------
 
+# An ongoing role ("Present") must sort ahead of every dated entry, so it maps
+# to today rather than to None.
+ONGOING = {"present", "current", "ongoing", "now"}
+
+DATE_FORMATS = ("%Y-%m-%d", "%Y/%m/%d", "%B %Y", "%b %Y", "%B %d, %Y", "%b %d, %Y", "%m/%Y", "%Y")
+
+# Checked in order; the first field that parses wins. End dates before start
+# dates so a finished role sorts by when it ended.
+END_FIELDS = ("end_date", "endDate", "last_updated", "updated_at", "pushed_at",
+              "date", "issue_date", "createdDate")
+START_FIELDS = ("start_date", "startDate", "created", "created_at", "createdAt")
+
+
 def parse_date(date_str) -> str:
-    """Parse various date formats and return ISO 8601 string, or None if unparseable."""
-    if not date_str or date_str in ("", None, "Present", "Current"):
+    """Parse a date in any format we see in the source data → ISO 8601, or None."""
+    if not date_str:
         return None
 
     date_str = str(date_str).strip()
+    if not date_str:
+        return None
 
-    # Try common formats
-    formats = [
-        "%Y-%m-%d",
-        "%B %Y",
-        "%b %Y",
-        "%Y",
-    ]
+    if date_str.lower() in ONGOING:
+        return date.today().strftime("%Y-%m-%d")
 
-    for fmt in formats:
+    for fmt in DATE_FORMATS:
         try:
-            dt = datetime.strptime(date_str, fmt)
-            return dt.strftime("%Y-%m-%d")
+            return datetime.strptime(date_str, fmt).strftime("%Y-%m-%d")
         except ValueError:
             continue
+
+    # Last resort: a bare 4-digit year anywhere in the string ("Spring 2024").
+    match = re.search(r"\b(19|20)\d{2}\b", date_str)
+    if match:
+        return f"{match.group(0)}-01-01"
 
     return None
 
 
 def extract_date_from_dict(item: dict) -> str:
-    """Extract a sortable date from an experience/project dict."""
-    for field in ["end_date", "updated_at", "pushed_at", "createdDate", "endDate", "date"]:
-        if field in item and item[field]:
+    """Extract the sortable date from an experience / project / repo dict."""
+    for field in END_FIELDS + START_FIELDS:
+        if item.get(field):
             parsed = parse_date(item[field])
             if parsed:
                 return parsed
-
-    for field in ["start_date", "created_at", "createdAt", "startDate"]:
-        if field in item and item[field]:
-            parsed = parse_date(item[field])
-            if parsed:
-                return parsed
-
     return None
 
 
@@ -295,6 +303,226 @@ def split_oversized(chunks: list[dict]) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
+# Frontend export
+#
+# The UI renders from a single generated file so the site and the vector DB can
+# never drift: edit data/*.json, run this script, and both update together.
+# ---------------------------------------------------------------------------
+
+FRONTEND_DATA_FILE = Path(
+    "../Frontend/vscode-themed/src/data/portfolioData.json"
+).resolve()
+
+
+def read_source(name: str):
+    path = Path("data") / f"{name}.json"
+    if not path.exists():
+        return None
+    return json.loads(path.read_text())
+
+
+def sort_key(item: dict) -> str:
+    """Newest-first sort key; undated entries sink to the bottom."""
+    return item.get("date") or "0000-00-00"
+
+
+# Dropped when comparing employers so "Mu Sigma Inc." and "Mu Sigma Innovation
+# & Development Labs" resolve to the same company.
+COMPANY_NOISE = {"inc", "inc.", "llc", "ltd", "corp", "corporation", "co", "company",
+                 "labs", "lab", "innovation", "development", "&", "and", "the", "group"}
+
+
+def normalize_company(name: str) -> str:
+    cleaned = re.sub(r"[^\w\s]", " ", (name or "").lower())
+    words = [w for w in cleaned.split() if w not in COMPANY_NOISE]
+    return " ".join(words)
+
+
+def build_experience(resume, linkedin) -> list[dict]:
+    """Merge resume + LinkedIn roles, newest first.
+
+    The resume is the curated source. A LinkedIn role is only added when the
+    resume has nothing at that employer for the same period — LinkedIn lists
+    several overlapping titles per stint that would otherwise show as duplicates.
+    """
+    roles: list[dict] = []
+
+    for job in (resume or {}).get("work_experience", []):
+        end = job.get("end_date", "")
+        roles.append({
+            "title": job["title"],
+            "company": job["company"],
+            "location": job.get("location", ""),
+            "startDate": job.get("start_date", ""),
+            "endDate": end,
+            "current": str(end).lower() in ONGOING,
+            "technologies": job.get("technologies", []),
+            "highlights": job.get("highlights", []),
+            "date": extract_date_from_dict(job),
+            "source": "resume",
+        })
+
+    claimed = {(normalize_company(r["company"]), r["date"]) for r in roles}
+
+    for job in (linkedin or {}).get("work_experience", []):
+        company, title = job.get("company_name", ""), job.get("designation", "")
+        job_date = extract_date_from_dict(job)
+        if not company or (normalize_company(company), job_date) in claimed:
+            continue
+        end = job.get("end_date", "")
+        # LinkedIn stores the whole role as one blob; split it back into bullets.
+        highlights = [
+            line.strip().lstrip("•").strip()
+            for line in job.get("description", "").split("\n")
+            if line.strip()
+        ]
+        roles.append({
+            "title": title,
+            "company": company,
+            "location": job.get("location", ""),
+            "startDate": job.get("start_date", ""),
+            "endDate": end,
+            "current": str(end).lower() in ONGOING,
+            "technologies": [],
+            "highlights": highlights,
+            "date": job_date,
+            "source": "linkedin",
+        })
+        claimed.add((normalize_company(company), job_date))
+
+    return sorted(roles, key=sort_key, reverse=True)
+
+
+def build_education(resume, linkedin) -> list[dict]:
+    schools: dict[str, dict] = {}
+
+    for edu in (resume or {}).get("education", []):
+        school = edu.get("school", "")
+        schools[school.split(",")[0].lower().strip()] = {
+            "degree": edu.get("degree", ""),
+            "school": school,
+            "field": "",
+            "startDate": edu.get("start_date", ""),
+            "endDate": edu.get("end_date", ""),
+            "honors": edu.get("honors", ""),
+            "coursework": edu.get("coursework", []),
+            "date": extract_date_from_dict(edu),
+        }
+
+    for edu in (linkedin or {}).get("education", []):
+        school = edu.get("institution_name", "")
+        if not school or school.lower().strip() in schools:
+            continue
+        schools[school.lower().strip()] = {
+            "degree": edu.get("degree", ""),
+            "school": school,
+            "field": edu.get("field_of_study", ""),
+            "startDate": edu.get("start_date", ""),
+            "endDate": edu.get("end_date", ""),
+            "honors": "",
+            "coursework": [],
+            "date": extract_date_from_dict(edu),
+        }
+
+    return sorted(schools.values(), key=sort_key, reverse=True)
+
+
+def export_frontend_data() -> dict:
+    """Build the normalized payload the React app renders from."""
+    resume = read_source("resume") or {}
+    linkedin = read_source("linkedin") or {}
+    repos = read_source("github") or []
+
+    payload = {
+        "generatedAt": date.today().isoformat(),
+        "personal": {
+            "name": resume.get("Name", ""),
+            "title": "Applied AI Engineer",
+            "email": resume.get("email", ""),
+            "phone": resume.get("phone", ""),
+            "location": resume.get("location", ""),
+            "linkedin": resume.get("linkedin_url", ""),
+            "github": resume.get("github_url", ""),
+            "portfolio": resume.get("portfolio_url", ""),
+            "summary": resume.get("summary", ""),
+        },
+        "experience": build_experience(resume, linkedin),
+        "education": build_education(resume, linkedin),
+        "projects": sorted(
+            [
+                {
+                    "name": p.get("name", ""),
+                    "description": p.get("description", ""),
+                    "technologies": p.get("technologies", []),
+                    "award": p.get("award", ""),
+                    "displayDate": p.get("date", ""),
+                    "date": extract_date_from_dict(p),
+                }
+                for p in resume.get("projects", [])
+            ],
+            key=sort_key,
+            reverse=True,
+        ),
+        "repos": sorted(
+            [
+                {
+                    "name": r.get("name", ""),
+                    "description": r.get("description") or "",
+                    "language": r.get("language") or "",
+                    "topics": r.get("topics", []),
+                    "stars": r.get("stars", 0),
+                    "url": r.get("url", ""),
+                    "homepage": r.get("homepage") or "",
+                    "created": r.get("created", ""),
+                    "lastUpdated": r.get("last_updated", ""),
+                    "date": extract_date_from_dict(r),
+                }
+                for r in repos
+            ],
+            key=sort_key,
+            reverse=True,
+        ),
+        "certifications": sorted(
+            [
+                {
+                    "name": c.get("certification_name", ""),
+                    "issuer": c.get("issuing_organization", ""),
+                    "issued": c.get("issue_date", ""),
+                    "date": extract_date_from_dict(c),
+                }
+                for c in linkedin.get("certifications", [])
+            ],
+            key=sort_key,
+            reverse=True,
+        ),
+        "awards": sorted(
+            [
+                {
+                    "name": a.get("award_name", ""),
+                    "issuer": a.get("issuing_organization", ""),
+                    "issued": a.get("issue_date", ""),
+                    "date": extract_date_from_dict(a),
+                }
+                for a in linkedin.get("honors_and_awards", [])
+            ],
+            key=sort_key,
+            reverse=True,
+        ),
+        "skills": resume.get("skills", {}),
+        "allSkills": linkedin.get("skills", []),
+    }
+
+    FRONTEND_DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
+    FRONTEND_DATA_FILE.write_text(json.dumps(payload, indent=2) + "\n")
+
+    print(f"\n📦 Exported frontend data → {FRONTEND_DATA_FILE}")
+    print(f"   {len(payload['experience'])} roles, {len(payload['education'])} schools, "
+          f"{len(payload['projects'])} projects, {len(payload['repos'])} repos, "
+          f"{len(payload['certifications'])} certs, {len(payload['awards'])} awards")
+    return payload
+
+
+# ---------------------------------------------------------------------------
 # Data loading
 # ---------------------------------------------------------------------------
 
@@ -368,7 +596,13 @@ def ensure_vector_index(collection):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", action="store_true", help="print chunks, don't embed or write")
+    parser.add_argument("--export-only", action="store_true",
+                        help="regenerate the frontend data file without touching MongoDB")
     args = parser.parse_args()
+
+    if args.export_only:
+        export_frontend_data()
+        return
 
     db = None
     try:
@@ -397,6 +631,8 @@ def main():
             meta_str = f"\nmetadata: {json.dumps(c.get('metadata', {}), indent=2)}" if c.get("metadata") else ""
             print(f"\n===== [{c['source']}] {c['section']} ====={date_str}{meta_str}\n{c['text']}")
         return
+
+    export_frontend_data()
 
     if db is None:
         sys.exit("❌ Cannot write chunks: MongoDB is unreachable")

@@ -1,279 +1,384 @@
-import React, { useState, useRef, useEffect } from 'react';
-import './Chatbot.css';
-import ChatbotService from '../../../services/ChatbotService';
-import VoiceAgentService from '../../../services/VoiceAgentService';
+import React, { useState, useRef, useEffect, useContext, useCallback } from "react";
+import "./Chatbot.css";
+import ChatbotService from "../../../services/ChatbotService";
+import VoiceAgentService from "../../../services/VoiceAgentService";
+import { AppContext } from "../../../context/AppContext";
+import { ui } from "../../../config/portfolioConfig";
+
+/** Section name → tab number in Content.jsx's switch. */
+const SECTION_TABS = {
+  home: 1,
+  about: 2,
+  skills: 2,
+  projects: 3,
+  experience: 4,
+  education: 4,
+  contact: 5,
+};
+
+const SECTION_LABELS = {
+  home: "Home",
+  about: "About",
+  skills: "Skills",
+  projects: "Projects",
+  experience: "Experience",
+  education: "Experience",
+  contact: "Contact",
+};
+
+const SUGGESTIONS = [
+  "What's he working on now?",
+  "Show me his projects",
+  "Take me to his experience",
+  "What's his AI stack?",
+  "How do I contact him?",
+];
+
+const greeting = () => ({
+  id: `bot-${Date.now()}`,
+  isBot: true,
+  html: ui.chatbot.initialMessage,
+  timestamp: new Date(),
+});
 
 const Chatbot = ({ isOpen, onClose }) => {
-  const [messages, setMessages] = useState([]);
-  const [userInput, setUserInput] = useState('');
+  const { setActiveFile } = useContext(AppContext);
+
+  const [messages, setMessages] = useState(() => {
+    const saved = ChatbotService.loadConversationFromSession();
+    return saved.length ? saved : [greeting()];
+  });
+  const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [voiceSupported] = useState(VoiceAgentService.isSupported());
-  const [handsFreeMode, setHandsFreeMode] = useState(false);
+  const [handsFree, setHandsFree] = useState(false);
+  const [voiceError, setVoiceError] = useState("");
+
+  const voiceSupported = VoiceAgentService.isSupported();
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const handsFreeRef = useRef(false);
+  const sendRef = useRef(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  /* ---------- effects ---------- */
 
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 300);
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isLoading]);
+
+  useEffect(() => {
+    if (isOpen) setTimeout(() => inputRef.current?.focus(), 320);
   }, [isOpen]);
 
   useEffect(() => {
-    VoiceAgentService.onListeningStateChange = (listening) => {
-      setIsListening(listening);
-    };
-
-    VoiceAgentService.onTranscriptChange = (transcript) => {
-      setUserInput(transcript);
-    };
-
-    VoiceAgentService.onError = (error) => {
-      console.error('Voice error:', error);
-    };
-  }, []);
-
-  useEffect(() => {
-    const savedMessages = ChatbotService.loadConversationFromSession();
-    if (savedMessages.length > 0) {
-      setMessages(savedMessages);
-    } else {
-      setMessages([
-        {
-          id: 1,
-          text: "Hey! 👋 I'm Naisarg's AI assistant. Ask me about his projects, experience, skills, or anything else!",
-          isBot: true,
-          timestamp: new Date(),
-        },
-      ]);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (messages.length > 0) {
-      ChatbotService.saveConversationToSession(messages);
-    }
+    if (messages.length) ChatbotService.saveConversationToSession(messages);
   }, [messages]);
 
-  const handleSendMessage = async (message = userInput, isVoice = false) => {
-    if (message.trim() === '') return;
+  // Esc closes the panel.
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
 
-    const newMessage = {
-      id: messages.length + 1,
-      text: message,
-      isBot: false,
-      isVoice,
-      timestamp: new Date(),
-    };
+  /* ---------- navigation ---------- */
 
-    setMessages((prev) => [...prev, newMessage]);
-    setUserInput('');
-    setIsLoading(true);
+  const navigate = useCallback(
+    (section) => {
+      const tab = SECTION_TABS[section];
+      if (tab) setActiveFile(tab);
+    },
+    [setActiveFile]
+  );
 
-    try {
-      const conversationHistory = ChatbotService.formatConversationHistory(
-        [...messages, newMessage]
-      );
-      const navigationIntent = VoiceAgentService.detectNavigationIntent(message);
+  /* ---------- sending ---------- */
 
-      const response = await ChatbotService.sendMessage(message, conversationHistory, isVoice);
+  const send = useCallback(
+    async (rawText, viaVoice = false) => {
+      const text = (rawText ?? "").trim();
+      if (!text || isLoading) return;
 
-      const botMessage = {
-        id: messages.length + 2,
-        text: response.response,
-        isBot: true,
+      const outgoing = {
+        id: `user-${Date.now()}`,
+        isBot: false,
+        html: text,
+        isVoice: viaVoice,
         timestamp: new Date(),
-        navigationIntent,
       };
 
-      setMessages((prev) => [...prev, botMessage]);
+      const history = ChatbotService.formatConversationHistory([...messages, outgoing]);
+      setMessages((prev) => [...prev, outgoing]);
+      setUserInput("");
+      setIsLoading(true);
 
-      if (navigationIntent) {
-        setTimeout(() => {
-          scrollToSection(navigationIntent);
-        }, 300);
-      }
+      // Navigate immediately — don't make the user wait on the LLM round-trip.
+      const section = VoiceAgentService.detectNavigationIntent(text);
+      if (section) navigate(section);
 
-      if (isVoice && voiceSupported) {
-        setIsSpeaking(true);
-        VoiceAgentService.speak(response.response);
-        setTimeout(() => {
-          setIsSpeaking(VoiceAgentService.getIsSpeaking());
-        }, 500);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: prev.length + 1,
-          text: `Error: ${error.message}`,
+      try {
+        const res = await ChatbotService.sendMessage(text, history, viaVoice);
+        const reply = {
+          id: `bot-${Date.now()}`,
           isBot: true,
-          isError: true,
+          html: res.response,
+          navigatedTo: section ? SECTION_LABELS[section] : null,
           timestamp: new Date(),
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        };
+        setMessages((prev) => [...prev, reply]);
 
-  const handleVoiceInput = () => {
+        if (viaVoice && voiceSupported) VoiceAgentService.speak(res.response);
+      } catch (err) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `err-${Date.now()}`,
+            isBot: true,
+            isError: true,
+            html: "I couldn't reach my backend just then. Give it another go in a moment.",
+            retry: text,
+            timestamp: new Date(),
+          },
+        ]);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [messages, isLoading, navigate, voiceSupported]
+  );
+
+  // Keep a stable handle so the voice callbacks always call the latest send().
+  useEffect(() => {
+    sendRef.current = send;
+  }, [send]);
+
+  /* ---------- voice wiring ---------- */
+
+  useEffect(() => {
+    VoiceAgentService.onListeningStateChange = setIsListening;
+    VoiceAgentService.onSpeakingStateChange = setIsSpeaking;
+    VoiceAgentService.onTranscriptChange = setUserInput;
+
+    VoiceAgentService.onError = (err) => {
+      if (err === "aborted" || err === "no-speech") return;
+      setVoiceError(
+        err === "not-allowed"
+          ? "Microphone blocked — enable it in your browser settings."
+          : `Voice error: ${err}`
+      );
+      setTimeout(() => setVoiceError(""), 4000);
+    };
+
+    // Fires once speech is final, so hands-free never needs a click.
+    VoiceAgentService.onFinalTranscript = (transcript) => {
+      const text = transcript.trim();
+      if (text) sendRef.current?.(text, true);
+    };
+
+    return () => {
+      VoiceAgentService.onListeningStateChange = null;
+      VoiceAgentService.onSpeakingStateChange = null;
+      VoiceAgentService.onTranscriptChange = null;
+      VoiceAgentService.onError = null;
+      VoiceAgentService.onFinalTranscript = null;
+    };
+  }, []);
+
+  // Hands-free loop: as soon as we stop speaking and aren't busy, listen again.
+  useEffect(() => {
+    if (!handsFree || isListening || isSpeaking || isLoading) return;
+    const t = setTimeout(() => {
+      if (handsFreeRef.current) VoiceAgentService.startListening();
+    }, 600);
+    return () => clearTimeout(t);
+  }, [handsFree, isListening, isSpeaking, isLoading]);
+
+  const toggleMic = () => {
     if (isListening) {
       VoiceAgentService.stopListening();
-      if (userInput.trim()) {
-        handleSendMessage(userInput, true);
-      }
     } else {
+      VoiceAgentService.stopSpeaking();
       VoiceAgentService.startListening();
     }
   };
 
-  const toggleHandsFreeMode = () => {
-    if (!handsFreeMode) {
-      setHandsFreeMode(true);
-      VoiceAgentService.startListening();
-      VoiceAgentService.speak("Hands-free mode activated. I'm listening!");
+  const toggleHandsFree = () => {
+    const next = !handsFree;
+    setHandsFree(next);
+    handsFreeRef.current = next;
+
+    if (next) {
+      VoiceAgentService.speak("Hands-free on. Ask me anything about Naisarg.");
     } else {
-      setHandsFreeMode(false);
       VoiceAgentService.stopListening();
       VoiceAgentService.stopSpeaking();
     }
   };
 
-  const scrollToSection = (section) => {
-    // This would need to emit an event to the parent component
-    window.dispatchEvent(new CustomEvent('navigateToSection', { detail: { section } }));
+  const clearChat = () => {
+    VoiceAgentService.stopSpeaking();
+    ChatbotService.clearConversationSession();
+    setMessages([greeting()]);
   };
 
-  const clearChat = () => {
-    setMessages([
-      {
-        id: 1,
-        text: "Chat cleared! Ready for a fresh conversation 🎉",
-        isBot: true,
-        timestamp: new Date(),
-      },
-    ]);
-    ChatbotService.clearConversationSession();
-  };
+  /* ---------- status line ---------- */
+
+  const status = isListening
+    ? { text: "Listening…", tone: "listening" }
+    : isSpeaking
+    ? { text: "Speaking…", tone: "speaking" }
+    : isLoading
+    ? { text: "Thinking…", tone: "thinking" }
+    : handsFree
+    ? { text: "Hands-free on", tone: "ready" }
+    : { text: "Ask me anything", tone: "idle" };
+
+  const showSuggestions = messages.length <= 1 && !isLoading;
 
   return (
-    <div className={`modern-chatbot ${isOpen ? 'open' : 'closed'}`}>
-      {/* Header */}
-      <div className="chatbot-header">
-        <div className="header-content">
-          <h3>AI Assistant</h3>
-          <p className="status-text">
-            {isListening ? '🎤 Listening...' : isSpeaking ? '🔊 Speaking...' : '✨ Ready'}
-          </p>
+    <aside
+      className={`ai-panel ${isOpen ? "open" : "closed"}`}
+      aria-hidden={!isOpen}
+      aria-label="AI assistant"
+    >
+      <header className="ai-header">
+        <div className="ai-identity">
+          <span className={`ai-orb ${status.tone}`} aria-hidden="true" />
+          <div>
+            <h2>Naisarg&apos;s AI</h2>
+            <p className={`ai-status ${status.tone}`}>{status.text}</p>
+          </div>
         </div>
-        <div className="header-controls">
-          <button
-            className={`voice-toggle ${handsFreeMode ? 'active' : ''}`}
-            onClick={toggleHandsFreeMode}
-            title="Toggle hands-free mode"
-            aria-label="Toggle hands-free mode"
-          >
-            🎙️
+
+        <div className="ai-actions">
+          {voiceSupported && (
+            <button
+              className={`icon-btn ${handsFree ? "on" : ""}`}
+              onClick={toggleHandsFree}
+              title={handsFree ? "Turn off hands-free" : "Turn on hands-free"}
+              aria-pressed={handsFree}
+            >
+              {handsFree ? "🔊" : "🎧"}
+            </button>
+          )}
+          <button className="icon-btn" onClick={clearChat} title="Clear conversation">
+            ⟲
           </button>
-          <button
-            className="clear-btn"
-            onClick={clearChat}
-            title="Clear conversation"
-            aria-label="Clear conversation"
-          >
-            🗑️
-          </button>
-          <button
-            className="close-btn"
-            onClick={onClose}
-            title="Close chatbot"
-            aria-label="Close chatbot"
-          >
+          <button className="icon-btn" onClick={onClose} title="Close (Esc)">
             ✕
           </button>
         </div>
-      </div>
+      </header>
 
-      {/* Messages Container */}
-      <div className="messages-container">
+      {voiceError && <div className="ai-banner error">{voiceError}</div>}
+
+      <div className="ai-messages">
         {messages.map((msg) => (
-          <div key={msg.id} className={`message ${msg.isBot ? 'bot' : 'user'}`}>
-            <div className="message-avatar">
-              {msg.isBot ? '🤖' : '👤'}
-            </div>
-            <div className="message-content">
-              <div className="message-text">{msg.text}</div>
-              {msg.isVoice && <span className="voice-indicator">🎤 Voice</span>}
+          <div key={msg.id} className={`bubble-row ${msg.isBot ? "bot" : "user"}`}>
+            <div className={`bubble ${msg.isError ? "error" : ""}`}>
+              {msg.isBot ? (
+                // Backend returns light HTML (<b>, <ul>, <li>) from its own formatter.
+                <div
+                  className="bubble-body"
+                  dangerouslySetInnerHTML={{ __html: msg.html }}
+                />
+              ) : (
+                <div className="bubble-body">{msg.html}</div>
+              )}
+
+              {msg.navigatedTo && (
+                <button
+                  className="nav-chip"
+                  onClick={() => navigate(msg.navigatedTo.toLowerCase())}
+                >
+                  ↗ Opened {msg.navigatedTo}
+                </button>
+              )}
+
+              {msg.isVoice && <span className="voice-tag">🎙 voice</span>}
+
+              {msg.retry && (
+                <button className="retry-btn" onClick={() => send(msg.retry)}>
+                  Try again
+                </button>
+              )}
             </div>
           </div>
         ))}
+
         {isLoading && (
-          <div className="message bot">
-            <div className="message-avatar">🤖</div>
-            <div className="message-content">
-              <div className="typing-indicator">
-                <span></span>
-                <span></span>
-                <span></span>
+          <div className="bubble-row bot">
+            <div className="bubble">
+              <div className="dots" aria-label="Thinking">
+                <span /><span /><span />
               </div>
             </div>
           </div>
         )}
+
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area */}
-      <div className="chatbot-input-area">
-        <input
+      {showSuggestions && (
+        <div className="ai-suggestions">
+          {SUGGESTIONS.map((s) => (
+            <button key={s} className="suggestion" onClick={() => send(s)}>
+              {s}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div className="ai-composer">
+        <textarea
           ref={inputRef}
-          type="text"
+          className="ai-input"
+          rows={1}
           value={userInput}
+          placeholder={isListening ? "Listening…" : "Ask about his work, or say “show me projects”"}
           onChange={(e) => setUserInput(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-          placeholder="Type a message or use voice..."
-          className="message-input"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              send(userInput);
+            }
+          }}
           disabled={isLoading}
         />
 
-        <button
-          className={`voice-btn ${isListening ? 'listening' : ''}`}
-          onClick={handleVoiceInput}
-          disabled={!voiceSupported || isLoading}
-          title="Toggle voice input"
-          aria-label="Toggle voice input"
-        >
-          🎙️
-        </button>
+        {voiceSupported && (
+          <button
+            className={`mic-btn ${isListening ? "live" : ""}`}
+            onClick={toggleMic}
+            disabled={isLoading}
+            title={isListening ? "Stop listening" : "Speak"}
+            aria-pressed={isListening}
+          >
+            🎙
+          </button>
+        )}
 
-        <button
-          className="send-btn"
-          onClick={() => handleSendMessage()}
-          disabled={isLoading || !userInput.trim()}
-          title="Send message"
-          aria-label="Send message"
-        >
-          ➤
-        </button>
+        {isSpeaking ? (
+          <button
+            className="send-btn stop"
+            onClick={() => VoiceAgentService.stopSpeaking()}
+            title="Stop speaking"
+          >
+            ■
+          </button>
+        ) : (
+          <button
+            className="send-btn"
+            onClick={() => send(userInput)}
+            disabled={isLoading || !userInput.trim()}
+            title="Send"
+          >
+            ↑
+          </button>
+        )}
       </div>
-
-      {/* Footer */}
-      <div className="chatbot-footer">
-        <p className="footer-text">💡 Tip: Say "show me projects" or "tell me about experience"</p>
-      </div>
-    </div>
+    </aside>
   );
 };
 

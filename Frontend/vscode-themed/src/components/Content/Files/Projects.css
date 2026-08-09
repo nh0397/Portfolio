@@ -1,136 +1,125 @@
-/* Projects Grid */
+/* Projects — black / gold */
+
 .projects-container {
-  padding: 2rem;
-  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-  min-height: 100vh;
+  --gold: #ffc83d;
+  --gold-deep: #f0a500;
+  --gold-dim: rgba(255, 200, 61, 0.13);
+  --ink: #0a0a0b;
+  --surface: #141416;
+  --surface-2: #1c1c20;
+  --line: rgba(255, 200, 61, 0.16);
+  --text: #f5f5f4;
+  --muted: #a1a1aa;
+
+  min-height: 100%;
+  padding: 2.5rem 2rem 4rem;
+  background:
+    radial-gradient(900px 500px at 85% -10%, rgba(255, 200, 61, 0.08), transparent 60%),
+    linear-gradient(180deg, var(--ink) 0%, #111113 100%);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-y: auto;
 }
 
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-  padding: 2rem 0;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.1rem;
+  max-width: 1150px;
+  margin: 0 auto;
 }
 
 .project-card {
-  background: linear-gradient(135deg, #1f2937 0%, #2d3748 100%);
-  border: 1px solid #fbbf24;
-  border-radius: 12px;
-  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.project-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.2), transparent);
-  transition: left 0.5s ease;
+  gap: 0.85rem;
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  transition: transform 0.22s, border-color 0.22s, background 0.22s;
 }
 
 .project-card:hover {
-  transform: translateY(-8px);
-  border-color: #f59e0b;
-  box-shadow: 0 20px 40px rgba(251, 191, 36, 0.2);
-}
-
-.project-card:hover::before {
-  left: 100%;
+  transform: translateY(-4px);
+  border-color: rgba(255, 200, 61, 0.42);
+  background: var(--surface-2);
 }
 
 .card-top {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
+  justify-content: space-between;
+  gap: 0.85rem;
 }
+
+.card-top a { text-decoration: none; }
 
 .repo-name {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: #fbbf24;
-  margin: 0;
-  text-decoration: none;
-  transition: color 0.2s;
+  color: var(--text);
+  line-height: 1.35;
+  transition: color 0.18s;
 }
 
-.repo-name:hover {
-  color: #f59e0b;
-}
+.card-top a:hover .repo-name { color: var(--gold); }
 
 .language-tag {
-  padding: 0.4rem 0.8rem;
-  background: rgba(251, 191, 36, 0.15);
-  border: 1px solid #fbbf24;
-  border-radius: 50px;
-  font-size: 0.75rem;
-  color: #fbbf24;
+  flex-shrink: 0;
+  padding: 0.24rem 0.6rem;
+  font-size: 0.7rem;
   font-weight: 600;
+  color: var(--gold);
+  background: var(--gold-dim);
+  border: 1px solid var(--line);
+  border-radius: 999px;
   white-space: nowrap;
 }
 
 .repo-description {
-  font-size: 0.9rem;
-  color: #d1d5db;
-  margin: 0;
-  line-height: 1.5;
-  flex-grow: 1;
+  flex: 1;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--muted);
 }
 
 .repo-stats {
   display: flex;
   gap: 1rem;
-  font-size: 0.85rem;
-  color: #9ca3af;
+  font-size: 0.78rem;
+  color: #71717a;
 }
 
 .repo-stats span {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.3rem;
 }
 
-.repo-actions {
-  display: flex;
-  gap: 1rem;
-}
+.repo-actions { display: flex; gap: 0.55rem; }
 
 .repo-actions a {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  color: #000;
-  font-size: 1.2rem;
-  transition: all 0.2s;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.95rem;
+  color: var(--gold);
+  background: var(--gold-dim);
+  border: 1px solid var(--line);
+  border-radius: 9px;
   text-decoration: none;
+  transition: background 0.18s, transform 0.18s;
 }
 
 .repo-actions a:hover {
-  transform: scale(1.1);
-  box-shadow: 0 8px 16px rgba(251, 191, 36, 0.3);
+  background: rgba(255, 200, 61, 0.26);
+  transform: translateY(-2px);
 }
 
-@media (max-width: 768px) {
-  .projects-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-  }
-
-  .project-card {
-    padding: 1rem;
-  }
+@media (max-width: 720px) {
+  .projects-container { padding: 1.75rem 1rem 3rem; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .project-card:hover { transform: none; }
 }

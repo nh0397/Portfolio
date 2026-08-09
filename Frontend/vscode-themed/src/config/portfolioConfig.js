@@ -1,25 +1,48 @@
 // ========================================
 // PORTFOLIO CONFIGURATION FILE
 // ========================================
-// This is the main configuration file for your VSCode-themed portfolio.
-// Update this file to customize your portfolio with your own information.
+// Facts (who I am, where I worked, what I shipped) come from
+// src/data/portfolioData.json, which the backend regenerates with:
+//
+//     cd Backend && python ingest.py
+//
+// That same command reindexes the vector DB, so the site and the chatbot can
+// never disagree. Do NOT hand-edit the facts below — edit Backend/data/*.json
+// and re-run ingest.
+//
+// Everything else in this file is presentation-only: project videos, skill
+// icons, LinkedIn posts and UI copy that have no place in the resume data.
+
+import data from "../data/portfolioData.json";
 
 export const portfolioConfig = {
   // ========================================
-  // PERSONAL INFORMATION
+  // PERSONAL INFORMATION  (synced)
   // ========================================
   personal: {
-    name: "NAISARG HALVADIYA",
-    title: "AI Engineer | Software + Data",
-    bio: "Transforming Insights into Impact: A Data-Savvy Solution Engineer that loves solving real-world problems using AI",
-    brief: "As a software engineer adept at harnessing data, I specialize in transforming intricate data insights into impactful, real-world solutions. My expertise spans full-stack development and data science, allowing me to innovate and drive forward-thinking projects. With a proven track record in leveraging data to enhance user experiences and streamline processes, I am dedicated to pushing the boundaries of technology to solve real-world problems efficiently and effectively.",
+    name: data.personal.name.toUpperCase(),
+    title: "Applied AI Engineer | GenAI · RAG · Multi-Agent Systems",
+    bio: "I build production AI systems — multi-agent orchestration, RAG pipelines and LLM evaluation — on top of 4+ years of backend and distributed-systems engineering.",
+    brief: data.personal.summary,
     photo: "../assets/images/Photo.jpeg",
-    location: "San Francisco, CA",
-    email: "naisarg.halvadiya@gmail.com",
-    linkedin: "https://linkedin.com/in/naisarg-h",
-    github: "https://github.com/nh0397",
-    portfolio: "https://naisarg.dev"
+    location: data.personal.location,
+    email: data.personal.email,
+    phone: data.personal.phone,
+    linkedin: data.personal.linkedin,
+    github: data.personal.github,
+    portfolio: data.personal.portfolio
   },
+
+  // ========================================
+  // SYNCED DATA  (straight from the vector-DB source files)
+  // ========================================
+  syncedExperience: data.experience,
+  syncedEducation: data.education,
+  syncedProjects: data.projects,
+  repos: data.repos,
+  certifications: data.certifications,
+  awards: data.awards,
+  dataGeneratedAt: data.generatedAt,
 
   // ========================================
   // SKILLS & TECHNOLOGIES
@@ -115,25 +138,63 @@ export const portfolioConfig = {
 
   // ========================================
   // FEATURED PROJECTS
+  // Narrative + media for the showcase. Ordered newest first to match the
+  // dated project list in portfolioData.json.
   // ========================================
   featuredProjects: [
     {
-      title: "Secure Sense",
-      subtitle: "GenAI-Aware Data Loss Prevention Tool",
-      problem: "Accidental sensitive data sharing via ChatGPT/Gemini was becoming risky in workplaces.",
-      solution: "Built a real-time DLP browser tool with LLM integration to mask/block sensitive content using org-defined rules.",
+      title: "High-Performance Vulnerability Dashboard",
+      subtitle: "236K records from a 371MB dataset, rendered in under a second",
+      date: "May 2026",
+      problem: "A 371MB vulnerability dataset froze the browser for 90 seconds on load, making the data effectively unusable.",
+      solution: "Moved JSON parsing off the main thread into Web Workers, virtualized the DOM with react-window and used Zustand as an in-memory query store — fully client-side, no backend.",
       impact: [
-        "Intercepts risky data before it leaves",
-        "Generalized to work across the browser (not just chat)",
+        "236,000+ records rendered in under 1 second",
+        "Eliminated a 90-second main-thread freeze",
+        "Filtering and search stay interactive at full dataset size",
       ],
-      future: "Deploying admin dashboard & policy manager for IT teams.",
-      tech: ["React", "Flask", "Ollama", "Python", "JavaScript", "Edge-AI", "Native LLM"],
+      future: "Streaming ingest so the first rows paint before the file finishes downloading.",
+      tech: ["React", "TypeScript", "Web Workers", "react-window", "Zustand"],
+      link: null,
+      github: "https://github.com/nh0397/Vulnerability-Dashboard",
+      media: { type: "none", url: null, alt: "Vulnerability Dashboard" }
+    },
+    {
+      title: "Multi-Agent Financial Analyst",
+      subtitle: "Planner–supervisor agent system for natural-language financial queries",
+      date: "January 2026",
+      problem: "Single-shot LLM calls answer ambiguous financial questions confidently and wrongly, with no chance to ask for clarification.",
+      solution: "Architected a planner-supervisor multi-agent system that detects ambiguity *before* invoking tools, then orchestrates specialist agents — with an LLM routing layer that falls back across Mixtral 8x7B and Llama 3 70B on Groq.",
+      impact: [
+        "Sub-second agentic responses via Groq routing",
+        "Ambiguity caught before tool invocation, not after",
+        "Automatic model fallback keeps the system up when one model degrades",
+      ],
+      future: "Persistent run history so a session can resume mid-plan.",
+      tech: ["LangGraph", "Groq", "Chainlit", "Python", "Multi-Agent Systems"],
+      link: null,
+      github: "https://github.com/nh0397/Multi-Agent-Task-Solver",
+      media: { type: "none", url: null, alt: "Multi-Agent Financial Analyst" }
+    },
+    {
+      title: "AI Compliance Guardrail",
+      subtitle: "🏆 Winner, Best Emerging AI Hack — SF Hacks 2025",
+      date: "April 2025",
+      problem: "Employees paste sensitive data into ChatGPT without realising it leaves the network.",
+      solution: "Built a DLP system in a 24-hour sprint: a Chrome extension intercepting PII in prompts in real time, and a Flask API that routes fast checks to Mistral but sends sensitive classification to a local model via Ollama — so PII never leaves the network.",
+      impact: [
+        "Intercepts risky data before it leaves the browser",
+        "Sensitive classification runs locally — no PII egress",
+        "React admin dashboard for policy management and violation tracking",
+      ],
+      future: "Deploying the admin dashboard & policy manager for IT teams.",
+      tech: ["React", "Flask", "Ollama", "Mistral", "Chrome Extension", "Edge-AI"],
       link: null,
       github: "https://github.com/nh0397/SF-Hacks",
       media: {
         type: "gif",
         url: null,
-        alt: "Secure Sense DLP Tool Demo"
+        alt: "AI Compliance Guardrail DLP demo"
       }
     },
     {

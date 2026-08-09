@@ -101,7 +101,11 @@ def retrieve_chunks(query: str, k: int = 8) -> list[dict]:
 
 def format_text(text: str) -> str:
     """Convert the model's light markdown to the HTML the frontend renders."""
-    text = re.sub(r"\*\*(.*?)\*\*", r"<b>\1</b>", text)
+    text = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", text)
+    # Single asterisks around a word are emphasis, not a bullet — bullets are
+    # matched later as "* " at line start, so require a non-space after the *.
+    text = re.sub(r"(?<!\*)\*(?!\s)(.+?)(?<!\s)\*(?!\*)", r"<i>\1</i>", text)
+    text = re.sub(r"`([^`]+)`", r"<code>\1</code>", text)
     # Group consecutive "* item" lines into a single <ul>
     lines, html, in_list = text.split("\n"), [], False
     for line in lines:
