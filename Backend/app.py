@@ -11,7 +11,8 @@ from flask_cors import CORS
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 
-from config import CHAT_MODEL, CHUNKS_COLLECTION, CHUNKS_INDEX, EMBEDDING_MODEL
+from config import (CHAT_MODEL, CHUNKS_COLLECTION, CHUNKS_INDEX, EMBEDDING_MODEL,
+                    cors_origins)
 
 load_dotenv()
 
@@ -21,12 +22,15 @@ app = Flask(__name__)
 # without a backend edit; deployed origins stay an explicit list.
 LOCALHOST_ORIGIN = re.compile(r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$")
 
-ALLOWED_ORIGINS = [
+# naisarghalvadiya.tech was the old domain and no longer resolves; the site is
+# on .me now. Extra origins (Netlify previews, staging) come from the
+# ALLOWED_ORIGINS env var — see config.cors_origins.
+ALLOWED_ORIGINS = cors_origins([
     LOCALHOST_ORIGIN,
-    os.getenv("PRODUCTION_URL", "https://naisarghalvadiya.tech"),
-    "https://naisarghalvadiya.tech",
-    "https://www.naisarghalvadiya.tech",
-]
+    os.getenv("PRODUCTION_URL", "https://naisarghalvadiya.me"),
+    "https://naisarghalvadiya.me",
+    "https://www.naisarghalvadiya.me",
+])
 
 CORS(app, resources={
     r"/*": {

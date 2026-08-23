@@ -11,6 +11,7 @@ in the import block, before the caller has loaded its own environment.
 On Vercel there is no .env file and the real environment is used instead.
 """
 import os
+import re
 
 from dotenv import load_dotenv
 
@@ -36,3 +37,37 @@ CHAT_MODEL = os.getenv("CHAT_MODEL", "openai/gpt-oss-120b")
 # ── Atlas ─────────────────────────────────────────────────────────────────
 CHUNKS_COLLECTION = os.getenv("MONGO_CHUNKS_CL_NAME", "portfolio-chunks")
 CHUNKS_INDEX = os.getenv("MONGO_CHUNKS_INDEX_NAME", "chunks_vector_index")
+
+
+# ── CORS ──────────────────────────────────────────────────────────────────
+# Browser origins allowed to call the API, on top of the built-in defaults in
+# app.py (the custom domain and any localhost port). Comma-separated:
+#   ALLOWED_ORIGINS=https://my-site.netlify.app,https://staging.example.com
+# A blocked origin is easy to misread: the preflight still returns 200, just
+# without an Access-Control-Allow-Origin header, so the browser reports a CORS
+# failure on the actual request while the OPTIONS row looks healthy.
+EXTRA_ALLOWED_ORIGINS = [
+    o.strip().rstrip("/")
+    for o in os.getenv("ALLOWED_ORIGINS", "").split(",")
+    if o.strip()
+]
+
+_NETLIFY_SITE = re.compile(r"^https://([a-z0-9-]+)\.netlify\.app$")
+
+
+def cors_origins(defaults: list) -> list:
+    """Built-in defaults plus ALLOWED_ORIGINS.
+
+    For each *.netlify.app entry, the site's deploy-preview subdomains
+    (https://<deploy-id>--<site>.netlify.app) are allowed as well. Scoped to
+    that one site deliberately: with supports_credentials enabled, a blanket
+    *.netlify.app would let any Netlify site call the API with cookies.
+    """
+    origins = list(defaults)
+    for origin in EXTRA_ALLOWED_ORIGINS:
+        origins.append(origin)
+        match = _NETLIFY_SITE.match(origin)
+        if match:
+            site = re.escape(match.group(1))
+            origins.append(re.compile(rf"^https://[a-z0-9-]+--{site}\.netlify\.app$"))
+    return origins
