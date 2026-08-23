@@ -97,6 +97,10 @@ dist
 # Gatsby files
 .cache/
 public
+# ...but Vite's public/ is source, not build output — it holds favicon.ico
+# and must ship. The bare 'public' above matches every public dir at any
+# depth, which silently kept the favicon out of the repo.
+!Frontend/portfolio/public/
 
 # Storybook build outputs
 .out
@@ -442,3 +446,4 @@ docs/dist/
 
 # Vite build output
 Frontend/portfolio/dist/
+.env*
