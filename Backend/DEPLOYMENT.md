@@ -47,7 +47,7 @@ MONGO_DB_NAME=detail-extractor
 unset is safe and keeps current behaviour:**
 
 ```env
-CHAT_MODEL=llama-3.3-70b-versatile
+CHAT_MODEL=openai/gpt-oss-120b
 EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
 EMBEDDING_DIMS=768
 MONGO_CHUNKS_CL_NAME=portfolio-chunks

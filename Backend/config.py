@@ -26,8 +26,12 @@ EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "nomic-ai/nomic-embed-text-v1.5")
 EMBEDDING_DIMS = int(os.getenv("EMBEDDING_DIMS", "768"))
 
 # ── Chat (Groq) ───────────────────────────────────────────────────────────
-# Safe to swap per environment; no stored state depends on it.
-CHAT_MODEL = os.getenv("CHAT_MODEL", "llama-3.3-70b-versatile")
+# Safe to swap per environment; no stored state depends on it. Verify the id
+# is still served by the account first — Groq retires models, and a retired
+# id fails per-request with a 404 rather than at startup:
+#   curl https://api.groq.com/openai/v1/models -H "Authorization: Bearer $GROQ_API_KEY"
+# llama-3.3-70b-versatile was the previous default; it is no longer served.
+CHAT_MODEL = os.getenv("CHAT_MODEL", "openai/gpt-oss-120b")
 
 # ── Atlas ─────────────────────────────────────────────────────────────────
 CHUNKS_COLLECTION = os.getenv("MONGO_CHUNKS_CL_NAME", "portfolio-chunks")
