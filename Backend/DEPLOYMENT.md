@@ -24,35 +24,61 @@ vercel
 
 ### Step 4: Configure Environment Variables on Vercel
 
-Go to your Vercel dashboard → Project Settings → Environment Variables and add:
+Set these in the Vercel dashboard (Project Settings → Environment Variables),
+or with the CLI — see "Setting variables from the CLI" below.
+
+**Secrets — required. The app will not serve chat without them:**
 
 ```env
-# LLM Provider Configuration (Choose one)
-LLM_PROVIDER=groq  # Options: 'groq' (recommended - free & fast), 'gemini'
+# Fireworks (embeddings) — https://fireworks.ai/
+FIREWORKS_API_KEY=your_fireworks_api_key_here
 
-# Groq API (Recommended - 1,000 free requests/day, ultra-fast)
-# Get your API key at: https://console.groq.com/
+# Groq (chat) — https://console.groq.com/
 GROQ_API_KEY=your_groq_api_key_here
-GROQ_MODEL=mixtral-8x7b-32768  # Options: mixtral-8x7b-32768, llama3-70b-8192, llama3-8b-8192
 
-# Google Gemini API (Alternative)
-GOOGLE_API_KEY=your_gemini_api_key_here
-GEMINI_MODEL=gemini-1.5-flash  # Options: gemini-1.5-flash, gemini-1.5-pro
-
-# MongoDB Atlas Configuration
+# MongoDB Atlas
+MONGO_HOST=your-cluster.xxxxx.mongodb.net
 MONGO_USERNAME=your_mongodb_username
 MONGO_PASSWORD=your_mongodb_password
-MONGO_APP_NAME=your_app_name
 MONGO_DB_NAME=detail-extractor
-MONGO_CL_NAME=detail-extractor-collection
-MONGO_INDEX_NAME=vector_index_3
-MONGO_EMBEDDING_FIELD_NAME=embedding
-
-# Flask Configuration
-FLASK_ENV=production
-DEVELOPMENT_URL=http://localhost:3000
-PRODUCTION_URL=https://your-frontend-domain.com
 ```
+
+**Optional — all default in `config.py` to the values below, so leaving them
+unset is safe and keeps current behaviour:**
+
+```env
+CHAT_MODEL=llama-3.3-70b-versatile
+EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
+EMBEDDING_DIMS=768
+MONGO_CHUNKS_CL_NAME=portfolio-chunks
+MONGO_CHUNKS_INDEX_NAME=chunks_vector_index
+```
+
+**Frontend origins (used for CORS):**
+
+```env
+PRODUCTION_URL=https://your-frontend-domain.com
+DEVELOPMENT_URL=http://localhost:3000
+```
+
+> ⚠️ `EMBEDDING_MODEL` and `EMBEDDING_DIMS` are not a free swap. They must
+> match the vectors already stored in Atlas. Changing either means re-running
+> `python ingest.py` and `python rebuild_index.py`; changing them on Vercel
+> alone degrades retrieval silently rather than raising an error.
+
+> ℹ️ Model names are deliberately *not* pinned in `vercel.json`. A value in
+> `vercel.json`'s `env` block would shadow whatever you set in the dashboard,
+> which makes dashboard edits look like they do nothing. Set them in the
+> dashboard or via the CLI; `config.py` supplies the fallback.
+
+### Setting variables from the CLI
+
+```bash
+vercel env add GROQ_API_KEY production
+```
+
+Repeat per variable and per environment (`production`, `preview`,
+`development`). `vercel env ls` shows what is currently set.
 
 ### Step 5: Redeploy with Environment Variables
 ```bash

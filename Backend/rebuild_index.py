@@ -8,11 +8,9 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from pymongo.operations import SearchIndexModel
 
-load_dotenv()
+from config import CHUNKS_COLLECTION, CHUNKS_INDEX, EMBEDDING_DIMS
 
-EMBEDDING_DIMS = 768
-CHUNKS_COLLECTION = os.getenv("MONGO_CHUNKS_CL_NAME", "portfolio-chunks")
-CHUNKS_INDEX = os.getenv("MONGO_CHUNKS_INDEX_NAME", "chunks_vector_index")
+load_dotenv()
 
 
 def mongo_client() -> MongoClient:

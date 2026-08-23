@@ -34,12 +34,10 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from pymongo.operations import SearchIndexModel
 
+from config import CHUNKS_COLLECTION, CHUNKS_INDEX, EMBEDDING_DIMS, EMBEDDING_MODEL
+
 load_dotenv()
 
-EMBEDDING_MODEL = "nomic-ai/nomic-embed-text-v1.5"
-EMBEDDING_DIMS = 768
-CHUNKS_COLLECTION = os.getenv("MONGO_CHUNKS_CL_NAME", "portfolio-chunks")
-CHUNKS_INDEX = os.getenv("MONGO_CHUNKS_INDEX_NAME", "chunks_vector_index")
 MAX_CHUNK_CHARS = 1800
 MIN_CHUNK_CHARS = 80
 

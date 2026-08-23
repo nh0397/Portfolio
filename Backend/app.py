@@ -11,13 +11,9 @@ from flask_cors import CORS
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 
-load_dotenv()
+from config import CHAT_MODEL, CHUNKS_COLLECTION, CHUNKS_INDEX, EMBEDDING_MODEL
 
-EMBEDDING_MODEL = "nomic-ai/nomic-embed-text-v1.5"
-EMBEDDING_DIMS = 768
-CHAT_MODEL = "llama-3.3-70b-versatile"
-CHUNKS_COLLECTION = os.getenv("MONGO_CHUNKS_CL_NAME", "portfolio-chunks")
-CHUNKS_INDEX = os.getenv("MONGO_CHUNKS_INDEX_NAME", "chunks_vector_index")
+load_dotenv()
 
 app = Flask(__name__)
 
