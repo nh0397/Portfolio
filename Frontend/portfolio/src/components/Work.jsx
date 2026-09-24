@@ -53,7 +53,7 @@ function Media({ media, title }) {
 }
 
 export default function Work() {
-  const [openId, setOpenId] = useState(featuredWork[0].id);
+  const [openId, setOpenId] = useState(featuredWork[0]?.id ?? null);
 
   return (
     <section id="work" className="section">
@@ -161,6 +161,23 @@ export default function Work() {
               </article>
             );
           })}
+        </div>
+
+        <div className="repository-section reveal">
+          <h3>More on GitHub</h3>
+          <p className="section-sub">Projects and experiments, ordered by latest activity.</p>
+          <div className="repository-grid">
+            {data.repos.map((repo) => (
+              <a className="repository-card" key={repo.url} href={repo.url} target="_blank" rel="noreferrer">
+                <span className="repository-title"><GitHubIcon size={16} /> {repo.name}</span>
+                {repo.description && <p>{repo.description}</p>}
+                <span className="repository-meta mono">
+                  {repo.language || "Repository"}
+                  {repo.lastUpdated && ` · Updated ${repo.lastUpdated.slice(0, 10)}`}
+                </span>
+              </a>
+            ))}
+          </div>
         </div>
 
         <a

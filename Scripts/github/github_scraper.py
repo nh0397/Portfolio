@@ -1,43 +1,46 @@
-import requests
+"""Fetch public repository facts without asking an LLM to rewrite them."""
 import base64
 import os
+import requests
+
 
 def fetch_github_repositories(username):
-    headers = {
-        "Authorization": f"token {os.getenv('GITHUB_ACCESS_TOKEN')}"
-    }
-    url = f'https://api.github.com/users/{username}/repos'
-    try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()  # Raises HTTPError for bad responses
-        repos = response.json()
-
-        repo_data = []
-        for repo in repos:
-            readme_url = f'https://api.github.com/repos/{username}/{repo["name"]}/readme'
-            readme_response = requests.get(readme_url, headers=headers)
-            readme_response.raise_for_status()
-
-            readme_content = base64.b64decode(readme_response.json()['content']).decode('utf-8')
-            
-            data = {
-                "name": repo['name'],
-                "description": repo.get('description', 'No description provided'),
-                "readme": readme_content,
-                "languages_url": repo['languages_url'],
-                "html_url": repo['html_url'],
-                "created_at": repo['created_at'],
-                "updated_at": repo['updated_at']
-            }
-            repo_data.append(data)
-        
-        return repo_data
-
-    except requests.exceptions.HTTPError as err:
-        print(f"HTTP error occurred: {err}")  # Print the complete error
-        print(f"Response status code: {response.status_code}")
-        print(f"Response content: {response.content}")
-    except Exception as err:
-        print(f"Other error occurred: {err}")
-
-    return []
+    if not username:
+        raise ValueError("GITHUB_USERNAME is required")
+    headers = {"Accept": "application/vnd.github+json"}
+    token = os.getenv("GITHUB_ACCESS_TOKEN") or os.getenv("GITHUB_TOKEN")
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    repos = []
+    page = 1
+    while True:
+        response = requests.get(
+            f"https://api.github.com/users/{username}/repos",
+            params={"per_page": 100, "page": page, "sort": "updated", "type": "owner"},
+            headers=headers, timeout=30,
+        )
+        response.raise_for_status()
+        batch = response.json()
+        if not batch:
+            break
+        for repo in batch:
+            if repo.get("private"):
+                continue
+            readme = requests.get(f"https://api.github.com/repos/{repo['full_name']}/readme",
+                                  headers=headers, timeout=30)
+            if readme.status_code == 404:
+                text = ""
+            else:
+                readme.raise_for_status()
+                text = base64.b64decode(readme.json()["content"]).decode("utf-8", errors="replace")
+            repos.append({
+                "name": repo["name"], "description": repo.get("description") or "",
+                "readme": text, "language": repo.get("language") or "",
+                "topics": repo.get("topics", []), "stars": repo["stargazers_count"],
+                "url": repo["html_url"], "homepage": repo.get("homepage") or "",
+                "created": repo["created_at"], "last_updated": repo["pushed_at"],
+            })
+        page += 1
+    if not repos:
+        raise ValueError("GitHub returned no public repositories; refusing an empty refresh")
+    return repos

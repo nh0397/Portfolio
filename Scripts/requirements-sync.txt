@@ -1,0 +1,9 @@
+requests>=2.32,<3
+python-dotenv>=1,<2
+openai>=1.44,<3
+pymongo>=4.8,<5
+certifi
+pypdf>=5,<7
+google-genai>=1,<2
+selenium>=4,<5
+webdriver-manager>=4,<5

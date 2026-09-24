@@ -1,0 +1,181 @@
+{
+  "Name": "Naisarg Halvadiya",
+  "email": "naisarg.halvadiya@gmail.com",
+  "phone": "+1 (628) 946-0347",
+  "location": "San Francisco, CA",
+  "linkedin_url": "https://www.linkedin.com/in/naisarg-h/",
+  "github_url": "https://github.com/nh0397",
+  "portfolio_url": "https://naisarghalvadiya.tech",
+  "summary": "Applied AI Engineer with 4+ years of software engineering experience and hands-on expertise in Generative AI, multi-agent orchestration, RAG pipelines, LLM evaluation, vector search and machine learning. Built production-grade AI systems using LangGraph, LangChain, Claude, Ollama, FastAPI and PyTorch, including multi-agent healthcare workflows, enterprise RAG applications and predictive analytics solutions. Strong background in backend engineering, distributed systems, cloud infrastructure and translating AI research into scalable business products.",
+  "work_experience": [
+    {
+      "title": "Applied AI Engineer",
+      "company": "Palatys Inc. (Brewlytix)",
+      "location": "Philadelphia, PA (Remote)",
+      "start_date": "January 2026",
+      "end_date": "Present",
+      "technologies": [
+        "Vue 3",
+        "TypeScript",
+        "Go/Gin",
+        "PostgreSQL",
+        "AWS"
+      ],
+      "highlights": [
+        "Designed and developed AI-ready data architectures and backend services using Go/Gin, PostgreSQL and AWS EC2 to support scalable multi-tenant applications.",
+        "Built and maintained structured datasets from competition scoresheets, judging feedback and sensory evaluation records, enabling future LLM fine-tuning, RAG pipelines and analytics workflows.",
+        "Architected tenant-isolated APIs, authentication flows and data access controls to ensure secure multi-club data segregation and scalability.",
+        "Developed data models and ETL processes to standardize unstructured judging data into formats suitable for machine learning and AI-powered insights.",
+        "Evaluated and integrated retrieval-augmented generation (RAG), vector search and LLM-based analytics into the platform roadmap, including recommendation, knowledge-retrieval and reputation-scoring features."
+      ]
+    },
+    {
+      "title": "Graduate Teaching Assistant",
+      "company": "San Francisco State University",
+      "location": "",
+      "start_date": "Sep 2023",
+      "end_date": "Jan 2026",
+      "technologies": [],
+      "highlights": [
+        "Mentored 500+ students in full-stack development and data science fundamentals.",
+        "Guided student projects implementing industry standards for testing, deployment, and analysis.",
+        "Created automated grading systems reducing evaluation time by 50%."
+      ]
+    },
+    {
+      "title": "Senior Software Engineer",
+      "company": "Mu Sigma Inc.",
+      "location": "Bangalore, India",
+      "start_date": "October 2022",
+      "end_date": "July 2023",
+      "technologies": [
+        "Node.js",
+        "PostgreSQL",
+        "Redis",
+        "GitLab CI/CD",
+        "Cypress"
+      ],
+      "highlights": [
+        "Resolved critical performance and stability issues in a Node.js SaaS platform serving 5,000+ daily enterprise users by identifying event-loop blocking, database connection-pool exhaustion and inefficient SQL queries on indexed columns. Refactored data-processing workflows, optimized Redis cache invalidation and restored index-scan query execution, reducing retrieval latency by 30% and supporting renewal of a $1M enterprise contract.",
+        "Reduced production defects by 90% by designing and implementing a GitLab CI/CD pipeline with 70+ automated Cypress integration tests. Established automated quality gates, standardized Git workflows and mentored a 10-engineer team on testing and deployment best practices.",
+        "Analyzed production incidents to root cause and built monitoring and alerting systems, making preemptive system changes to prevent recurrence and improve platform reliability.",
+        "Developed RESTful APIs and backend services using Node.js, allowing easy integration with internal analytics platforms and enterprise-level client applications.",
+        "Improved PostgreSQL performance through query optimization, indexing and schema modifications, delivering faster reporting and more responsive application behavior."
+      ]
+    },
+    {
+      "title": "Software Engineer",
+      "company": "Mu Sigma Inc.",
+      "location": "Bangalore, India",
+      "start_date": "October 2019",
+      "end_date": "September 2022",
+      "technologies": [
+        "Angular",
+        "Next.js",
+        "Node.js",
+        "FastAPI",
+        "PostgreSQL"
+      ],
+      "highlights": [
+        "Led a 7-engineer team to build a centralized performance-management platform for 30+ teams, implementing RBAC to secure sensitive employee data and supporting 25+ concurrent enterprise pilot programs.",
+        "Developed a logistic-regression churn prediction model that identified at-risk pilot accounts using product-usage and engagement signals, enabling proactive customer-success interventions and contributing to a 35% pilot-to-enterprise conversion rate (~$350K in new annual recurring revenue).",
+        "Built and deployed an NLP-based sentiment analysis pipeline that processed 10,000+ employee feedback records to automatically extract themes, trends and insights, reducing performance-review cycle time by 65% and saving approximately 20 hours of manual HR reporting effort per month.",
+        "Implemented full-stack features using Angular, Next.js, Node.js, and PostgreSQL to support performance management workflows in different business units and increased user adoption in pilot teams.",
+        "Automated data ingestion and reporting using FastAPI and Python services, improving data accuracy and reducing operational overhead across business units."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "M.S. in Data Science and Artificial Intelligence",
+      "school": "San Francisco State University, San Francisco, CA",
+      "start_date": "August 2023",
+      "end_date": "January 2026",
+      "honors": "Graduate Award for Distinguished Achievement",
+      "coursework": [
+        "Software Engineering",
+        "Natural Language Technologies",
+        "Data Mining",
+        "Technical Entrepreneurship"
+      ]
+    },
+    {
+      "degree": "Bachelor of Technology - BTech",
+      "school": "Nirma University",
+      "start_date": "2015",
+      "end_date": "2019",
+      "honors": "",
+      "coursework": []
+    }
+  ],
+  "projects": [
+    {
+      "name": "High-Performance Vulnerability Dashboard",
+      "description": "Rendered 236,000+ vulnerability records from a 371MB dataset in under 1 second, fully client-side: eliminated a 90-second browser freeze by offloading JSON parsing to Web Workers, virtualizing the DOM with react-window and using Zustand as an in-memory query store.",
+      "technologies": [
+        "React",
+        "TypeScript",
+        "Web Workers"
+      ],
+      "award": "",
+      "date": "May 2026"
+    },
+    {
+      "name": "Multi-Agent Financial Analyst",
+      "description": "Architected a planner-supervisor multi-agent system that interprets natural-language financial queries, detects ambiguity before tool invocation and orchestrates specialist agents; built an LLM routing layer with automatic model fallback (Mixtral 8x7B, Llama 3 70B) on Groq for sub-second agentic responses.",
+      "technologies": [
+        "LangGraph",
+        "Groq",
+        "Chainlit"
+      ],
+      "award": "",
+      "date": "January 2026"
+    },
+    {
+      "name": "AI Compliance Guardrail",
+      "description": "Built a DLP system in a 24-hour sprint: a Chrome extension intercepting PII in ChatGPT prompts in real time, a Flask API routing fast checks to Mistral and sensitive classifications to a locally deployed model via Ollama so PII never leaves the network, plus a React admin dashboard for policy management and violation tracking.",
+      "technologies": [],
+      "award": "Winner, Best Emerging AI Hack, SF Hacks 2025",
+      "date": "April 2025"
+    }
+  ],
+  "skills": {
+    "languages": [
+      "TypeScript/JavaScript",
+      "Python",
+      "Go",
+      "SQL"
+    ],
+    "ai_ml": [
+      "LangGraph/LangChain",
+      "multi-agent orchestration",
+      "RAG",
+      "local LLM deployment (Ollama)",
+      "Pinecone",
+      "PyTorch"
+    ],
+    "backend_frontend": [
+      "Node.js",
+      "Go/Gin",
+      "FastAPI",
+      "Flask",
+      "REST",
+      "WebSockets",
+      "React",
+      "Next.js",
+      "Vue 3",
+      "Tailwind"
+    ],
+    "data_infrastructure": [
+      "PostgreSQL",
+      "Redis",
+      "MongoDB",
+      "Kafka",
+      "AWS",
+      "Docker",
+      "Kubernetes",
+      "GitLab CI/CD",
+      "GitHub Actions"
+    ]
+  }
+}

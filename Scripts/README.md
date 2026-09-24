@@ -1,230 +1,117 @@
-# Portfolio RAG System - Data Processing Script
+# Portfolio data sync
 
-A simple data processing script that reads latest data from GitHub, LinkedIn, and Resume, chunks it intelligently, creates embeddings, and writes to MongoDB vector database.
+Run `python Scripts/sync_portfolio.py` from the repository root. `Scripts/main.py`
+and `Backend/ingest.py` delegate to this same entrypoint. The older scraping,
+chunking, and graph modules are historical; this workflow does not use Neo4j.
 
-## 🎯 **Single Purpose**
+## Data flow
 
-This Scripts folder has **ONE JOB**:
-1. **Read** latest data from GitHub, LinkedIn, and Resume
-2. **Chunk** the data by semantic units (one chunk per item)
-3. **Create** embeddings using Fireworks AI
-4. **Write** everything to MongoDB vector database
+1. Read the resume and curated project details from `Scripts/resources/`.
+2. Fetch every public GitHub repository, including paginated results and READMEs.
+3. Use the checked-in LinkedIn snapshot, or explicitly enable live refresh.
+4. Validate a single normalized source bundle.
+5. Generate chatbot chunks and the frontend JSON from that same bundle.
+6. Embed all chunks, ensure the configured Atlas vector index is ready, then
+   replace the collection in a transaction. Failures roll back the replacement.
+7. Write `Frontend/portfolio/src/data/portfolioData.json` only after DB success.
+8. GitHub Actions builds the site, commits the JSON, and optionally calls a
+   Netlify build hook. Netlify must finish deploying before the live site changes.
 
-That's it. No server, no API, just data processing.
+MongoDB and Git/Netlify are separate systems, so this is not an atomic deployment
+across both. Atlas search indexing is also eventually consistent. If a commit,
+build, or deployment fails after the DB update, fix that failure and rerun the
+workflow. The JSON `sourceHash` and each chunk's `source_hash` identify the bundle;
+chunks also store `ingested_at` and `embedding_model` for auditing.
 
-## 🏗️ **Simple Structure**
+## Source files
 
-```
-Scripts/
-├── main.py                    # THE ONLY SCRIPT YOU NEED
-├── requirements.txt           # Python dependencies
-├── .env                       # Environment variables (create this)
-├── final_data.json           # Generated final data (backup)
-├── resources/                 # Static resources
-│   └── Resume.pdf            # Your resume file
-├── linkedin/                  # LinkedIn scraping
-│   └── linkedin_scraper.py
-├── github/                    # GitHub scraping
-│   └── github_scraper.py
-├── resume/                    # Resume parsing
-│   └── resume_parser.py
-└── chunking/                  # Structured chunking
-    ├── structured_chunker.py
-    ├── text_chunker.py        # (legacy)
-    └── chunking_config.py     # (legacy)
-```
+- `Scripts/resources/Resume.pdf`: optional text-based resume. When present, it
+  takes precedence over resume.json and is extracted using Gemini. Requires
+  `GOOGLE_API_KEY`. Scanned/image-only PDFs fail instead of silently erasing data.
+- `Scripts/resources/resume.json`: editable structured resume; used when no PDF
+  is present. Includes `Name`, contact fields, `work_experience` (company, title,
+  dates, highlights, technologies), education, projects, and a skills object.
+- `Scripts/resources/linkedin.json`: checked-in fallback for skills,
+  certifications, awards, and optional additional roles/education.
+- `Scripts/resources/featured-work.json`: curated case studies and video metadata.
+  New GitHub repositories appear automatically in the repository grid. Add an
+  entry here only when a project also needs a featured narrative or demo video.
+  YouTube media uses `{ "type": "youtube", "id": "VIDEO_ID", "alt": "Demo title" }`.
 
-## 🚀 **How to Use**
+The initial resume and LinkedIn JSON were reconstructed from the existing
+August 9, 2026 frontend export, not freshly downloaded profiles. Resume roles
+include the existing merged experience to preserve the site. Replace these
+snapshots with your authoritative source files when available. Files in this
+public repo and generated UI JSON are public; use a publishable resume.
 
-### 1. **Setup Environment**
+## Setup
 
-```bash
-# Navigate to Scripts directory
-cd Scripts
+Install Python 3.12 and run:
 
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### 2. **Create .env File**
-
-Create `.env` file in the Scripts directory:
-
-```env
-# Google Gemini API
-GOOGLE_API_KEY=your_gemini_api_key_here
-
-# MongoDB Atlas Configuration
-MONGO_USERNAME=your_mongodb_username
-MONGO_PASSWORD=your_mongodb_password
-MONGO_APP_NAME=your_app_name
-MONGO_DB_NAME=detail-extractor
-MONGO_CL_NAME=detail-extractor-collection
-MONGO_INDEX_NAME=vector_index_3
-MONGO_EMBEDDING_FIELD_NAME=embedding
-
-# User Profile Data
-USER_NAME=your_full_name
-USER_EMAIL=your_email@example.com
-GITHUB_USERNAME=your_github_username
-LINKEDIN_URL=https://www.linkedin.com/in/your-profile-url/
-
-# Optional (for scraping)
-LINKEDIN_EMAIL=your_linkedin_email@example.com
-LINKEDIN_PASSWORD=your_linkedin_password
-GITHUB_ACCESS_TOKEN=your_github_access_token
+```sh
+pip install -r Scripts/requirements-sync.txt
+python -m unittest discover -s Scripts/tests -v
+python Scripts/sync_portfolio.py --dry-run
+python Scripts/sync_portfolio.py --frontend-only
+python Scripts/sync_portfolio.py
 ```
 
-### 3. **Add Your Resume**
+`--dry-run` fetches and validates without writing. `--frontend-only` (also
+`--export-only`) writes site JSON without MongoDB/embeddings, useful for branch
+previews. PDF parsing/live LinkedIn extraction can still call Gemini in these
+modes. Full sync needs the secrets below. Local credentials can live in ignored
+`Scripts/.env` or `Backend/.env`.
 
-```bash
-# Place your resume in the resources directory
-cp /path/to/your/resume.pdf resources/Resume.pdf
-```
+## GitHub Actions
 
-### 4. **Run the Script**
+`.github/workflows/sync-portfolio.yml` runs Mondays at 09:23 UTC, manually, and
+when source files change. Production sync runs only on the default branch;
+pushing this feature branch cannot update the live database. Merge the workflow
+to activate scheduled runs. Allow Actions to write repository contents; branch
+protection must allow the bot's generated-data commit, or the push step fails.
 
-```bash
-# That's it! Just run main.py
-python main.py
-```
+Repository secrets:
 
-## 📊 **What main.py Does**
+| Secret | Purpose |
+| --- | --- |
+| `MONGO_USERNAME`, `MONGO_PASSWORD` | Atlas credentials |
+| `MONGO_HOST` | Full cluster hostname, without scheme or credentials |
+| `MONGO_DB_NAME` | Same database as the deployed backend |
+| `FIREWORKS_API_KEY` | Generate embeddings |
+| `GOOGLE_API_KEY` | Required for PDF parsing and live LinkedIn extraction |
+| `LINKEDIN_EMAIL`, `LINKEDIN_PASSWORD` | Only for optional live LinkedIn refresh |
+| `NETLIFY_BUILD_HOOK` | Optional POST hook to explicitly request a site rebuild |
 
-```
-🚀 Portfolio RAG Data Processing Script
-==================================================
-Job: Read data → Chunk → Embed → Store in vector DB
-==================================================
+GitHub access uses the workflow's built-in token (public repositories only).
+The Atlas database user needs write and search-index management permissions.
+Atlas networking must allow the chosen Actions runner to connect; a runner with
+controlled egress is useful when configuring a narrow Atlas access list.
 
-📖 Step 1: Reading latest data from sources...
-   📂 Fetching latest GitHub repositories...
-   🔗 Scraping latest LinkedIn profile...
-   📄 Parsing resume...
+Repository variables (defaults shown):
 
-🤖 Step 2: Formatting data with Gemini AI...
-   📝 Formatting resume data...
-   🔗 Formatting LinkedIn data...
-   📂 Formatting GitHub data...
+| Variable | Default |
+| --- | --- |
+| `GITHUB_USERNAME` | `nh0397` |
+| `MONGO_CHUNKS_CL_NAME` | `portfolio-chunks` |
+| `MONGO_CHUNKS_INDEX_NAME` | `chunks_vector_index` |
+| `EMBEDDING_MODEL` | `nomic-ai/nomic-embed-text-v1.5` |
+| `EMBEDDING_DIMS` | `768` |
+| `EXTRACTION_MODEL` | `gemini-2.5-flash` |
+| `LINKEDIN_REFRESH` | `false` |
+| `LINKEDIN_URL` | `https://www.linkedin.com/in/naisarg-h/` |
 
-🔪 Step 4: Setting up structured chunking system...
-   ✅ Using structured JSON chunking (one chunk per item)
+Collection, index, embedding model and dimensions must match the backend's
+hosting environment. Both code paths import `Backend/config.py`, but different
+environment overrides can still diverge. The index is created or updated in
+place under that configured name; no new index name is generated per run.
 
-✂️ Step 5: Chunking data by semantic units...
-   📄 Created 6 resume chunks (1 basic info + 2 work exp + 2 projects + 1 skills)
-   🔗 Created 16 LinkedIn chunks (1 basic info + 3 work exp + 2 education + 1 skills + 4 certs + 5 awards)
-   📂 Created 15 GitHub chunks (1 per repository)
+LinkedIn's existing Selenium login approach remains optional because login
+challenges and site changes can block unattended access. Enable it with
+`LINKEDIN_REFRESH=true` only after testing the credentials. A failed live scrape
+fails the run before database publication; it does not silently use stale data.
+No credentials are needed when using the snapshot.
 
-🔮 Step 6: Creating embeddings for chunks...
-   📝 Creating embedding for resume chunk 1/X...
-   🔗 Creating embedding for LinkedIn chunk 1/Y...
-   📂 Creating embedding for GitHub chunk 1/Z...
-
-💾 Step 7: Writing chunks to MongoDB vector database...
-   ✅ Written N chunks to MongoDB vector database
-   📊 Database: detail-extractor
-   📁 Collection: detail-extractor-collection
-
-🎉 Data processing completed successfully!
-✅ Script completed - Vector database is ready for your chatbot!
-```
-
-## 📦 **Folder Structure**
-
-### **🔗 linkedin/**
-- **File**: `linkedin_scraper.py`
-- **Purpose**: Scrape latest LinkedIn profile data
-
-### **📂 github/**
-- **File**: `github_scraper.py`
-- **Purpose**: Fetch latest GitHub repository data
-
-### **📄 resume/**
-- **File**: `resume_parser.py`
-- **Purpose**: Parse resume PDF and extract text
-
-### **🔪 chunking/**
-- **Files**: 
-  - `structured_chunker.py` - StructuredChunker class (one chunk per semantic unit)
-  - `text_chunker.py` - Legacy sliding window chunker (deprecated)
-  - `chunking_config.py` - Legacy configuration (deprecated)
-- **Purpose**: Create focused, structured JSON chunks preserving data hierarchy
-
-## 🔧 **Structured Chunking Strategy**
-
-### **Why Structured Chunks?**
-Instead of arbitrary text splitting, we create **one chunk per semantic unit**:
-
-- **Resume**: One chunk for each work experience, project, skills group
-- **LinkedIn**: One chunk for each job, education entry, certification, award
-- **GitHub**: One chunk per repository
-
-**Benefits**:
-- ✅ **Precise Retrieval**: Get exactly the relevant item, not mixed content
-- ✅ **Preserved Structure**: JSON structure maintained for better querying
-- ✅ **Better Context**: Each chunk is a complete, meaningful unit
-- ✅ **More Granular**: 37 focused chunks instead of 6 mixed ones
-
-## 🎯 **When to Run**
-
-Run this script whenever you want to update your vector database with:
-
-- **New GitHub repositories** or updated descriptions
-- **Updated LinkedIn profile** information
-- **Updated resume** with new experiences/skills
-- **After making changes** to any of your data sources
-
-## 📈 **Performance Features**
-
-### **Structured JSON Chunking**
-- **Semantic Coherence**: Each chunk is a complete logical unit
-- **Precise Retrieval**: Query for specific work experience, project, or repo
-- **Structure Preservation**: JSON format maintained for rich queries
-- **Metadata Enhancement**: Typed chunks with section awareness
-
-### **Vector Search Ready**
-- **Semantic Similarity**: Fireworks AI embeddings (nomic-embed-text-v1.5)
-- **MongoDB Atlas**: Vector search index
-- **Multi-source**: Resume, LinkedIn, GitHub data
-- **Real-time Ready**: Fast, granular retrieval for chatbot responses
-
-## 🔒 **Security**
-
-- **Environment Variables**: Sensitive data in `.env` file
-- **API Key Management**: Secure Google API key handling
-- **Rate Limiting**: API call throttling to avoid limits
-
-## 🛠️ **Development**
-
-### **Adding New Data Sources**
-1. Create new folder (e.g., `twitter/`, `medium/`)
-2. Add scraper file
-3. Import and use in `main.py`
-
-### **Modifying Chunking**
-1. Edit `chunking/structured_chunker.py`
-2. Customize formatting methods for your needs
-3. Add new chunk types for additional data sources
-
-## 📊 **Output**
-
-The script creates:
-- **MongoDB Vector Database**: All chunks with embeddings stored
-- **final_data.json**: Backup of processed data
-- **Console Output**: Detailed progress and summary
-
-## 🚀 **Integration**
-
-Once you run this script, your MongoDB vector database is ready to be used by:
-- Your portfolio website chatbot
-- Any RAG application
-- Vector search queries
-- AI-powered resume matching
-
----
-
-**🎉 Simple, focused, and effective - exactly what you need!**
+The frontend imports the generated JSON at build time; it does not query MongoDB.
+Configure Netlify's Git integration to build generated-data commits, or set the
+build hook above. The workflow also uploads the built site as an Actions artifact.
+A successful build-hook request means a deployment was requested, not completed.

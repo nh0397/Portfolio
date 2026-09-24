@@ -1,72 +1,38 @@
-import json
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.by import By
-import time
-from dotenv import load_dotenv
+"""Optional authenticated LinkedIn refresh; fail closed on login challenges."""
 import os
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 def scrape_linkedin_profile(linkedin_url):
-    # Set up Selenium WebDriver options
-    chrome_options = Options()
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--disable-gpu')
-
-    # Initialize Chrome WebDriver using ChromeDriverManager and Service
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-
-    # Log in to LinkedIn using credentials from .env
-    driver.get('https://www.linkedin.com/login')
-    driver.find_element(By.ID, 'username').send_keys(os.getenv('LINKEDIN_EMAIL'))
-    driver.find_element(By.ID, 'password').send_keys(os.getenv('LINKEDIN_PASSWORD'))
-    driver.find_element(By.CSS_SELECTOR, '.login__form_action_container button').click()
-
-    # Wait for login to complete
-    time.sleep(5)
-
-    # Load existing JSON data from final_data.json
-    profile_data = {}
+    for key in ("LINKEDIN_EMAIL", "LINKEDIN_PASSWORD"):
+        if not os.getenv(key):
+            raise ValueError(f"{key} is required for live LinkedIn refresh")
+    if not linkedin_url or not linkedin_url.startswith("https://www.linkedin.com/in/"):
+        raise ValueError("LINKEDIN_URL must be a LinkedIn profile URL")
+    options = Options()
+    options.add_argument("--headless=new")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    driver = webdriver.Chrome(options=options)
     try:
-        with open('final_data.json', 'r') as json_file:
-            profile_data = json.load(json_file)
-            if not isinstance(profile_data, dict):
-                profile_data = {}
-    except FileNotFoundError:
-        profile_data = {}
-
-    # Scrape data from the main profile page
-    driver.get(linkedin_url)
-    time.sleep(5)  # Wait for the page to load completely
-
-    main_page_data = driver.find_element(By.TAG_NAME, 'body').text
-    profile_data['Main Profile'] = main_page_data
-
-    # Define sections to scrape
-    sections = {
-        "Licenses and Certifications": linkedin_url + 'details/certifications/',
-        "Skills": linkedin_url + 'details/skills/',
-        "Recommendations": linkedin_url + 'details/recommendations/?detailScreenTabIndex=0',
-        "Honors and Awards": linkedin_url + 'details/honors/'
-    }
-
-    # Scrape each section, focusing on 'artdeco-card' class content
-    for section_name, section_url in sections.items():
-        driver.get(section_url)
-        time.sleep(5)  # Wait for the page to load completely
-
-        artdeco_cards = driver.find_elements(By.CLASS_NAME, 'artdeco-card')
-        section_content = "\n".join([card.text.strip() for card in artdeco_cards])
-
-        profile_data[section_name] = section_content
-
-    # Close the browser
-    driver.quit()
-
-    # Save the updated data into final_data.json
-    with open('final_data.json', 'w') as json_file:
-        json.dump(profile_data, json_file, indent=4)
-
-    return profile_data
+        driver.set_page_load_timeout(45)
+        wait = WebDriverWait(driver, 30)
+        driver.get("https://www.linkedin.com/login")
+        wait.until(EC.presence_of_element_located((By.ID, "username"))).send_keys(os.environ["LINKEDIN_EMAIL"])
+        driver.find_element(By.ID, "password").send_keys(os.environ["LINKEDIN_PASSWORD"])
+        driver.find_element(By.CSS_SELECTOR, 'button[type="submit"]').click()
+        wait.until(lambda d: "/feed" in d.current_url)
+        driver.get(linkedin_url.rstrip("/") + "/")
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "main h1")))
+        result = {"profile": driver.find_element(By.TAG_NAME, "main").text}
+        for section in ("experience", "education", "certifications", "skills", "honors"):
+            driver.get(linkedin_url.rstrip("/") + f"/details/{section}/")
+            wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "main .artdeco-card")))
+            result[section] = driver.find_element(By.TAG_NAME, "main").text
+        return result
+    finally:
+        driver.quit()

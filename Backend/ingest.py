@@ -1,29 +1,14 @@
-"""
-Ingestion script: builds the chunked vector collection the chatbot searches.
+"""Shared chunking, embedding, index and frontend-export helpers.
 
-Reads Naisarg's portfolio data (resume / GitHub / LinkedIn), splits it into
-small semantic chunks (one per job, project, repo, section...), embeds each
-chunk with Fireworks embeddings, and writes them to a dedicated MongoDB collection
-with an Atlas Vector Search index.
-
-Extracts and stores metadata: dates, location, contact info, URLs.
-
-Data sources (both optional, at least one required):
-  1. The legacy collection (MONGO_CL_NAME) whose documents hold
-     resume_data / github_data / linkedin_data JSON strings.
-  2. Local files: data/resume.json, data/github.json, data/linkedin.json
-     (filename stem is used as the source label).
-
-Usage:
-    python ingest.py            # ingest from legacy collection + data/ files
-    python ingest.py --dry-run  # show the chunks without writing anything
+The CLI delegates to Scripts/sync_portfolio.py so every normal ingestion also
+produces the UI JSON. See Scripts/README.md for sources and configuration.
 """
 
-import argparse
 import json
 import os
 import re
 import sys
+import time
 from datetime import date, datetime
 from pathlib import Path
 from urllib.parse import quote_plus
@@ -47,7 +32,7 @@ def mongo_client() -> MongoClient:
     pwd = quote_plus(os.getenv("MONGO_PASSWORD", ""))
     host = os.getenv("MONGO_HOST") or f"{os.getenv('MONGO_APP_NAME')}.5kfcs.mongodb.net"
     uri = f"mongodb+srv://{user}:{pwd}@{host}/?retryWrites=true&w=majority"
-    return MongoClient(uri, tlsCAFile=certifi.where())
+    return MongoClient(uri, tlsCAFile=certifi.where(), serverSelectionTimeoutMS=15000, connectTimeoutMS=15000)
 
 
 # ---------------------------------------------------------------------------
@@ -78,6 +63,11 @@ def parse_date(date_str) -> str:
 
     if date_str.lower() in ONGOING:
         return date.today().strftime("%Y-%m-%d")
+
+    try:
+        return datetime.fromisoformat(date_str.replace("Z", "+00:00")).date().isoformat()
+    except ValueError:
+        pass
 
     for fmt in DATE_FORMATS:
         try:
@@ -220,7 +210,10 @@ def chunk_json(source: str, data, path: str = "") -> list[dict]:
             if isinstance(item, dict):
                 text = render_value(item)
                 if len(text) > MAX_CHUNK_CHARS:
-                    chunks.extend(chunk_json(source, item, section))
+                    # Keep the repository/item date when splitting long README content.
+                    chunks.append({"source": source, "section": section, "text": text,
+                                   "date": extract_date_from_dict(item),
+                                   "metadata": {k: item[k] for k in ("name", "url") if item.get(k)}})
                 elif text.strip():
                     item_date = extract_date_from_dict(item)
                     chunks.append({
@@ -276,10 +269,12 @@ def split_oversized(chunks: list[dict]) -> list[dict]:
         if len(text) <= MAX_CHUNK_CHARS:
             result.append(chunk)
             continue
-        lines, buf = text.split("\n"), ""
+        lines = [piece for line in text.split("\n")
+                 for piece in ([line[i:i + MAX_CHUNK_CHARS] for i in range(0, len(line), MAX_CHUNK_CHARS)] or [""])]
+        buf = ""
         part = 1
         for line in lines:
-            if len(buf) + len(line) > MAX_CHUNK_CHARS and buf:
+            if len(buf) + 1 + len(line) > MAX_CHUNK_CHARS and buf:
                 result.append({
                     **chunk,
                     "section": f"{chunk['section']} (part {part})",
@@ -303,17 +298,17 @@ def split_oversized(chunks: list[dict]) -> list[dict]:
 # ---------------------------------------------------------------------------
 # Frontend export
 #
-# The UI renders from a single generated file so the site and the vector DB can
-# never drift: edit data/*.json, run this script, and both update together.
+# The sync passes one normalized source bundle to both this exporter and the
+# chunker. The static site must rebuild after the resulting JSON is committed.
 # ---------------------------------------------------------------------------
 
-FRONTEND_DATA_FILE = Path(
-    "../Frontend/portfolio/src/data/portfolioData.json"
-).resolve()
+ROOT = Path(__file__).resolve().parents[1]
+DATA_DIR = ROOT / "Backend" / "data"
+FRONTEND_DATA_FILE = ROOT / "Frontend/portfolio/src/data/portfolioData.json"
 
 
 def read_source(name: str):
-    path = Path("data") / f"{name}.json"
+    path = DATA_DIR / f"{name}.json"
     if not path.exists():
         return None
     return json.loads(path.read_text())
@@ -425,11 +420,11 @@ def build_education(resume, linkedin) -> list[dict]:
     return sorted(schools.values(), key=sort_key, reverse=True)
 
 
-def export_frontend_data() -> dict:
+def export_frontend_data(sources=None, write=True) -> dict:
     """Build the normalized payload the React app renders from."""
-    resume = read_source("resume") or {}
-    linkedin = read_source("linkedin") or {}
-    repos = read_source("github") or []
+    resume = sources["resume"] if sources is not None else read_source("resume") or {}
+    linkedin = sources["linkedin"] if sources is not None else read_source("linkedin") or {}
+    repos = sources["github"] if sources is not None else read_source("github") or []
 
     payload = {
         "generatedAt": date.today().isoformat(),
@@ -510,10 +505,17 @@ def export_frontend_data() -> dict:
         "allSkills": linkedin.get("skills", []),
     }
 
-    FRONTEND_DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
-    FRONTEND_DATA_FILE.write_text(json.dumps(payload, indent=2) + "\n")
+    if sources is not None:
+        payload["featuredWork"] = sources.get("featured_work", [])
+    else:
+        featured_path = ROOT / "Scripts/resources/featured-work.json"
+        payload["featuredWork"] = json.loads(featured_path.read_text(encoding="utf-8")) if featured_path.exists() else []
 
-    print(f"\n📦 Exported frontend data → {FRONTEND_DATA_FILE}")
+    if write:
+        FRONTEND_DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
+        FRONTEND_DATA_FILE.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+
+    print(f"\n📦 {'Exported' if write else 'Prepared'} frontend data → {FRONTEND_DATA_FILE}")
     print(f"   {len(payload['experience'])} roles, {len(payload['education'])} schools, "
           f"{len(payload['projects'])} projects, {len(payload['repos'])} repos, "
           f"{len(payload['certifications'])} certs, {len(payload['awards'])} awards")
@@ -540,7 +542,7 @@ def load_from_legacy_collection(db) -> list[dict]:
 
 def load_from_local_files() -> list[dict]:
     chunks = []
-    for f in sorted(Path("data").glob("*.json")):
+    for f in sorted(DATA_DIR.glob("*.json")):
         chunks.extend(chunk_json(f.stem, f.read_text()))
         print(f"📄 {f} loaded")
     return chunks
@@ -563,86 +565,47 @@ def embed_chunks(chunks: list[dict]) -> list[dict]:
             model=EMBEDDING_MODEL,
             input=texts
         )
-        for chunk, emb in zip(batch, result.data):
-            chunk["embedding"] = emb.embedding
+        embeddings = {emb.index: emb.embedding for emb in result.data}
+        if set(embeddings) != set(range(len(batch))):
+            raise ValueError("Embedding service returned an incomplete batch")
+        for i, chunk in enumerate(batch):
+            if len(embeddings[i]) != EMBEDDING_DIMS:
+                raise ValueError("Embedding dimensions do not match config.py")
+            chunk["embedding"] = embeddings[i]
         print(f"🧮 Embedded {min(start + batch_size, len(chunks))}/{len(chunks)}")
     return chunks
 
 
-def ensure_vector_index(collection):
+def ensure_vector_index(collection, timeout=300):
     definition = {
         "fields": [
             {"type": "vector", "path": "embedding", "numDimensions": EMBEDDING_DIMS, "similarity": "cosine"},
             {"type": "filter", "path": "source"},
             {"type": "filter", "path": "date"},
-            {"type": "filter", "path": "metadata"},
         ]
     }
-    try:
-        existing = [i["name"] for i in collection.list_search_indexes()]
-        if CHUNKS_INDEX in existing:
-            print(f"🔍 Vector index '{CHUNKS_INDEX}' already exists")
-            return
+    existing = next((i for i in collection.list_search_indexes() if i["name"] == CHUNKS_INDEX), None)
+    if existing is None:
         collection.create_search_index(SearchIndexModel(definition=definition, name=CHUNKS_INDEX, type="vectorSearch"))
-        print(f"🔍 Created vector index '{CHUNKS_INDEX}' (takes ~1 min to become queryable)")
-    except Exception as e:
-        print(f"⚠️  Could not create the index via the driver ({e}).")
-        print(f"   Create it manually in Atlas on '{collection.name}', name '{CHUNKS_INDEX}', with:")
-        print(json.dumps(definition, indent=2))
+    elif existing.get("latestDefinition") != definition:
+        collection.update_search_index(CHUNKS_INDEX, definition)
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        index = next((i for i in collection.list_search_indexes() if i["name"] == CHUNKS_INDEX), {})
+        if index.get("status") == "FAILED":
+            raise RuntimeError(f"Vector index {CHUNKS_INDEX} failed to build")
+        if (index.get("queryable") and index.get("status") == "READY"
+                and index.get("latestDefinition") == definition):
+            return
+        time.sleep(5)
+    raise TimeoutError(f"Vector index {CHUNKS_INDEX} did not become ready")
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--dry-run", action="store_true", help="print chunks, don't embed or write")
-    parser.add_argument("--export-only", action="store_true",
-                        help="regenerate the frontend data file without touching MongoDB")
-    args = parser.parse_args()
-
-    if args.export_only:
-        export_frontend_data()
-        return
-
-    db = None
-    try:
-        client = mongo_client()
-        client.admin.command("ping")
-        db = client[os.getenv("MONGO_DB_NAME")]
-    except Exception as e:
-        print(f"⚠️  MongoDB unreachable ({e}); using local data/ files only")
-
-    chunks = (load_from_legacy_collection(db) if db is not None else []) + load_from_local_files()
-    chunks = split_oversized(merge_small_chunks(chunks))
-    if not chunks:
-        sys.exit("❌ No data found — need the legacy collection or files in data/*.json")
-
-    print(f"\n✂️  {len(chunks)} chunks total")
-    for c in chunks[:10]:
-        date_str = f" | date: {c.get('date', 'none')}" if c.get("date") else ""
-        meta_str = f" | meta: {c.get('metadata', {})}" if c.get("metadata") else ""
-        print(f"   [{c['source']}] {c['section']} ({len(c['text'])} chars){date_str}{meta_str}")
-    if len(chunks) > 10:
-        print(f"   ... and {len(chunks) - 10} more")
-
-    if args.dry_run:
-        for c in chunks:
-            date_str = f"\ndate: {c.get('date')}" if c.get("date") else ""
-            meta_str = f"\nmetadata: {json.dumps(c.get('metadata', {}), indent=2)}" if c.get("metadata") else ""
-            print(f"\n===== [{c['source']}] {c['section']} ====={date_str}{meta_str}\n{c['text']}")
-        return
-
-    export_frontend_data()
-
-    if db is None:
-        sys.exit("❌ Cannot write chunks: MongoDB is unreachable")
-
-    chunks = embed_chunks(chunks)
-
-    collection = db[CHUNKS_COLLECTION]
-    collection.delete_many({})
-    collection.insert_many(chunks)
-    print(f"✅ Wrote {len(chunks)} chunks to '{CHUNKS_COLLECTION}'")
-
-    ensure_vector_index(collection)
+    # Preserve the historical entrypoint while using the shared publication path.
+    sys.path.insert(0, str(ROOT / "Scripts"))
+    from sync_portfolio import main as sync_main
+    sync_main()
 
 
 if __name__ == "__main__":

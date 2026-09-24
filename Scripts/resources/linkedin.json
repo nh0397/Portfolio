@@ -1,0 +1,139 @@
+{
+  "work_experience": [],
+  "education": [],
+  "certifications": [
+    {
+      "certification_name": "Intermediate Technical Interview Prep",
+      "issuing_organization": "CodePath",
+      "issue_date": "May 2025"
+    },
+    {
+      "certification_name": "Learning GitHub",
+      "issuing_organization": "LinkedIn",
+      "issue_date": "Jun 2024"
+    },
+    {
+      "certification_name": "Intermediate Web Development Course",
+      "issuing_organization": "CodePath",
+      "issue_date": "Apr 2024"
+    },
+    {
+      "certification_name": "Docker Essentials: A Developer Introduction",
+      "issuing_organization": "IBM",
+      "issue_date": "Jan 2024"
+    }
+  ],
+  "honors_and_awards": [
+    {
+      "award_name": "Impact Award",
+      "issuing_organization": "Mu Sigma",
+      "issue_date": "Jul 2023"
+    },
+    {
+      "award_name": "Spot Award",
+      "issuing_organization": "Mu Sigma",
+      "issue_date": "Apr 2023"
+    },
+    {
+      "award_name": "Impact Award",
+      "issuing_organization": "Mu Sigma",
+      "issue_date": "Apr 2021"
+    },
+    {
+      "award_name": "Spot Award",
+      "issuing_organization": "Mu Sigma",
+      "issue_date": "Oct 2020"
+    },
+    {
+      "award_name": "Spot Award",
+      "issuing_organization": "Mu Sigma",
+      "issue_date": "Apr 2020"
+    }
+  ],
+  "skills": [
+    "Agile Methodologies",
+    "AI-Powered Personal Chatbot",
+    "Angular",
+    "API Development",
+    "AWS",
+    "Back-End Web Development",
+    "Caching",
+    "Continuous Integration and Continuous Delivery (CI/CD)",
+    "Cypress",
+    "DASH",
+    "Data Analytics",
+    "Data Management",
+    "Data Science",
+    "Data Structures",
+    "Databases",
+    "Django",
+    "Distributed Systems",
+    "Docker",
+    "EduBridge",
+    "Event Driven Systems",
+    "Express",
+    "FAISS",
+    "FastAPI",
+    "Firebase",
+    "FlareGraph",
+    "Flask",
+    "Frontend",
+    "Full-Stack Development",
+    "Gemini",
+    "Generative AI Tools",
+    "GitHub Actions",
+    "GitLab CI/CD",
+    "HTML5",
+    "Integration",
+    "Intermediate Technical Interview Prep",
+    "Jest",
+    "JavaScript",
+    "JWT",
+    "Kafka",
+    "Kubernetes",
+    "LangChain",
+    "LLMs",
+    "MATLAB",
+    "Mean Stack",
+    "Microservices",
+    "Microsoft Excel",
+    "Microsoft PowerPoint",
+    "MongoDB",
+    "MySQL",
+    "Natural Language Processing (NLP)",
+    "Next.js",
+    "Nginx",
+    "Node.js",
+    "NLP",
+    "OAuth2",
+    "Ollama",
+    "OpenAI",
+    "Pinecone",
+    "Plotly",
+    "PostgreSQL",
+    "Programming",
+    "Project Management",
+    "Prompt Engineering",
+    "PyTest",
+    "Python",
+    "RAG Workflows",
+    "RabbitMQ",
+    "RBAC",
+    "React",
+    "Redis",
+    "REST",
+    "Retrieval-Augmented Generation (RAG)",
+    "Role-Based Access Control (RBAC)",
+    "Selenium",
+    "Serverless",
+    "Software Development",
+    "Software Development Life Cycle (SDLC)",
+    "SQL",
+    "Systems & Architecture",
+    "Tailwind",
+    "Testing & Security",
+    "TypeScript",
+    "University Lecturing",
+    "WebSockets"
+  ]
+}

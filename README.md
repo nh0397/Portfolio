@@ -46,9 +46,9 @@ The fix is structural rather than procedural. One command writes **both**
 consumers from the same source:
 
 ```
-Backend/data/{resume,linkedin,github}.json      ← the only place facts are edited
+Scripts/resources/ + live GitHub + optional LinkedIn refresh
                      │
-          python ingest.py
+          python Scripts/sync_portfolio.py
                      │
         ┌────────────┴────────────┐
         ▼                         ▼
@@ -57,12 +57,14 @@ Backend/data/{resume,linkedin,github}.json      ← the only place facts are edi
    what the bot searches)
 ```
 
-There is no path where one updates and the other doesn't. Changing a fact means
-editing a source file and re-running ingest; nothing else is authoritative.
+The sync prepares both outputs from one validated bundle and writes the frontend
+JSON after MongoDB publication. GitHub Actions commits the JSON; the site then
+needs a successful rebuild and deployment. These systems are not one transaction,
+so a deployment failure requires a rerun. See [sync setup](Scripts/README.md).
 
 > **Transfers as:** if your assistant and your product surface read from
-> different stores, they *will* diverge. Make the divergence impossible instead
-> of writing a runbook asking people not to cause it.
+> different stores, generate both from the same validated source bundle and
+> track publication failures explicitly.
 
 ## 2. Recency: retrieval that knows what "latest" means
 
@@ -207,9 +209,8 @@ Portfolio/
 ├── Backend/
 │   ├── app.py                Flask API — retrieval + generation
 │   ├── ingest.py             chunk → embed → index, and export site data
-│   ├── data/*.json           the only place facts are edited (gitignored)
 │   └── vercel.json
-└── Scripts/                  data extraction helpers
+└── Scripts/                  scheduled sync, tests, and editable resources/
 ```
 
 ## Running it
@@ -218,7 +219,6 @@ Portfolio/
 # Backend — needs FIREWORKS_API_KEY, GROQ_API_KEY and MONGO_* in Backend/.env
 cd Backend
 pip install -r requirements.txt
-python ingest.py          # writes the vector index AND the site's data file
 python app.py             # http://localhost:5001
 ```
 
@@ -229,9 +229,16 @@ npm install
 npm run dev               # http://localhost:5173
 ```
 
-`python ingest.py --export-only` refreshes the site data without touching
-MongoDB. `--dry-run` prints the chunks and their extracted dates without
-writing anything.
+Run the data sync from the repository root:
+
+```bash
+pip install -r Scripts/requirements-sync.txt
+python Scripts/sync_portfolio.py
+```
+
+`--frontend-only` refreshes site JSON without MongoDB. `--dry-run` fetches and
+validates without writing. The weekly GitHub Actions workflow, source files,
+index configuration, and required secrets are documented in [Scripts](Scripts/README.md).
 
 ## Deploying
 

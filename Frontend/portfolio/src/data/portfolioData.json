@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-09",
+  "generatedAt": "2026-09-24",
   "personal": {
     "name": "Naisarg Halvadiya",
     "title": "Applied AI Engineer",
@@ -33,7 +33,7 @@
         "Developed data models and ETL processes to standardize unstructured judging data into formats suitable for machine learning and AI-powered insights.",
         "Evaluated and integrated retrieval-augmented generation (RAG), vector search and LLM-based analytics into the platform roadmap, including recommendation, knowledge-retrieval and reputation-scoring features."
       ],
-      "date": "2026-08-09",
+      "date": "2026-09-24",
       "source": "resume"
     },
     {
@@ -50,7 +50,7 @@
         "Created automated grading systems reducing evaluation time by 50%."
       ],
       "date": "2026-01-01",
-      "source": "linkedin"
+      "source": "resume"
     },
     {
       "title": "Senior Software Engineer",
@@ -120,7 +120,7 @@
     {
       "degree": "Bachelor of Technology - BTech",
       "school": "Nirma University",
-      "field": "Computer Engineering",
+      "field": "",
       "startDate": "2015",
       "endDate": "2019",
       "honors": "",
@@ -164,6 +164,49 @@
   ],
   "repos": [
     {
+      "name": "agent-ui-execution-engine",
+      "description": "Teach an AI to use an app, save the workflow, and replay it with new inputs. Includes a live browser, human takeover, and a banking demo.",
+      "language": "Python",
+      "topics": [
+        "ai-agent",
+        "ai-coding",
+        "ai-engineering",
+        "browser-automatiom",
+        "human-ai-collaboration",
+        "playwright-python"
+      ],
+      "stars": 0,
+      "url": "https://github.com/nh0397/agent-ui-execution-engine",
+      "homepage": "",
+      "created": "2026-09-20T04:07:36Z",
+      "lastUpdated": "2026-09-24T06:59:03Z",
+      "date": "2026-09-24"
+    },
+    {
+      "name": "agentic-pr-reviewer",
+      "description": "An AI PR reviewer that investigates code using tools (semantic search, dependency graphs) before generating review comments, instead of sending the raw diff straight to a model.",
+      "language": "Python",
+      "topics": [],
+      "stars": 0,
+      "url": "https://github.com/nh0397/agentic-pr-reviewer",
+      "homepage": "",
+      "created": "2026-08-22T22:02:57Z",
+      "lastUpdated": "2026-09-08T06:16:44Z",
+      "date": "2026-09-08"
+    },
+    {
+      "name": "Portfolio",
+      "description": "React portfolios (minimalist + VS Code themed), Flask API, and intelligent data processing tools. Features AI chatbot trained on personal data with real-time GitHub/LinkedIn integration.",
+      "language": "JavaScript",
+      "topics": [],
+      "stars": 0,
+      "url": "https://github.com/nh0397/Portfolio",
+      "homepage": "https://portfolio-iota-ruddy-22.vercel.app",
+      "created": "2025-09-06T19:42:01Z",
+      "lastUpdated": "2026-08-23T23:06:34Z",
+      "date": "2026-08-23"
+    },
+    {
       "name": "ipl-2026-auction-poc",
       "description": "Private IPL-style fantasy league PoC: live auction room, scoreboards, CricAPI + ESPN sync, Supabase Auth (Google) and GitHub Actions.",
       "language": "TypeScript",
@@ -177,8 +220,8 @@
       "stars": 0,
       "url": "https://github.com/nh0397/ipl-2026-auction-poc",
       "homepage": "https://ipl-2026-auction-poc.vercel.app",
-      "created": "2026-03-09",
-      "lastUpdated": "2026-06-07",
+      "created": "2026-03-09T21:02:06Z",
+      "lastUpdated": "2026-06-07T06:40:29Z",
       "date": "2026-06-07"
     },
     {
@@ -189,8 +232,8 @@
       "stars": 0,
       "url": "https://github.com/nh0397/Vulnerability-Dashboard",
       "homepage": "",
-      "created": "2026-05-01",
-      "lastUpdated": "2026-05-05",
+      "created": "2026-05-01T22:37:13Z",
+      "lastUpdated": "2026-05-05T01:39:04Z",
       "date": "2026-05-05"
     },
     {
@@ -201,8 +244,8 @@
       "stars": 0,
       "url": "https://github.com/nh0397/Title-Transfer-Agent",
       "homepage": "",
-      "created": "2026-04-21",
-      "lastUpdated": "2026-04-21",
+      "created": "2026-04-21T12:33:24Z",
+      "lastUpdated": "2026-04-21T14:37:12Z",
       "date": "2026-04-21"
     },
     {
@@ -213,8 +256,8 @@
       "stars": 0,
       "url": "https://github.com/nh0397/nh0397",
       "homepage": "",
-      "created": "2024-06-16",
-      "lastUpdated": "2026-04-19",
+      "created": "2024-06-16T14:47:21Z",
+      "lastUpdated": "2026-04-19T21:22:52Z",
       "date": "2026-04-19"
     },
     {
@@ -225,21 +268,9 @@
       "stars": 0,
       "url": "https://github.com/nh0397/emotionAnalysis-realtime",
       "homepage": "",
-      "created": "2025-08-24",
-      "lastUpdated": "2026-04-08",
+      "created": "2025-08-24T01:11:05Z",
+      "lastUpdated": "2026-04-08T21:39:29Z",
       "date": "2026-04-08"
-    },
-    {
-      "name": "Portfolio",
-      "description": "React portfolios (minimalist + VS Code themed), Flask API, and intelligent data processing tools. Features AI chatbot trained on personal data with real-time GitHub/LinkedIn integration.",
-      "language": "JavaScript",
-      "topics": [],
-      "stars": 0,
-      "url": "https://github.com/nh0397/Portfolio",
-      "homepage": "https://portfolio-iota-ruddy-22.vercel.app",
-      "created": "2025-09-06",
-      "lastUpdated": "2026-03-28",
-      "date": "2026-03-28"
     },
     {
       "name": "Multi-Agent-Task-Solver",
@@ -257,8 +288,8 @@
       "stars": 1,
       "url": "https://github.com/nh0397/Multi-Agent-Task-Solver",
       "homepage": "",
-      "created": "2026-01-21",
-      "lastUpdated": "2026-01-22",
+      "created": "2026-01-21T17:40:05Z",
+      "lastUpdated": "2026-01-22T17:47:32Z",
       "date": "2026-01-22"
     },
     {
@@ -277,8 +308,8 @@
       "stars": 1,
       "url": "https://github.com/nh0397/WorkFlowDoc",
       "homepage": "",
-      "created": "2025-11-07",
-      "lastUpdated": "2025-12-04",
+      "created": "2025-11-07T05:36:41Z",
+      "lastUpdated": "2025-12-04T06:48:21Z",
       "date": "2025-12-04"
     },
     {
@@ -289,8 +320,8 @@
       "stars": 0,
       "url": "https://github.com/nh0397/Prof-Sync",
       "homepage": "",
-      "created": "2025-09-06",
-      "lastUpdated": "2025-09-06",
+      "created": "2025-09-06T23:00:42Z",
+      "lastUpdated": "2025-09-06T23:01:11Z",
       "date": "2025-09-06"
     },
     {
@@ -301,12 +332,12 @@
       "stars": 0,
       "url": "https://github.com/nh0397/Smart-Resume-AI",
       "homepage": "",
-      "created": "2025-09-06",
-      "lastUpdated": "2025-09-06",
+      "created": "2025-09-06T21:53:09Z",
+      "lastUpdated": "2025-09-06T22:32:56Z",
       "date": "2025-09-06"
     },
     {
-      "name": "SF-Hacks",
+      "name": "AI-Compliance-Guardrail",
       "description": "GenAI-aware DLP tool that detects and blocks or masks sensitive data in real-time, preventing leaks when anyone uses Gen AI tools like ChatGPT or Gemini.",
       "language": "JavaScript",
       "topics": [
@@ -316,10 +347,10 @@
         "llms"
       ],
       "stars": 0,
-      "url": "https://github.com/nh0397/SF-Hacks",
+      "url": "https://github.com/nh0397/AI-Compliance-Guardrail",
       "homepage": "",
-      "created": "2025-04-05",
-      "lastUpdated": "2025-07-14",
+      "created": "2025-04-05T00:59:24Z",
+      "lastUpdated": "2025-07-14T04:02:06Z",
       "date": "2025-07-14"
     },
     {
@@ -335,8 +366,8 @@
       "stars": 0,
       "url": "https://github.com/nh0397/EduBridge",
       "homepage": "",
-      "created": "2024-06-16",
-      "lastUpdated": "2024-12-09",
+      "created": "2024-06-16T18:10:16Z",
+      "lastUpdated": "2024-12-09T22:30:17Z",
       "date": "2024-12-09"
     },
     {
@@ -353,8 +384,8 @@
       "stars": 0,
       "url": "https://github.com/nh0397/CardifyAI",
       "homepage": "",
-      "created": "2024-08-24",
-      "lastUpdated": "2024-09-05",
+      "created": "2024-08-24T19:33:51Z",
+      "lastUpdated": "2024-09-05T09:12:07Z",
       "date": "2024-09-05"
     },
     {
@@ -365,8 +396,8 @@
       "stars": 0,
       "url": "https://github.com/nh0397/StockBot-AI",
       "homepage": "",
-      "created": "2024-08-03",
-      "lastUpdated": "2024-08-07",
+      "created": "2024-08-03T07:25:52Z",
+      "lastUpdated": "2024-08-07T16:18:44Z",
       "date": "2024-08-07"
     },
     {
@@ -383,8 +414,8 @@
       "stars": 0,
       "url": "https://github.com/nh0397/Legal-GPT",
       "homepage": "",
-      "created": "2024-06-23",
-      "lastUpdated": "2024-07-11",
+      "created": "2024-06-23T15:47:30Z",
+      "lastUpdated": "2024-07-11T23:04:50Z",
       "date": "2024-07-11"
     },
     {
@@ -400,8 +431,8 @@
       "stars": 0,
       "url": "https://github.com/nh0397/Data-Viz-SFFD",
       "homepage": "",
-      "created": "2023-11-25",
-      "lastUpdated": "2024-07-02",
+      "created": "2023-11-25T09:04:21Z",
+      "lastUpdated": "2024-07-02T14:03:26Z",
       "date": "2024-07-02"
     },
     {
@@ -412,8 +443,8 @@
       "stars": 0,
       "url": "https://github.com/nh0397/Discussion-Forum",
       "homepage": "",
-      "created": "2024-06-27",
-      "lastUpdated": "2024-06-27",
+      "created": "2024-06-27T05:31:28Z",
+      "lastUpdated": "2024-06-27T05:41:09Z",
       "date": "2024-06-27"
     },
     {
@@ -424,9 +455,21 @@
       "stars": 0,
       "url": "https://github.com/nh0397/Flight-Fare-Prediction",
       "homepage": "",
-      "created": "2024-04-22",
-      "lastUpdated": "2024-04-23",
+      "created": "2024-04-22T05:35:16Z",
+      "lastUpdated": "2024-04-23T13:41:20Z",
       "date": "2024-04-23"
+    },
+    {
+      "name": "web102_prework",
+      "description": "",
+      "language": "JavaScript",
+      "topics": [],
+      "stars": 0,
+      "url": "https://github.com/nh0397/web102_prework",
+      "homepage": "",
+      "created": "2024-01-03T20:38:42Z",
+      "lastUpdated": "2024-01-04T07:45:37Z",
+      "date": "2024-01-04"
     }
   ],
   "certifications": [
@@ -611,5 +654,216 @@
     "TypeScript",
     "University Lecturing",
     "WebSockets"
-  ]
+  ],
+  "featuredWork": [
+    {
+      "id": "agent-ui-execution-engine",
+      "title": "Agent UI Execution Engine",
+      "tagline": "Teach a browser task once, replay it with new inputs",
+      "year": "2026",
+      "problem": "Repeated work in applications without useful APIs still has to happen through their screens. Each run needs approval, error handling, and evidence of what changed.",
+      "approach": "Built a chat workspace and Python browser engine that can discover a task, record a human demonstration, and replay verified workflows. A live browser view supports takeover, while a synthetic banking app provides repeatable test scenarios.",
+      "metrics": [
+        {
+          "k": "3 modes",
+          "v": "Discover, record, and replay"
+        },
+        {
+          "k": "0",
+          "v": "model decisions in the recorded replay check"
+        },
+        {
+          "k": "6",
+          "v": "replay scenarios with expected outcomes"
+        }
+      ],
+      "stack": [
+        "Python",
+        "Chromium",
+        "Groq",
+        "PostgreSQL",
+        "Docker"
+      ],
+      "github": "https://github.com/nh0397/agent-ui-execution-engine",
+      "demo": null,
+      "media": {
+        "type": "none"
+      }
+    },
+    {
+      "id": "vulnerability-dashboard",
+      "title": "High-Performance Vulnerability Dashboard",
+      "tagline": "236,000 records from a 371MB file, interactive in under a second",
+      "year": "2026",
+      "problem": "A 371MB vulnerability export froze the browser for 90 seconds on load. The data existed but nobody could actually use it.",
+      "approach": "Moved JSON parsing off the main thread into Web Workers, virtualized the DOM with react-window, and used Zustand as an in-memory query store. Entirely client-side \u2014 no backend, no pagination API.",
+      "metrics": [
+        {
+          "k": "< 1s",
+          "v": "to first interactive render"
+        },
+        {
+          "k": "0s",
+          "v": "main-thread blocking (was 90s)"
+        },
+        {
+          "k": "236K",
+          "v": "rows filterable live"
+        }
+      ],
+      "stack": [
+        "React",
+        "TypeScript",
+        "Web Workers",
+        "react-window",
+        "Zustand"
+      ],
+      "github": "https://github.com/nh0397/Vulnerability-Dashboard",
+      "demo": null,
+      "media": {
+        "type": "none"
+      }
+    },
+    {
+      "id": "multi-agent-analyst",
+      "title": "Multi-Agent Financial Analyst",
+      "tagline": "A planner\u2013supervisor system that asks before it answers",
+      "year": "2026",
+      "problem": "Single-shot LLM calls answer ambiguous financial questions confidently and wrongly. There's no point in the loop where the model can say 'which quarter did you mean?'",
+      "approach": "Built a planner\u2013supervisor architecture that detects ambiguity before any tool is invoked, then dispatches specialist agents. An LLM routing layer falls back across Mixtral 8x7B and Llama 3 70B on Groq so a degraded model never takes the system down.",
+      "metrics": [
+        {
+          "k": "Sub-second",
+          "v": "agentic responses via Groq"
+        },
+        {
+          "k": "Pre-tool",
+          "v": "ambiguity detection"
+        },
+        {
+          "k": "2-model",
+          "v": "automatic fallback"
+        }
+      ],
+      "stack": [
+        "LangGraph",
+        "Groq",
+        "Chainlit",
+        "Python",
+        "Multi-agent orchestration"
+      ],
+      "github": "https://github.com/nh0397/Multi-Agent-Task-Solver",
+      "demo": null,
+      "media": {
+        "type": "none"
+      }
+    },
+    {
+      "id": "compliance-guardrail",
+      "title": "AI Compliance Guardrail",
+      "tagline": "Winner \u2014 Best Emerging AI Hack, SF Hacks 2025",
+      "year": "2025",
+      "award": "\ud83c\udfc6 SF Hacks 2025",
+      "problem": "People paste customer data into ChatGPT without registering that it leaves the building. Blocking the tools outright just pushes usage underground.",
+      "approach": "A Chrome extension intercepts prompts in real time. A Flask router sends cheap checks to Mistral, but anything possibly sensitive is classified by a local model via Ollama \u2014 so the PII never crosses the network boundary. Shipped in a 24-hour sprint with an admin dashboard for policy and violation tracking.",
+      "metrics": [
+        {
+          "k": "0",
+          "v": "PII egress \u2014 local classification"
+        },
+        {
+          "k": "24h",
+          "v": "concept to working demo"
+        },
+        {
+          "k": "1st",
+          "v": "place, emerging AI track"
+        }
+      ],
+      "stack": [
+        "React",
+        "Flask",
+        "Ollama",
+        "Mistral",
+        "Chrome Extension",
+        "Edge AI"
+      ],
+      "github": "https://github.com/nh0397/SF-Hacks",
+      "demo": null,
+      "media": {
+        "type": "gif",
+        "src": "secure-sense",
+        "alt": "Guardrail intercepting sensitive data in a prompt"
+      }
+    },
+    {
+      "id": "rag-assistant",
+      "title": "This Site's AI Assistant",
+      "tagline": "RAG over my own r\u00e9sum\u00e9, repos and LinkedIn \u2014 answering in the corner right now",
+      "year": "2025",
+      "problem": "A portfolio is a static artifact. Recruiters have specific questions and no fast way to ask them.",
+      "approach": "Chunked my r\u00e9sum\u00e9, GitHub and LinkedIn into a MongoDB Atlas vector index with Fireworks embeddings, retrieving date-sorted context so it always answers with current work. Groq handles generation. The same generated dataset renders this page, so the assistant and the site can never contradict each other.",
+      "metrics": [
+        {
+          "k": "1 source",
+          "v": "for site + assistant"
+        },
+        {
+          "k": "Date-ranked",
+          "v": "retrieval, newest first"
+        },
+        {
+          "k": "Voice",
+          "v": "hands-free Q&A + navigation"
+        }
+      ],
+      "stack": [
+        "MongoDB Atlas",
+        "Fireworks",
+        "Groq",
+        "Flask",
+        "React",
+        "Web Speech API"
+      ],
+      "github": "https://github.com/nh0397/Portfolio",
+      "demo": null,
+      "media": {
+        "type": "youtube",
+        "id": "ZTqdEmM5NJg",
+        "alt": "RAG assistant walkthrough"
+      }
+    },
+    {
+      "id": "flaregraph",
+      "title": "FlareGraph",
+      "tagline": "Five years of San Francisco fire incidents, mapped",
+      "year": "2024",
+      "problem": "SF Fire Department incident reports are public but effectively unreadable for planning \u2014 thousands of rows with no spatial view.",
+      "approach": "A Dash + Plotly application that geospatially clusters five years of incidents and surfaces hotspots against response times.",
+      "metrics": [
+        {
+          "k": "5 yrs",
+          "v": "of incident data"
+        },
+        {
+          "k": "Geospatial",
+          "v": "hotspot clustering"
+        }
+      ],
+      "stack": [
+        "Dash",
+        "Plotly",
+        "Python",
+        "Geospatial clustering"
+      ],
+      "github": "https://github.com/nh0397/Data-Viz-SFFD",
+      "demo": null,
+      "media": {
+        "type": "youtube",
+        "id": "f08CN-qMKCI",
+        "alt": "FlareGraph interactive map"
+      }
+    }
+  ],
+  "sourceHash": "bf0a9308456f1f25a5ec0cdf1425dd1db437582995e15f416b4c7bb60876d4be"
 }
