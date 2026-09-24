@@ -77,8 +77,16 @@ if not groq_client:
     print("❌ GROQ_API_KEY not set")
 
 
-def retrieve_chunks(query: str, k: int = 8) -> list[dict]:
-    """Embed the query and return the k most relevant portfolio chunks, sorted by date (newest first)."""
+def retrieve_chunks(query: str, k: int = 8, recent_n: int = 3) -> list[dict]:
+    """Embed the query and return the k most relevant portfolio chunks, sorted by date (newest first).
+
+    Vector similarity alone doesn't encode recency — embeddings for "his newest
+    project" and a two-year-old repo description can score within a point of
+    each other, so a brand-new item can miss the top-k entirely. To keep
+    "what's he working on now" answers current, the most recently dated chunks
+    are always pulled in alongside the semantic matches, then merged and
+    re-sorted by date.
+    """
     result = fw_embed.embeddings.create(
         model=EMBEDDING_MODEL,
         input=query
@@ -96,9 +104,19 @@ def retrieve_chunks(query: str, k: int = 8) -> list[dict]:
             }
         },
         {"$project": {"_id": 0, "source": 1, "section": 1, "text": 1, "date": 1, "metadata": 1, "score": {"$meta": "vectorSearchScore"}}},
-        {"$sort": {"date": -1}},
     ]
-    return list(collection.aggregate(pipeline))
+    semantic = list(collection.aggregate(pipeline))
+
+    recent = list(
+        collection.find(
+            {"date": {"$ne": None}},
+            {"_id": 0, "source": 1, "section": 1, "text": 1, "date": 1, "metadata": 1},
+        ).sort("date", -1).limit(recent_n)
+    )
+
+    seen = {(c["source"], c["section"]) for c in semantic}
+    merged = semantic + [c for c in recent if (c["source"], c["section"]) not in seen]
+    return sorted(merged, key=lambda c: c.get("date") or "", reverse=True)
 
 
 def format_text(text: str) -> str:
