@@ -255,7 +255,11 @@ def chat():
 
         try:
             chunks = retrieve_chunks(message) if collection is not None else []
-            print(f"🔍 Retrieved {len(chunks)} chunks, top score: {chunks[0]['score']:.3f}" if chunks else "🔍 No chunks retrieved")
+            # Chunks merged in purely for recency (see retrieve_chunks) carry no
+            # vectorSearchScore, so this can't assume chunks[0] has one.
+            top_score = chunks[0].get("score") if chunks else None
+            score_str = f"{top_score:.3f}" if top_score is not None else "n/a"
+            print(f"🔍 Retrieved {len(chunks)} chunks, top score: {score_str}" if chunks else "🔍 No chunks retrieved")
         except Exception as e:
             print(f"⚠️  Retrieval failed, answering without context: {e}")
             chunks = []
