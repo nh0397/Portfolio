@@ -58,13 +58,7 @@ export const featuredWork = [
     stack: ["Playwright", "Python", "Browser automation", "Agentic workflows", "Human-in-the-loop"],
     github: "https://github.com/nh0397/agent-ui-execution-engine",
     demo: null,
-    // Drop the demo clip in public/media/ — see public/media/README.md for the
-    // expected filename. Swap type to "gif" + an .gif src if that's the format.
-    media: {
-      type: "video",
-      src: "/media/agent-ui-execution-engine.mp4",
-      alt: "Agent UI Execution Engine — recording a workflow and replaying it with new inputs",
-    },
+    media: { type: "none" },
   },
   {
     id: "vulnerability-dashboard",
