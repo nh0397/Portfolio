@@ -42,6 +42,25 @@ export const proofPoints = [
  */
 export const featuredWork = [
   {
+    id: "agent-ui-execution-engine",
+    title: "Agent UI Execution Engine",
+    tagline: "Teach an agent a workflow once, replay it with new inputs",
+    year: "2026",
+    problem:
+      "An agent that re-reasons every click on every run is slow, expensive, and impossible to audit — nobody can say why it did what it did, and it can't be trusted with a task like moving money.",
+    approach:
+      "Playwright drives a live browser the agent operates. A demonstrated workflow is captured once and saved as a parameterized, replayable script, so a repeat run executes recorded steps against new inputs instead of paying for LLM reasoning at every click. A human-takeover control hands the browser back mid-run when the agent stalls or the step needs judgment, proven end-to-end on a banking workflow where an auditable trail is non-negotiable.",
+    metrics: [
+      { k: "Record once", v: "replay with new inputs" },
+      { k: "Live browser", v: "+ human takeover mid-run" },
+      { k: "Banking demo", v: "auditable, step-by-step trail" },
+    ],
+    stack: ["Playwright", "Python", "Browser automation", "Agentic workflows", "Human-in-the-loop"],
+    github: "https://github.com/nh0397/agent-ui-execution-engine",
+    demo: null,
+    media: { type: "none" },
+  },
+  {
     id: "vulnerability-dashboard",
     title: "High-Performance Vulnerability Dashboard",
     tagline: "236,000 records from a 371MB file, interactive in under a second",

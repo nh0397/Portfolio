@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-09",
+  "generatedAt": "2026-09-24",
   "personal": {
     "name": "Naisarg Halvadiya",
     "title": "Applied AI Engineer",
@@ -33,7 +33,7 @@
         "Developed data models and ETL processes to standardize unstructured judging data into formats suitable for machine learning and AI-powered insights.",
         "Evaluated and integrated retrieval-augmented generation (RAG), vector search and LLM-based analytics into the platform roadmap, including recommendation, knowledge-retrieval and reputation-scoring features."
       ],
-      "date": "2026-08-09",
+      "date": "2026-09-24",
       "source": "resume"
     },
     {
@@ -163,6 +163,25 @@
     }
   ],
   "repos": [
+    {
+      "name": "agent-ui-execution-engine",
+      "description": "Teach an AI to use an app, save the workflow, and replay it with new inputs. Includes a live browser, human takeover, and a banking demo.",
+      "language": "Python",
+      "topics": [
+        "ai-agent",
+        "ai-coding",
+        "ai-engineering",
+        "browser-automatiom",
+        "human-ai-collaboration",
+        "playwright-python"
+      ],
+      "stars": 0,
+      "url": "https://github.com/nh0397/agent-ui-execution-engine",
+      "homepage": "",
+      "created": "2026-09-20",
+      "lastUpdated": "2026-09-24",
+      "date": "2026-09-24"
+    },
     {
       "name": "ipl-2026-auction-poc",
       "description": "Private IPL-style fantasy league PoC: live auction room, scoreboards, CricAPI + ESPN sync, Supabase Auth (Google) and GitHub Actions.",
