@@ -17,6 +17,21 @@ function Media({ media, title }) {
     );
   }
 
+  if (media.type === "video") {
+    return (
+      <div className="work-media">
+        <video
+          src={media.src}
+          poster={media.poster}
+          controls
+          preload="metadata"
+          playsInline
+          aria-label={media.alt || title}
+        />
+      </div>
+    );
+  }
+
   if (media.type === "youtube") {
     // Hold the iframe until asked — five autoplaying embeds would cost more
     // than the whole rest of the page.
